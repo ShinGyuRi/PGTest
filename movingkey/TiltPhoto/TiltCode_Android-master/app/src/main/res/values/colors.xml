@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="colorPrimary">#3F51B5</color>
+    <color name="colorPrimaryDark">#303F9F</color>
+    <color name="colorAccent">#FF4081</color>
+
+    <color name="c_ffffff">#ffffff</color>
+    <color name="c_ffffff_80">#ccffffff</color>
+    <color name="c_ffffff_40">#64ffffff</color>
+    <color name="c_f5f5f5">#f5f5f5</color>
+    <color name="c_000000_60">#96000000</color>
+    <color name="c_000000_75">#cc000000</color>
+    <color name="c_000000_10">#16000000</color>
+    <color name="c_000000">#000000</color>
+    <color name="c_69b06c">#69b06c</color>
+    <color name="c_eeeeee">#eeeeee</color>
+    <color name="c_4b9b50">#4b9b50</color>
+    <color name="c_666666">#666666</color>
+    <color name="c_bebebe">#bebebe</color>
+    <color name="c_e1e1e1">#e1e1e1</color>
+    <color name="c_fab40a">#fab40a</color>
+    <color name="c_333333">#333333</color>
+    <color name="c_d2d2d2">#d2d2d2</color>
+    <color name="c_c9c9c9">#c9c9c9</color>
+    <color name="c_3b5a9a">#3b5a9a</color>
+    <color name="c_3b5a9a_80">#cc3b5a9a</color>
+    <color name="c_2d5e85">#2d5e85</color>
+    <color name="c_2d5e85_80">#cc2d5e85</color>
+    <color name="c_ffe812">#ffe812</color>
+    <color name="c_ffe812_80">#ccffe812</color>
+    <color name="c_3b1e1e">#3b1e1e</color>
+    <color name="c_3b1e1e_40">#643b1e1e</color>
+    <color name="c_999999">#999999</color>
+    <color name="c_25272a">#25272a</color>
+    <color name="c_f8f8f8">#f8f8f8</color>
+    <color name="c_74d17a">#74d17a</color>
+    <color name="c_e9552c">#e9552c</color>
+    <color name="c_bae2b2">#bae2b2</color>
+    <color name="c_00c300">#00c300</color>
+    <color name="c_00c300_80">#cc00c300</color>
+    <color name="c_2d3133">#2d3133</color>
+    <color name="c_2d3133_80">#cc2d3133</color>
+
+
+    <color name="alter_primary">#424242</color>
+    <color name="alter_primary_dark">#212121</color>
+    <color name="alter_unchecked_image_background">@android:color/transparent</color>
+    <color name="alter_checked_image_background">#dd2fdfff</color>
+    <color name="alter_image_check_color">#b457585b</color>
+    <color name="alter_checked_photo_overlay">#28576eff</color>
+    <color name="alter_album_background">#BF000000</color>
+    <color name="alter_album_name_text_color">#fcffff</color>
+    <color name="alter_album_images_count_text_color">#a5a49f</color>
+    <color name="alter_checked_image_overlay">#a97f7f7f</color>
+    <color name="alter_video_thumbnail_overlay">#9b9b9b</color>
+</resources>

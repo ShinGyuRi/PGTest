@@ -1,0 +1,122 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <LinearLayout
+        android:orientation="vertical"
+        android:layout_width="match_parent"
+        android:layout_height="404dp"
+        android:layout_marginTop="40dp"
+        android:layout_gravity="center_horizontal"
+        android:layout_weight="0.73">
+
+        <LinearLayout
+            android:orientation="vertical"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:layout_gravity="center_horizontal">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_marginLeft="30dp"
+                android:layout_marginRight="30dp"
+                android:id="@+id/tiltview_tiltcodefragment"
+                android:layout_height="match_parent">
+
+            </LinearLayout>
+            <!--
+            <com.tiltcode.tiltcode.View.TiltCodeView
+                android:id="@+id/tiltview_tiltcodefragment"
+                android:layout_marginLeft="30dp"
+                android:layout_marginRight="30dp"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent" />-->
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:weightSum="3">
+
+            <Button
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Coupon"
+                android:layout_weight="1"
+                android:id="@+id/btn_coupon"/>
+
+            <Button
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Album"
+                android:layout_weight="1"
+                android:id="@+id/btn_album" />
+
+            <Button
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Facebook"
+                android:layout_weight="1"
+                android:id="@+id/btn_facebook"/>
+
+
+        </LinearLayout>
+    </LinearLayout>
+    <!--<LinearLayout-->
+    <!--android:orientation="horizontal"-->
+    <!--android:layout_width="match_parent"-->
+    <!--android:layout_height="40dp"-->
+    <!--android:weightSum="3"-->
+    <!--android:layout_gravity="center_horizontal">-->
+
+    <!--<LinearLayout-->
+    <!--android:id="@+id/btn_"-->
+    <!--android:orientation="vertical"-->
+    <!--android:layout_margin="2dp"-->
+    <!--android:layout_weight="1"-->
+    <!--android:layout_width="match_parent"-->
+    <!--android:layout_height="match_parent">-->
+
+    <!--<TextView-->
+    <!--android:layout_width="match_parent"-->
+    <!--android:textColor="#b3ffff"-->
+    <!--android:layout_height="match_parent"-->
+    <!--android:text=""-->
+    <!--android:gravity="center" />-->
+    <!--</LinearLayout>-->
+
+    <!--<LinearLayout-->
+    <!--android:id="@+id/btn_camera1"-->
+    <!--android:layout_margin="2dp"-->
+    <!--android:orientation="vertical"-->
+    <!--android:layout_weight="1"-->
+    <!--android:layout_width="match_parent"-->
+    <!--android:layout_height="match_parent"-->
+    <!--android:gravity="center|top"-->
+    <!--android:longClickable="false">-->
+    <!--<ImageView-->
+    <!--android:src="@drawable/camera1"-->
+    <!--android:layout_width="match_parent"-->
+    <!--android:layout_height="match_parent"/></LinearLayout>-->
+
+
+    <!--<LinearLayout-->
+    <!--android:id="@+id/btn_3"-->
+    <!--android:layout_margin="2dp"-->
+    <!--android:orientation="vertical"-->
+    <!--android:layout_weight="1"-->
+    <!--android:layout_width="match_parent"-->
+    <!--android:layout_height="match_parent">-->
+    <!--<TextView-->
+    <!--android:textColor="#1D71B8"-->
+    <!--android:layout_width="match_parent"-->
+    <!--android:layout_height="match_parent"-->
+    <!--android:text=""-->
+    <!--android:gravity="center" /></LinearLayout>-->
+    <!--</LinearLayout>-->
+
+</LinearLayout>
