@@ -58,9 +58,9 @@ public interface HttpService {
     void logOut(@Field("session") String session,
                 Callback<LoginResult> ret);
 
-//    @GET("/couponGet")
-//    void couponGet(@Query("session") String session,
-//                   Callback<CouponResult> ret);
+    @GET("/couponGet")
+    void couponGet(@Query("session") String session,
+                   Callback<CouponResult> ret);
 
     @FormUrlEncoded
     @POST("/changeName")

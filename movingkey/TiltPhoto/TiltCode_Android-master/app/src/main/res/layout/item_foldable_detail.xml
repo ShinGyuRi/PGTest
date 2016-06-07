@@ -1,0 +1,134 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical" android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <LinearLayout
+        android:orientation="vertical"
+        android:background="#ffed00"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_gravity="center_horizontal">
+
+        <ScrollView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:id="@+id/sv_foldable_detail"
+            android:layout_gravity="right" >
+        <LinearLayout
+            android:orientation="vertical"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <LinearLayout
+                android:orientation="vertical"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="right">
+
+                <FrameLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent">
+
+                   <ImageView
+                        android:layout_width="match_parent"
+                        android:layout_height="350dp"
+                        android:id="@+id/img_coupon_detail"
+                        android:scaleType="centerCrop"
+                        android:src="@drawable/test"
+                        android:layout_gravity="center_horizontal" />
+                    <ImageButton
+                        android:layout_gravity="right|bottom"
+                        android:layout_marginRight="20dp"
+                        android:layout_marginTop="5dp"
+                        android:scaleType="center"
+                        android:layout_marginBottom="10dp"
+                        android:layout_width="71dp"
+                        android:layout_height="28dp"
+                        android:textColor="#ababab"
+                        android:background="@drawable/btn_delete"
+                        android:id="@+id/btn_couponitem_delete" />
+                </FrameLayout>
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:orientation="vertical"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:minHeight="200dp"
+                android:layout_gravity="center_horizontal">
+
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="New Text"
+                    android:textColor="#1D71B8"
+                    android:id="@+id/tv_coupon_detail_title" />
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="2px"
+                    android:background="#1D71B8"></LinearLayout>
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="New Text"
+                    android:textColor="#1D71B8"
+                    android:id="@+id/tv_coupon_detail_create" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="New Text"
+                    android:textColor="#1D71B8"
+                    android:id="@+id/tv_coupon_detail_location" />
+
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:textColor="#1D71B8"
+                    android:layout_height="wrap_content"
+                    android:textSize="40dp"
+                    android:text=""
+                    android:id="@+id/tv_coupon_detail_desc" />
+
+
+                <TextView
+                    android:layout_marginTop="30dp"
+                    android:layout_width="wrap_content"
+                    android:textColor="#1D71B8"
+                    android:layout_gravity="center"
+                    android:layout_height="wrap_content"
+                    android:textSize="20dp"
+                    android:text=""
+                    android:id="@+id/tv_coupon_detail_file" />
+
+                <ImageView
+                    android:layout_width="match_parent"
+                    android:layout_height="350dp"
+                    android:id="@+id/img_coupon_image"
+                    android:scaleType="centerCrop"
+                    android:layout_gravity="center_horizontal" />
+
+                <Button
+                    android:layout_marginLeft="20dp"
+                    android:layout_marginRight="20dp"
+                    android:layout_marginTop="10dp"
+                    android:layout_marginBottom="30dp"
+                    android:layout_width="match_parent"
+                    android:layout_height="50dp"
+                    android:text="쿠폰 다운로드"
+                    android:textColor="#ffffff"
+                    android:background="@drawable/big_button"
+                    android:layout_gravity="center_horizontal"
+                    android:id="@+id/btn_couponitem_proc" />
+
+            </LinearLayout>
+
+        </LinearLayout>
+        </ScrollView>
+    </LinearLayout>
+</LinearLayout>

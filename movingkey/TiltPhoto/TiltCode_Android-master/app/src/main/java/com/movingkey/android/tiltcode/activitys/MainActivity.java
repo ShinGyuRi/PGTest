@@ -13,6 +13,7 @@ import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
 import android.location.Location;
 import android.location.LocationManager;
+import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Looper;
@@ -23,6 +24,8 @@ import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.telephony.TelephonyManager;
 import android.util.Log;
+import android.view.View;
+import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.Toast;
 
@@ -43,7 +46,7 @@ import retrofit.client.Response;
 /**
  * Created by Gyul on 2016-06-01.
  */
-public class MainActivity extends AppCompatActivity implements SensorEventListener{
+public class MainActivity extends AppCompatActivity implements SensorEventListener, View.OnClickListener {
 
     private final String LOG_NAME = MainActivity.class.getSimpleName();
 
@@ -61,7 +64,7 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
     private int RECOGNIZE = 1000;  // 500  jhnunu
     private boolean serviceRunning = false;
 
-    Context context;
+    public static Context context;
 
     TiltCodeView tiltView;
 
@@ -86,10 +89,19 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
             {0f, 6.8f, -6.8f}
     };
 
+    public static int selectedIndex = 0;
+
+    private static final int REQUEST_CAMERA = 0;
+
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        Button btnCoupon = (Button)findViewById(R.id.btn_coupon);
+        btnCoupon.setOnClickListener(this);
+        Button btnCamera = (Button)findViewById(R.id.btn_camera);
+        btnCamera.setOnClickListener(this);
 
         mActivityManager = (ActivityManager) this.getSystemService(Context.ACTIVITY_SERVICE);
         mSensorManager = (SensorManager)this.getSystemService(this.SENSOR_SERVICE);
@@ -337,6 +349,31 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
     private static final int LOCATION_INTERVAL = 10000; //gps업데이트 주기(1000=1초)    1000
     private static final float LOCATION_DISTANCE = 10f; // gps distance   10f
 
+    @Override
+    public void onClick(View v) {
+        Intent intent;
+        switch(v.getId())   {
+            case R.id.btn_coupon:
+                intent = new Intent(MainActivity.this, CouponReceiveActivity.class);
+                intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                startActivity(intent);
+                break;
+            case R.id.btn_camera:
+                Intent startCustomCameraIntent = new Intent(this, CameraActivity.class);
+                startActivityForResult(startCustomCameraIntent, REQUEST_CAMERA);
+        }
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if (resultCode != RESULT_OK) return;
+
+        if (requestCode == REQUEST_CAMERA) {
+            Uri photoUri = data.getData();
+        }
+        super.onActivityResult(requestCode, resultCode, data);
+    }
+
     class LocationListener implements android.location.LocationListener{
         //생성자
         public LocationListener(String provider)
@@ -484,9 +521,57 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
                                             @Override
                                             public void onClick(DialogInterface dialog, int which) {
                                                 // 'YES'
-                                                Intent intent = new Intent(MainActivity.this, CouponReceiveActivity.class);
-                                                intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                                                startActivity(intent);
+                                                // 쿠폰받는 중이 아닌것으로 플래그 변경 (150919 jhnunu)
+                                                Util.receiving = "-1";
+                                                Util.duplicatetilt = "-1";
+
+                                                Util.getEndPoint().setPort("40002");
+                                                Util.getHttpSerivce().couponAdd(Util.getAccessToken().getToken(),
+                                                        couponList.get(selectedIndex).id,
+                                                        new Callback<LoginResult>() {
+                                                            @Override
+                                                            public void success(LoginResult loginResult, Response response) {
+                                                                if (loginResult.code.equals("1")) { //성공
+                                                                    Toast.makeText(getBaseContext(), getResources().getText(R.string.message_success_receive), Toast.LENGTH_LONG).show();
+                                                                    if (CouponReceiveActivity.mListView != null) {
+                                                                        CouponReceiveActivity.mListView.setRefreshing();
+//                                                                        MainActivity.mPager.setCurrentItem(0);
+                                                                    }
+//                                                                    MainActivity.flag = true;
+//                                                                    finish();
+//                                                                    startActivity(new Intent(MainActivity.this, SplashActivity.class));
+
+                                                                    Intent intent = new Intent(MainActivity.this, CouponReceiveActivity.class);
+                                                                    intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                                                                    startActivity(intent);
+
+                                                                } else if (loginResult.code.equals("-1")) { //누락된게있음
+                                                                    Toast.makeText(getBaseContext(), getResources().getText(R.string.message_not_enough_data), Toast.LENGTH_LONG).show();
+                                                                } else if (loginResult.code.equals("-2")) { //알수없는 쿠폰 id
+                                                                    Toast.makeText(getBaseContext(), getResources().getText(R.string.message_unkown_coupon_id), Toast.LENGTH_LONG).show();
+                                                                } else if (loginResult.code.equals("-3")) { //비활성화된 쿠폰
+                                                                    Toast.makeText(getBaseContext(), getResources().getText(R.string.message_deactivated_coupon), Toast.LENGTH_LONG).show();
+                                                                } else if (loginResult.code.equals("-4")) { //유효하지 않은 세션
+                                                                    Toast.makeText(getBaseContext(), getResources().getText(R.string.message_session_invalid), Toast.LENGTH_LONG).show();
+                                                                } else if (loginResult.code.equals("-5")) { //발급자가 존재하지 않음
+                                                                    Toast.makeText(getBaseContext(), getResources().getText(R.string.message_unkown_coupon_create), Toast.LENGTH_LONG).show();
+                                                                } else if (loginResult.code.equals("-6")) { //발급자의 포인트가 부족
+                                                                    Toast.makeText(getBaseContext(), getResources().getText(R.string.message_no_enough_point), Toast.LENGTH_LONG).show();
+                                                                } else if (loginResult.code.equals("-7")) { //이미 가지고 있음
+                                                                    Toast.makeText(getBaseContext(), getResources().getText(R.string.message_already_have_coupon), Toast.LENGTH_LONG).show();
+                                                                }
+                                                            }
+
+                                                            @Override
+                                                            public void failure(RetrofitError error) {
+
+                                                                Log.d(LOG_NAME, "onError" + error.getMessage());
+
+                                                                Toast.makeText(getBaseContext(), getResources().getText(R.string.message_network_error), Toast.LENGTH_LONG).show();
+                                                            }
+                                                        });
+
+
                                             }
                                         }).setNegativeButton("취소",
                                         new DialogInterface.OnClickListener() {

@@ -52,9 +52,9 @@
             <Button
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="Album"
+                android:text="Camera"
                 android:layout_weight="1"
-                android:id="@+id/btn_album" />
+                android:id="@+id/btn_camera" />
 
             <Button
                 android:layout_width="match_parent"

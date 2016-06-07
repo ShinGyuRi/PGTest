@@ -30,7 +30,7 @@
         android:supportsRtl="true"
         android:largeHeap="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".SplashActivity">
+        <activity android:name=".activitys.SplashActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN"/>
 
@@ -44,6 +44,18 @@
         <activity
             android:name=".activitys.MemberLogin.LoginActivity"
             android:label="@string/title_activity_login">
+        </activity>
+        <activity android:name=".activitys.CouponReceiveActivity"
+            android:label="CouponReceiveActivity">
+
+        </activity>
+        <activity android:name=".activitys.CameraActivity"
+            android:label="CameraActivity">
+
+        </activity>
+        <activity
+            android:name=".activitys.RuntimePermissionActivity"
+            android:theme="@style/squarecamera__CameraFullScreenTheme.NoUI" >
         </activity>
     </application>
 

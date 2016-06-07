@@ -1,9 +1,10 @@
-package com.movingkey.android.tiltcode;
+package com.movingkey.android.tiltcode.activitys;
 
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 
+import com.movingkey.android.tiltcode.R;
 import com.movingkey.android.tiltcode.activitys.MainActivity;
 import com.movingkey.android.tiltcode.library.HWILib;
 

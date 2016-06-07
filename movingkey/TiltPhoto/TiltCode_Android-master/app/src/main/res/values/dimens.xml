@@ -1,4 +1,10 @@
 <resources>
+    <!-- Default screen margins, per the Android Design guidelines. -->
+    <dimen name="squarecamera__activity_horizontal_margin">16dp</dimen>
+    <dimen name="squarecamera__activity_vertical_margin">16dp</dimen>
+    <dimen name="squarecamera__cover_start_height">300dp</dimen>
+    <dimen name="squarecamera__cover_start_width">250dp</dimen>
+
     <dimen name="ptr_progress_bar_stroke_width">3.52dp</dimen>
     <dimen name="dp_212">188.44dp</dimen>
     <dimen name="dp_339.5">298.76dp</dimen>
