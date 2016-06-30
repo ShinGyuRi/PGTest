@@ -17,7 +17,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.squareup.picasso.Picasso;
@@ -94,7 +93,7 @@ public class HomeFragment extends ParentFragment implements View.OnClickListener
 
     Context context;
 
-    private LinearLayout fragmentHome;
+//    private LinearLayout fragmentHome;
     private FrameLayout layoutTilt;
     private TextView tvAlert;
 
@@ -122,10 +121,10 @@ public class HomeFragment extends ParentFragment implements View.OnClickListener
         imgTilt1 = (ImageView)view.findViewById(R.id.img_tilt1);
         imgTilt2 = (ImageView)view.findViewById(R.id.img_tilt2);
         imgTilt3 = (ImageView)view.findViewById(R.id.img_tilt3);
-        fragmentHome = (LinearLayout)view.findViewById(R.id.fragment_home);
+//        fragmentHome = (LinearLayout)view.findViewById(R.id.fragment_home);
         imgMark = (ImageView) view.findViewById(R.id.img_mark);
 
-        fragmentHome.setOnClickListener(this);
+        layoutTilt.setOnClickListener(this);
         tvAlert.setText(R.string.str_home_alert);
         layoutTilt.setOnTouchListener(this);
 
@@ -343,6 +342,8 @@ public class HomeFragment extends ParentFragment implements View.OnClickListener
                                            layoutTilt.removeAllViews();
                                            layoutTilt.addView(scaleView);
                                            tvAlert.setText(R.string.str_home_alert);
+                                           degree = null;
+                                           tiltCount=0;
 
                                        }
                                    });
@@ -353,7 +354,8 @@ public class HomeFragment extends ParentFragment implements View.OnClickListener
 
                        }else if(couponPhotoResult.message.equals("empty"))  {
                            AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
-                           builder.setNegativeButton("확인", new DialogInterface.OnClickListener()  {
+                           builder.setMessage("쿠폰이 없습니다.")
+                           .setNegativeButton("확인", new DialogInterface.OnClickListener()  {
                                @Override
                                public void onClick(DialogInterface dialog, int which) {
 
@@ -378,7 +380,7 @@ public class HomeFragment extends ParentFragment implements View.OnClickListener
     @Override
     public void onClick(View v) {
         switch (v.getId())  {
-            case R.id.fragment_home:
+            case R.id.layout_tilt:
                 setTilt();
 
                 break;
@@ -436,7 +438,6 @@ public class HomeFragment extends ParentFragment implements View.OnClickListener
                                             case "8":
                                                 imageView.setImageResource(R.drawable.tilt_mark_small_08);
                                                 break;
-
                                         }
                                         tiltCount++;
                                     if (tiltList.size()<3)  {
@@ -455,11 +456,7 @@ public class HomeFragment extends ParentFragment implements View.OnClickListener
 
     @Override
     public boolean onTouch(View v, MotionEvent event) {
-//        int action = event.getAction();
-//        if (action == MotionEvent.ACTION_UP)    {
-//            setTilt();
-//        }
         swipe.dispatchTouchEvent(event);
-        return true;
+        return false;
     }
 }
