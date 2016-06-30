@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="wrap_content" android:layout_height="wrap_content"
+    android:background="@drawable/blur_box">
+
+    <RelativeLayout
+        android:layout_width="285.7dp"
+        android:layout_height="180dp"
+        android:layout_centerHorizontal="true"
+        android:background="#FFFFFF">
+        
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="16.4dp"
+            android:text="Incoming Coupon"
+            android:layout_alignParentTop="true"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="19.8dp"
+            android:id="@+id/textView" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="14.6dp"
+            android:text="Would you lick to receive it?"
+            android:layout_below="@+id/textView"
+            android:layout_centerHorizontal="true"
+            android:id="@+id/textView2" />
+        
+        <ImageView
+            android:id="@+id/img_dig_coupon"
+            android:layout_width="179dp"
+            android:layout_height="86dp"
+            android:layout_below="@+id/textView2"
+            android:layout_marginTop="15dp"
+            android:layout_alignLeft="@+id/textView2"
+            android:layout_alignStart="@+id/textView2" />
+    </RelativeLayout>
+</RelativeLayout>

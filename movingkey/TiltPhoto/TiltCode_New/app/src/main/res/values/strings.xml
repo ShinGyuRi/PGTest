@@ -1,0 +1,37 @@
+<resources>
+    <string name="app_name">TiltCode</string>
+    <string name='API_SERVER'>http://api.tiltcode.com</string>
+    <string name="crash_toast_text">crash 발생</string>
+    <string name="str_permission_message_camera">해당 기능을 사용하기 위해 카메라, 저장공간 권한이 필요합니다. 설정화면에서 권한을 변경해 주세요</string>
+    <string name="facebook_app_id">999483533481900</string>
+
+    <string name="str_take_picture_from_camera">사진촬영</string>
+    <string name="str_take_picture_from_gallery">사진 앨범에서 선택</string>
+    <string name="str_birthday_format" formatted="false">%d년%d월%d일</string>
+    <string name="str_birthday_format_02">yyyy년 MM월 dd일</string>
+    <string name="str_pw_rule_description">8~16자리의 영문 대 소문자, 숫자, 특주문자 중 최소 2가지\n이상을 사용하세요</string>
+    <string name="str_warning_current_pw_invalid">현재 비밀번호가 올바르지 않습니다.</string>
+    <string name="str_warning_new_pw_min_8">새 비밀번호는 8자 이상으로 등록해주세요.</string>
+    <string name="str_warning_pw_min_8">비밀번호는 8자 이상으로 등록해주세요.</string>
+    <string name="str_warning_pw_rule_01">공백은 사용할 수 없습니다</string>
+    <string name="str_warning_pw_rule_02">영문 대문자, 소문자, 숫자, 특수문자 중 최소 2가지 이상의 문자조합으로 구성해주세요</string>
+    <string name="str_toast_login_error01">다시 로그인하세요</string>
+    <string name="str_toast_login_error02">Username과 Password를 확인하세요</string>
+    <string name="str_text_login_error">Your username and/or password are incorrect.</string>
+    <string name="str_text_signup_error">Username is already taken. Try a different name.</string>
+    <string name="str_text_mail_alert">TILT YOUR PHONE SIDEWAYS</string>
+    <string name="str_title_email_find_account">F I N D  A C C O U N D</string>
+    <string name="str_title_tiltcode">T I L T C O D E</string>
+    <string name="str_home_alert">TILT YOUR PHONE SIDEWAYS</string>
+    <string name="str_home_detected">SUCCESSFULLY DETECTED!</string>
+    <string name="str_signup_sns_success_message">Successfully added a new sns member.</string>
+    <string name="str_signup_tiltcode_success_message">Successfully added a new member.</string>
+    <string name="str_signup_sns_overlap_message">sns login success</string>
+    <string name="str_signup_tiltcode_overlap_message">username already exists.</string>
+
+    <string name="str_confirm">확인</string>
+    <string name="str_cancel">취소</string>
+    <string name="str_close">닫기</string>
+    <string name="str_next">다음</string>
+    <string name="str_setting">설정</string>
+</resources>

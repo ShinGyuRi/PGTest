@@ -1,0 +1,97 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="horizontal" android:layout_width="331dp"
+    android:layout_height="81.6dp"
+    android:background="#FFFFFF">
+
+    <ImageView
+        android:layout_width="82.2dp"
+        android:layout_height="wrap_content"
+        android:id="@+id/img_product"
+        android:layout_weight="1"
+        android:layout_marginRight="21dp"
+        android:layout_marginEnd="21dp"
+        android:layout_centerVertical="true"
+        android:layout_alignRight="@+id/relativeLayout"
+        android:layout_alignEnd="@+id/relativeLayout" />
+
+    <RelativeLayout
+        android:layout_width="38.3dp"
+        android:layout_height="38.3dp"
+        android:layout_alignParentBottom="true"
+        android:layout_toLeftOf="@+id/relativeLayout2"
+        android:layout_toStartOf="@+id/relativeLayout2"
+        android:layout_marginBottom="10dp"
+        android:layout_marginRight="22.7dp"
+        android:layout_marginEnd="22.7dp"
+        android:id="@+id/relativeLayout">
+    
+        <ImageView
+            android:id="@+id/img_circle_sale"
+            android:layout_width="38.3dp"
+            android:layout_height="38.3dp"
+            android:src="@drawable/oval_47"/>
+
+        <TextView
+            android:id="@+id/tv_sale"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="11sp"
+            android:layout_centerVertical="true"
+            android:layout_centerHorizontal="true" />
+
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:layout_width="165.5dp"
+        android:layout_height="match_parent"
+        android:background="#FA95D1D3"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentEnd="true"
+        android:id="@+id/relativeLayout2">
+
+        <LinearLayout
+            android:orientation="vertical"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginLeft="11.2dp"
+            android:layout_weight="4">
+
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/material_icons_blackclose"
+                android:layout_marginTop="4dp"
+                android:layout_marginLeft="139dp"/>
+
+            <TextView
+                android:id="@+id/tv_brandname"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textSize="15sp"/>
+
+            <TextView
+                android:id="@+id/tv_productname"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="3dp"
+                android:textSize="9sp"/>
+
+            <TextView
+                android:id="@+id/tb_dday"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="3dp"
+                android:textSize="8sp"/>
+
+            <TextView
+                android:id="@+id/tv_expdate"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="3dp"
+                android:textSize="6.7sp"/>
+        </LinearLayout>
+    </RelativeLayout>
+
+</RelativeLayout>
