@@ -149,14 +149,14 @@ public class HomeFragment extends ParentFragment implements View.OnClickListener
             @Override
             public void onSwipedRight(MotionEvent event) {
                 Log.d(TAG, "onSwipedRight()");
-                if(tilt != null)
+                if (tiltList.size() < 3)
                     getResult(tiltList);
+                touchFlag = true;
                 tiltCount=0;
                 tiltList.clear();
                 imgTilt1.setImageResource(R.drawable.rectangle_76);
                 imgTilt2.setImageResource(R.drawable.rectangle_76);
                 imgTilt3.setImageResource(R.drawable.rectangle_76);
-                touchFlag = true;
                 buffer.setLength(0);
 
             }
@@ -293,7 +293,9 @@ public class HomeFragment extends ParentFragment implements View.OnClickListener
         lat = jsinPreference.getValue("lat", "");
         lng = jsinPreference.getValue("lng", "");
 
-        String joined = buffer.deleteCharAt(0).toString();
+        String joined = "";
+        if (buffer.length() != 0)
+            joined = buffer.deleteCharAt(0).toString();
         degree = joined.split(",\\s+");
 
         Log.d(TAG,"degree : "+ Arrays.toString(degree)+" lat : "+lat+" lng : "+lng+" username : "+username + " loginType: "+loginType);
@@ -304,7 +306,6 @@ public class HomeFragment extends ParentFragment implements View.OnClickListener
                     @Override
                     public void success(CouponPhotoResult couponPhotoResult, Response response) throws NullPointerException {
                         Log.d(TAG, "getResult to string: " + couponPhotoResult.toString());
-                        touchFlag = false;
 
                        if (couponPhotoResult.result != null) {
                            layoutTilt.removeView(scaleView);
@@ -338,6 +339,7 @@ public class HomeFragment extends ParentFragment implements View.OnClickListener
                                        @Override
                                        public void onClick(DialogInterface dialog, int which) {
                                            ownCouponOrPhoto(username, _id, null);
+                                           touchFlag = false;
 
                                        }
                                    })
@@ -347,6 +349,7 @@ public class HomeFragment extends ParentFragment implements View.OnClickListener
                                            layoutTilt.removeAllViews();
                                            layoutTilt.addView(scaleView);
                                            tvAlert.setText(R.string.str_home_alert);
+                                           touchFlag = false;
 
                                        }
                                    });
@@ -355,15 +358,20 @@ public class HomeFragment extends ParentFragment implements View.OnClickListener
                            alertDialog.show();
                            alertDialog.getWindow().setLayout((int) getResources().getDimension(R.dimen.dialog_width), (int) getResources().getDimension(R.dimen.dialog_height));
 
-                       }else if(couponPhotoResult.message.equals("empty"))  {
+                       }
+                        if(couponPhotoResult.message != null)  {
                            AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
-                           builder.setMessage("쿠폰이 없습니다.")
+                           builder.setMessage("쿠폰이 없습니다")
                            .setNegativeButton("확인", new DialogInterface.OnClickListener()  {
                                @Override
                                public void onClick(DialogInterface dialog, int which) {
+                                   touchFlag = false;
 
                                }
                            });
+
+                            AlertDialog alertDialog = builder.create();
+                            alertDialog.show();
                        }
 
                     }
@@ -464,6 +472,7 @@ public class HomeFragment extends ParentFragment implements View.OnClickListener
     @Override
     public boolean onTouch(View v, MotionEvent event) {
         swipe.dispatchTouchEvent(event);
+        Log.d(TAG, "touchFlag: "+touchFlag);
         return touchFlag;
     }
 }
