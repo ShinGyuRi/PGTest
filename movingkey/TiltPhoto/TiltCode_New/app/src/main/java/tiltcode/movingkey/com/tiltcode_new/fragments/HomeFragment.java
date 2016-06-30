@@ -26,13 +26,11 @@ import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.List;
 
 import retrofit.Callback;
 import retrofit.RetrofitError;
 import retrofit.client.Response;
 import tiltcode.movingkey.com.tiltcode_new.Model.AccelData;
-import tiltcode.movingkey.com.tiltcode_new.Model.Coupon;
 import tiltcode.movingkey.com.tiltcode_new.Model.CouponPhotoResult;
 import tiltcode.movingkey.com.tiltcode_new.R;
 import tiltcode.movingkey.com.tiltcode_new.library.BaseApplication;
@@ -52,7 +50,7 @@ public class HomeFragment extends ParentFragment implements View.OnClickListener
 
     String username, loginType;
     String tilt;
-    String[] degree;
+    String[] degree = new String[3];
     String lat, lng;
 
     private static AccelData prev = null, now = null;
@@ -103,7 +101,7 @@ public class HomeFragment extends ParentFragment implements View.OnClickListener
 
     JsinPreference jsinPreference;
 
-    private static List<Coupon> couponList;
+    public boolean touchFlag = false;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -159,6 +157,7 @@ public class HomeFragment extends ParentFragment implements View.OnClickListener
                 imgTilt1.setImageResource(R.drawable.rectangle_76);
                 imgTilt2.setImageResource(R.drawable.rectangle_76);
                 imgTilt3.setImageResource(R.drawable.rectangle_76);
+                touchFlag = true;
 
             }
 
@@ -283,6 +282,9 @@ public class HomeFragment extends ParentFragment implements View.OnClickListener
         return values[2]; // 0 은 x 각도, 1은 y각도, 2는 z각도
     }
 
+    String imgUrl = "";
+    String _id = null;
+
     private void getResult(ArrayList<String> tiltList)    {
 
         username = jsinPreference.getValue("username", "");
@@ -294,27 +296,28 @@ public class HomeFragment extends ParentFragment implements View.OnClickListener
         String joined = buffer.deleteCharAt(0).toString();
         degree = joined.split(",\\s+");
 
-
         Log.d(TAG,"degree : "+ Arrays.toString(degree)+" lat : "+lat+" lng : "+lng+" username : "+username + " loginType: "+loginType);
 
         NetworkUtil.getHttpSerivce().getCouponOrPhoto(username, loginType, Arrays.toString(degree), String.valueOf(lat), String.valueOf(lng), "FREE",
                 new Callback<CouponPhotoResult>()   {
 
                     @Override
-                    public void success(CouponPhotoResult couponPhotoResult, Response response) {
+                    public void success(CouponPhotoResult couponPhotoResult, Response response) throws NullPointerException {
                         Log.d(TAG, "getResult to string: " + couponPhotoResult.toString());
 
-                       if (couponPhotoResult.result.equals("success")) {
+                       if (couponPhotoResult.result != null) {
                            layoutTilt.removeView(scaleView);
                            imgMark.setImageResource(R.drawable.detected_mark);
                            tvAlert.setText(R.string.str_home_detected);
 
-                           String imgUrl = "";
+
+                           JSONObject jsonObject = null;
                            try {
-                               JSONObject jsonObject = new JSONObject((String) couponPhotoResult.getCoupon());
+                               jsonObject = new JSONObject((String) couponPhotoResult.getCoupon());
                                Log.d(TAG, "JSONObject.tostring: " + jsonObject.toString());
                                imgUrl = jsonObject.getString("image");
                                Log.d(TAG, "imgUrl: " + imgUrl.replace("\\", ""));
+                               _id = jsonObject.getString("_id");
 
                            } catch (JSONException e) {
                                e.printStackTrace();
@@ -333,6 +336,7 @@ public class HomeFragment extends ParentFragment implements View.OnClickListener
                                    .setPositiveButton("OK", new DialogInterface.OnClickListener() {
                                        @Override
                                        public void onClick(DialogInterface dialog, int which) {
+                                           ownCouponOrPhoto(username, _id, null);
 
                                        }
                                    })
@@ -372,6 +376,10 @@ public class HomeFragment extends ParentFragment implements View.OnClickListener
                     }
                 });
 
+    }
+
+    public void ownCouponOrPhoto(String username, String coupon_id, String photo_id)  {
+        NetworkUtil.getHttpSerivce().ownCouponOrPhoto(username, coupon_id, photo_id);
     }
 
     private int tiltCount=0;
@@ -457,6 +465,6 @@ public class HomeFragment extends ParentFragment implements View.OnClickListener
     @Override
     public boolean onTouch(View v, MotionEvent event) {
         swipe.dispatchTouchEvent(event);
-        return false;
+        return touchFlag;
     }
 }
