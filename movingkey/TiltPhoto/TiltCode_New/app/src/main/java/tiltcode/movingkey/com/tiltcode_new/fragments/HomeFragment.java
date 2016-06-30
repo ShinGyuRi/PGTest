@@ -50,7 +50,7 @@ public class HomeFragment extends ParentFragment implements View.OnClickListener
 
     String username, loginType;
     String tilt;
-    String[] degree = new String[3];
+    String[] degree;
     String lat, lng;
 
     private static AccelData prev = null, now = null;
@@ -153,11 +153,11 @@ public class HomeFragment extends ParentFragment implements View.OnClickListener
                     getResult(tiltList);
                 tiltCount=0;
                 tiltList.clear();
-                degree = null;
                 imgTilt1.setImageResource(R.drawable.rectangle_76);
                 imgTilt2.setImageResource(R.drawable.rectangle_76);
                 imgTilt3.setImageResource(R.drawable.rectangle_76);
                 touchFlag = true;
+                buffer.setLength(0);
 
             }
 
@@ -304,6 +304,7 @@ public class HomeFragment extends ParentFragment implements View.OnClickListener
                     @Override
                     public void success(CouponPhotoResult couponPhotoResult, Response response) throws NullPointerException {
                         Log.d(TAG, "getResult to string: " + couponPhotoResult.toString());
+                        touchFlag = false;
 
                        if (couponPhotoResult.result != null) {
                            layoutTilt.removeView(scaleView);
@@ -346,8 +347,6 @@ public class HomeFragment extends ParentFragment implements View.OnClickListener
                                            layoutTilt.removeAllViews();
                                            layoutTilt.addView(scaleView);
                                            tvAlert.setText(R.string.str_home_alert);
-                                           degree = null;
-                                           tiltCount=0;
 
                                        }
                                    });
