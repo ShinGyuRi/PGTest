@@ -1,9 +1,6 @@
 package tiltcode.movingkey.com.tiltcode_new.activitys;
 
 import android.Manifest;
-import android.app.Fragment;
-import android.app.FragmentManager;
-import android.app.FragmentTransaction;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -12,6 +9,9 @@ import android.location.Location;
 import android.location.LocationManager;
 import android.os.Bundle;
 import android.os.Looper;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
@@ -54,6 +54,7 @@ public class MainActivity extends ParentActivity implements View.OnClickListener
 
     String lat, lng;
 
+    public Fragment homeFragment, couponFragment;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -76,9 +77,9 @@ public class MainActivity extends ParentActivity implements View.OnClickListener
 
 
         Fragment fragment = new HomeFragment();
-        FragmentManager fragmentManager = getFragmentManager();
+        FragmentManager fragmentManager = getSupportFragmentManager();
         FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-        fragmentTransaction.add( R.id.fragment_home, fragment );
+        fragmentTransaction.add(R.id.container, fragment);
         fragmentTransaction.commit();
 
         initializeLocationManager();
@@ -306,24 +307,19 @@ public class MainActivity extends ParentActivity implements View.OnClickListener
 
     public void ChangeFragment( View v ) {
 
-        Fragment fragment;
-
         switch( v.getId() ) {
             default:
             case R.id.img_btn_home: {
-                fragment = new HomeFragment();
+                homeFragment = HomeFragment.newInstance();
+                switchContent(homeFragment, R.id.container, false, false);
                 break;
             }
             case R.id.img_btn_coupon: {
-                fragment = new CouponFragment();
+                couponFragment = CouponFragment.newInstance();
+                switchContent(couponFragment, R.id.container, false, false);
                 break;
             }
         }
-
-        FragmentManager fragmentManager = getFragmentManager();
-        FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-        fragmentTransaction.replace( R.id.fragment_home, fragment );
-        fragmentTransaction.commit();
     }
 
     @Override

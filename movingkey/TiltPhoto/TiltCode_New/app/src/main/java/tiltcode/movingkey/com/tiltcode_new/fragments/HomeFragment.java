@@ -9,6 +9,7 @@ import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.v4.app.Fragment;
 import android.support.v7.app.AlertDialog;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -34,11 +35,13 @@ import tiltcode.movingkey.com.tiltcode_new.Model.AccelData;
 import tiltcode.movingkey.com.tiltcode_new.Model.CouponPhotoResult;
 import tiltcode.movingkey.com.tiltcode_new.R;
 import tiltcode.movingkey.com.tiltcode_new.library.BaseApplication;
+import tiltcode.movingkey.com.tiltcode_new.library.ParentActivity;
 import tiltcode.movingkey.com.tiltcode_new.library.ParentFragment;
 import tiltcode.movingkey.com.tiltcode_new.library.swipe.Swipe;
 import tiltcode.movingkey.com.tiltcode_new.library.swipe.SwipeListener;
 import tiltcode.movingkey.com.tiltcode_new.library.util.JsinPreference;
 import tiltcode.movingkey.com.tiltcode_new.library.util.NetworkUtil;
+import tiltcode.movingkey.com.tiltcode_new.library.util.Util;
 import tiltcode.movingkey.com.tiltcode_new.view.ScaleView;
 
 /**
@@ -83,8 +86,6 @@ public class HomeFragment extends ParentFragment implements View.OnClickListener
     private Sensor magnetometer;
     private ActivityManager mActivityManager;
 
-    public static Thread mThread;
-
     ScaleView scaleView;
     ImageView imgTilt1, imgTilt2, imgTilt3;
     ImageView dialogImg, imgMark;
@@ -103,9 +104,11 @@ public class HomeFragment extends ParentFragment implements View.OnClickListener
 
     public boolean touchFlag = false;
 
-    @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
+    public Fragment couponFragment;
+
+    public static HomeFragment newInstance() {
+        HomeFragment frag = new HomeFragment();
+        return frag;
     }
 
     @Nullable
@@ -282,10 +285,10 @@ public class HomeFragment extends ParentFragment implements View.OnClickListener
         return values[2]; // 0 은 x 각도, 1은 y각도, 2는 z각도
     }
 
-    String imgUrl = "";
+    String imgUrl, option, brandname, desc, exp;
     String _id = null;
 
-    private void getResult(ArrayList<String> tiltList)    {
+    public void getResult(ArrayList<String> tiltList)    {
 
         username = jsinPreference.getValue("username", "");
         loginType = jsinPreference.getValue("loginType", "");
@@ -318,9 +321,12 @@ public class HomeFragment extends ParentFragment implements View.OnClickListener
                                jsonObject = new JSONObject((String) couponPhotoResult.getCoupon());
                                Log.d(TAG, "JSONObject.tostring: " + jsonObject.toString());
                                imgUrl = jsonObject.getString("image");
+                               option = jsonObject.getString("option");
+                               brandname = jsonObject.getString("brandname");
+                               desc = jsonObject.getString("description");
+                               exp = Util.unixTimeToDate(Long.parseLong(jsonObject.getString("exp")));
                                Log.d(TAG, "imgUrl: " + imgUrl.replace("\\", ""));
                                _id = jsonObject.getString("_id");
-
                            } catch (JSONException e) {
                                e.printStackTrace();
                            } catch (NullPointerException e) {
@@ -331,14 +337,21 @@ public class HomeFragment extends ParentFragment implements View.OnClickListener
                            LayoutInflater inflater = getActivity().getLayoutInflater();
                            View dialogView = inflater.inflate(R.layout.dialog_coupon, null);
                            dialogImg = (ImageView) dialogView.findViewById(R.id.img_dig_coupon);
-                           Picasso.with(getActivity())
+                           Picasso.with(getContext())
                                    .load(imgUrl.replace("\\", ""))
                                    .into(dialogImg);
                            builder.setView(dialogView)
                                    .setPositiveButton("OK", new DialogInterface.OnClickListener() {
                                        @Override
                                        public void onClick(DialogInterface dialog, int which) {
+//                                           couponFragment = CouponFragment.newInstance(imgUrl.replace("\\", ""), option, brandname, desc, exp);
+
+
+                                           Log.d(TAG, "username: "+username + " coupon_id: "+_id);
                                            ownCouponOrPhoto(username, _id, null);
+//                                           ((CouponFragment)getTargetFragment()).getCouponList();
+                                           couponFragment = CouponFragment.newInstance();
+                                           ((ParentActivity) getActivity()).switchContent(couponFragment, R.id.container, true, false);
                                            touchFlag = false;
 
                                        }
@@ -373,20 +386,30 @@ public class HomeFragment extends ParentFragment implements View.OnClickListener
                             AlertDialog alertDialog = builder.create();
                             alertDialog.show();
                        }
-
                     }
 
                     @Override
                     public void failure(RetrofitError error) {
                         Log.d(TAG, "error.getLocalizedMessage() : " + error.getLocalizedMessage());
-
                     }
                 });
 
     }
 
     public void ownCouponOrPhoto(String username, String coupon_id, String photo_id)  {
-        NetworkUtil.getHttpSerivce().ownCouponOrPhoto(username, coupon_id, photo_id);
+        NetworkUtil.getHttpSerivce().ownCouponOrPhoto(username, coupon_id, photo_id,
+                new Callback<CouponPhotoResult>()    {
+
+                    @Override
+                    public void success(CouponPhotoResult couponPhotoResult, Response response) {
+                        Log.d(TAG, "ownCouponOrPhoto: "+couponPhotoResult.result);
+                    }
+
+                    @Override
+                    public void failure(RetrofitError error) {
+                        Log.d(TAG, "error.getLocalizedMessage()" + error.getLocalizedMessage());
+                    }
+                });
     }
 
     private int tiltCount=0;

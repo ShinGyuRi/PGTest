@@ -115,7 +115,7 @@ public class SignUpActivity extends ParentActivity implements View.OnClickListen
                     profileImage = stream.toByteArray();
                 }
                 if(checkPasswordValidation(inputPassword))
-                    requestSignUp(profileImage, "", SNSTYPE_CODE.TILTCODE);
+                    requestSignUp();
                 showLoading();
                 break;
             case R.id.img_profile:
@@ -136,11 +136,11 @@ public class SignUpActivity extends ParentActivity implements View.OnClickListen
         });
     }
 
-    public void requestSignUp(byte[] inputImage, String snsID, String snsType) {
+    public void requestSignUp() {
         latitude = null;
         longitude = null;
 
-        NetworkUtil.getHttpSerivce().signUp(latitude, longitude, inputImage, inputSex, inputDOB, snsID, snsType, inputEmail, inputUsername, inputFirstName, inputLastName, inputPassword,
+        NetworkUtil.getHttpSerivce().signUp(latitude, longitude, null, inputSex, inputDOB, "", SNSTYPE_CODE.TILTCODE, inputEmail, inputUsername, inputFirstName, inputLastName, inputPassword,
                 new Callback<SignUpResult>() {
                     @Override
                     public void success(SignUpResult signUpResult, Response response) {
@@ -154,12 +154,6 @@ public class SignUpActivity extends ParentActivity implements View.OnClickListen
                             imgCancel.setImageResource(R.drawable.cancel_1);
                             tvCancel.setText(R.string.str_text_signup_error);
                             etUsername.setText(null);
-
-                        }
-                        else if(signUpResult.message.equals(R.string.str_signup_sns_success_message))   {
-
-                        }
-                        else if (signUpResult.message.equals(R.string.str_signup_sns_overlap_message))  {
 
                         }
                     }

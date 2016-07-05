@@ -3,7 +3,10 @@ package tiltcode.movingkey.com.tiltcode_new.Model;
 import retrofit.Callback;
 import retrofit.http.Field;
 import retrofit.http.FormUrlEncoded;
+import retrofit.http.Multipart;
 import retrofit.http.POST;
+import retrofit.http.Part;
+import retrofit.mime.TypedFile;
 
 /**
  * Created by Gyul on 2016-06-20.
@@ -42,6 +45,13 @@ public interface HttpService {
                 @Field("pw") String pw,
                 Callback<SignUpResult> ret);
 
+    @Multipart
+    @POST("/users/signUp")
+    void snsSignUp(@Part("image") TypedFile image,
+                   @Part("snsID") String snsID,
+                   @Part("snsType") String snsType,
+                   Callback<SignUpResult> ret);
+
     @FormUrlEncoded
     @POST("/getCouponOrPhoto")
     void getCouponOrPhoto(@Field("username") String username,
@@ -51,4 +61,17 @@ public interface HttpService {
                           @Field("longitude") String longitude,
                           @Field("option") String option,
                           Callback<CouponPhotoResult> ret);
+
+    @FormUrlEncoded
+    @POST("/ownCouponOrPhoto")
+    void ownCouponOrPhoto(@Field("username") String username,
+                          @Field("coupon_id") String coupon_id,
+                          @Field("photo_id") String photo_id,
+                          Callback<CouponPhotoResult> ret);
+
+    @FormUrlEncoded
+    @POST("/listCoupon")
+    void listCoupon(@Field("username") String username,
+                    @Field("page") String page,
+                    Callback<ListCouponResult> ret);
 }

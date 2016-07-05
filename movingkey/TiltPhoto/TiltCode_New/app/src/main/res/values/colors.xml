@@ -7,4 +7,6 @@
     <color name="colorHint">#C8C8C8</color>
     <color name="colorTitleBar">#666666</color>
     <color name="colorText">#666666</color>
+    <color name="colorWhite">#FFFFFF</color>
+    <color name="colorListView">#FA95D1D3</color>
 </resources>

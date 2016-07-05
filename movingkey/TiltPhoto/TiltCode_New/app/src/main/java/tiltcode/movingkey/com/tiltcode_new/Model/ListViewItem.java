@@ -1,21 +1,19 @@
 package tiltcode.movingkey.com.tiltcode_new.Model;
 
-import android.graphics.drawable.Drawable;
-
 /**
  * Created by Gyul on 2016-06-30.
  */
 public class ListViewItem {
 
-    private Drawable imgProduct;
+    private String imgProduct, imgBrand;
     private String tvSale;
     private String tvBrandname, tvProduct, tvDday, tvExpDate;
 
-    public Drawable getImgProduct() {
+    public String getImgProduct() {
         return imgProduct;
     }
 
-    public void setImgProduct(Drawable imgProduct) {
+    public void setImgProduct(String imgProduct) {
         this.imgProduct = imgProduct;
     }
 
@@ -57,5 +55,13 @@ public class ListViewItem {
 
     public void setTvExpDate(String tvExpDate) {
         this.tvExpDate = tvExpDate;
+    }
+
+    public String getImgBrand() {
+        return imgBrand;
+    }
+
+    public void setImgBrand(String imgBrand) {
+        this.imgBrand = imgBrand;
     }
 }

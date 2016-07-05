@@ -40,13 +40,13 @@ import retrofit.Callback;
 import retrofit.RetrofitError;
 import retrofit.client.Response;
 import tiltcode.movingkey.com.tiltcode_new.Model.SignInResult;
+import tiltcode.movingkey.com.tiltcode_new.Model.SignUpResult;
 import tiltcode.movingkey.com.tiltcode_new.R;
 import tiltcode.movingkey.com.tiltcode_new.library.BaseApplication;
 import tiltcode.movingkey.com.tiltcode_new.library.ParentActivity;
 import tiltcode.movingkey.com.tiltcode_new.library.util.Debug;
 import tiltcode.movingkey.com.tiltcode_new.library.util.Definitions.SNSTYPE_CODE;
 import tiltcode.movingkey.com.tiltcode_new.library.util.DeviceUtil;
-import tiltcode.movingkey.com.tiltcode_new.library.util.ImageUtil;
 import tiltcode.movingkey.com.tiltcode_new.library.util.JsinPreference;
 import tiltcode.movingkey.com.tiltcode_new.library.util.NetworkUtil;
 import tiltcode.movingkey.com.tiltcode_new.library.util.TextUtil;
@@ -230,22 +230,21 @@ public class LoginActivity extends ParentActivity implements View.OnClickListene
         jsinPreference.put("username", facebookReferenceId);
         jsinPreference.put("loginType", SNSTYPE_CODE.FACEBOOK);
         Log.d(TAG, "jsinpreference username"+jsinPreference.getValue("username", ""));
-        Bitmap bitmap = null;
-        bitmap = getFacebookProfilePicture(facebookImagePath);
-        signUpActivity = new SignUpActivity();
-        signUpActivity.requestSignUp(ImageUtil.bitmapToByteArray(bitmap), facebookReferenceId, SNSTYPE_CODE.FACEBOOK);
+        getFacebookProfilePicture(facebookReferenceId);
+        requestSignUp();
 
     }
 
-    public Bitmap getFacebookProfilePicture(String imageURL)
+    public void getFacebookProfilePicture(String userID)
     {
         Picasso.with(LoginActivity.this)
-                .load(imageURL)
+                .load("http://graph.facebook.com/"+userID+"/picture?type=large")
                 .into(new Target() {
                     @Override
                     public void onBitmapLoaded(Bitmap bitmap, Picasso.LoadedFrom from) {
+                        Log.d(TAG, " getFacebookProfilePicture: "+bitmap);
                         profileBitmap = bitmap;
-
+//                        requestSignUp(null, facebookReferenceId, SNSTYPE_CODE.FACEBOOK);
                     }
 
                     @Override
@@ -258,8 +257,30 @@ public class LoginActivity extends ParentActivity implements View.OnClickListene
 
                     }
                 });
+    }
 
-        return profileBitmap;
+    public void requestSignUp() {
+
+        NetworkUtil.getHttpSerivce().snsSignUp(null, facebookReferenceId, SNSTYPE_CODE.FACEBOOK,
+                new Callback<SignUpResult>() {
+                    @Override
+                    public void success(SignUpResult signUpResult, Response response) {
+                        Log.d(TAG, "signUpResult.message: " + signUpResult.message, new Throwable());
+
+                        if(signUpResult.message.equals(R.string.str_signup_sns_success_message))   {
+
+                        }
+                        else if (signUpResult.message.equals(R.string.str_signup_sns_overlap_message))  {
+
+                        }
+                    }
+
+                    @Override
+                    public void failure(RetrofitError error) {
+                        Log.d(TAG, "error.getLocalizedMessage()" + error.getLocalizedMessage());
+
+                    }
+                });
     }
 
 
@@ -315,7 +336,6 @@ public class LoginActivity extends ParentActivity implements View.OnClickListene
                 tvCancel.setVisibility(View.INVISIBLE);
                 layoutUsername.setBackgroundResource(R.drawable.text_field_01);
                 break;
-
             case R.id.et_password:
                 imgCancel.setVisibility(View.INVISIBLE);
                 tvCancel.setVisibility(View.INVISIBLE);
