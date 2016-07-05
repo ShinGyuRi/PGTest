@@ -74,4 +74,10 @@ public interface HttpService {
     void listCoupon(@Field("username") String username,
                     @Field("page") String page,
                     Callback<ListCouponResult> ret);
+
+    @FormUrlEncoded
+    @POST("/users/usedCoupon")
+    void usedCoupon(@Field("couponid") String couponid,
+                    @Field("username") String username,
+                    Callback<ListCouponResult> ret);
 }

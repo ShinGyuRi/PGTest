@@ -8,6 +8,7 @@ public class ListViewItem {
     private String imgProduct, imgBrand;
     private String tvSale;
     private String tvBrandname, tvProduct, tvDday, tvExpDate;
+    private String couponId, barcode;
 
     public String getImgProduct() {
         return imgProduct;
@@ -63,5 +64,21 @@ public class ListViewItem {
 
     public void setImgBrand(String imgBrand) {
         this.imgBrand = imgBrand;
+    }
+
+    public String getCouponId() {
+        return couponId;
+    }
+
+    public void setCouponId(String couponId) {
+        this.couponId = couponId;
+    }
+
+    public String getBarcode() {
+        return barcode;
+    }
+
+    public void setBarcode(String barcode) {
+        this.barcode = barcode;
     }
 }

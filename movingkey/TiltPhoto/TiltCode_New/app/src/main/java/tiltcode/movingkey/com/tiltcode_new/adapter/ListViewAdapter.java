@@ -98,7 +98,7 @@ public class ListViewAdapter extends BaseAdapter {
     }
 
     // 아이템 데이터 추가를 위한 함수. 개발자가 원하는대로 작성 가능.
-    public void addItem(String imgUrl, String option, String brandname, String desc, String exp, String imgBrand) {
+    public void addItem(String imgUrl, String option, String brandname, String desc, String exp, String imgBrand, String couponId, String barcode) {
         Log.d(TAG, "addItem");
         ListViewItem item = new ListViewItem();
 
@@ -109,6 +109,8 @@ public class ListViewAdapter extends BaseAdapter {
         item.setTvExpDate("Valid through "+exp);
         item.setTvDday("D-"+String.valueOf(Util.dDay(Integer.valueOf(exp.substring(6, 10)), Integer.valueOf(exp.substring(3, 5)), Integer.valueOf(exp.substring(0, 2)))));
         item.setImgBrand(imgBrand);
+        item.setCouponId(couponId);
+        item.setBarcode(barcode);
 
         listViewItemList.add(item);
     }

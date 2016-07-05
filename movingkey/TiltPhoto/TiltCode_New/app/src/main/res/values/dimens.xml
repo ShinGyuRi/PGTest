@@ -22,4 +22,7 @@
 
     <dimen name="dialog_width">286dp</dimen>
     <dimen name="dialog_height">250dp</dimen>
+
+    <dimen name="barcode_width">209.4dp</dimen>
+    <dimen name="barcode_height">45.9dp</dimen>
 </resources>

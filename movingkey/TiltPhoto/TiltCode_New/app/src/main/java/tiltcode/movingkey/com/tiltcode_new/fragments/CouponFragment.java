@@ -38,7 +38,7 @@ public class CouponFragment extends ParentFragment{
     ListView listView;
     ListViewAdapter adapter;
 
-    String imgUrl, option, brandname, desc, exp, imgBrand;
+    String imgUrl, option, brandname, desc, exp, imgBrand, couponId, barcode;
 
     String username;
     int page;
@@ -80,16 +80,26 @@ public class CouponFragment extends ParentFragment{
 //                String descStr = item.getDesc() ;
 //                Drawable iconDrawable = item.getIcon() ;
 
+                Log.d(TAG, "coupon id: "+item.getCouponId());
+                jsinPreference.put("couponId", item.getCouponId());
+
                 dialog = new CouponDialog(getContext(), adapter, position);
 
                 dialog.setOnShowListener(new DialogInterface.OnShowListener()   {
                     @Override
                     public void onShow(DialogInterface dia) {
-                        dialog.setImgBrandUrl(item.getImgBrand());
-                        dialog.setImgUrl(item.getImgProduct());
-                        dialog.setBrandname(item.getTvBrandname());
-                        dialog.setDesc(item.getTvProduct());
-                        dialog.setExp(item.getTvExpDate());
+//                        dialog.setImgBrandUrl(item.getImgBrand());
+//                        dialog.setImgUrl(item.getImgProduct());
+//                        dialog.setBrandname(item.getTvBrandname());
+//                        dialog.setDesc(item.getTvProduct());
+//                        dialog.setExp(item.getTvExpDate());
+
+                        dialog.setImgBrand(item.getImgBrand());
+                        dialog.setImgProduct(item.getImgProduct());
+                        dialog.setTvBrandname(item.getTvBrandname());
+                        dialog.setTvDesc(item.getTvProduct());
+                        dialog.setTvExp(item.getTvExpDate());
+                        dialog.setBarcode(item.getBarcode(), (int) getResources().getDimension(R.dimen.barcode_width), (int) getResources().getDimension(R.dimen.barcode_height));
                     }
                 });
 
@@ -117,7 +127,6 @@ public class CouponFragment extends ParentFragment{
                     public void success(ListCouponResult listCouponResult, Response response) {
                         if (listCouponResult.coupon != null)    {
                             couponList = listCouponResult.coupon;
-                            Log.d(TAG, "couponList image: "+ couponList.get(0).getImage());
 
                             if (couponList != null) {
                                 for(page=0; page<couponList.size(); page++)  {
@@ -128,10 +137,12 @@ public class CouponFragment extends ParentFragment{
                                     desc = couponList.get(page).getDescription();
                                     exp = Util.unixTimeToDate(Long.parseLong(couponList.get(page).getExp()));
                                     imgBrand = couponList.get(page).getBrandimage();
+                                    couponId = couponList.get(page).get_id();
+                                    barcode = couponList.get(page).getCode();
                                     Log.d(TAG, "exp: "+couponList.get(page).getExp());
 
                                     listView.setAdapter(adapter);
-                                    adapter.addItem(imgUrl, option, brandname, desc, exp, imgBrand);
+                                    adapter.addItem(imgUrl, option, brandname, desc, exp, imgBrand, couponId, barcode);
                                 }
                             }
                         }

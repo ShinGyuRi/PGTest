@@ -28,6 +28,9 @@ public class Coupon {
     @SerializedName("brandimage")
     public String brandimage;
 
+    @SerializedName("code")
+    public String code;
+
     public String get_id() {
         return _id;
     }
@@ -54,5 +57,9 @@ public class Coupon {
 
     public String getBrandimage() {
         return brandimage;
+    }
+
+    public String getCode() {
+        return code;
     }
 }

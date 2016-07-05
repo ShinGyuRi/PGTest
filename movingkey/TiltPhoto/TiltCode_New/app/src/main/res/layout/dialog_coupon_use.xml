@@ -63,22 +63,49 @@
                 android:layout_marginLeft="13.4dp"
                 android:layout_gravity="center"/>
 
-            <ImageView
-                android:layout_width="12dp"
-                android:layout_height="12dp"
-                android:layout_marginTop="6dp"
-                android:src="@drawable/material_icons_blackclose"/>
+            <LinearLayout
+                android:id="@+id/layout_close"
+                android:layout_width="16dp"
+                android:layout_height="40dp"
+                android:orientation="vertical">
+
+                <ImageView
+                    android:layout_width="12dp"
+                    android:layout_height="12dp"
+                    android:layout_marginTop="6dp"
+                    android:src="@drawable/material_icons_blackclose"/>
+            </LinearLayout>
 
         </LinearLayout>
         
-        <ImageView
-            android:id="@+id/img_barcode"
+        <LinearLayout
+            android:id="@+id/layout_barcode"
             android:layout_width="match_parent"
             android:layout_height="75.2dp"
+            android:orientation="vertical"
             android:background="#FFFFFF"
             android:layout_below="@+id/layout_coupon"
             android:layout_alignParentLeft="true"
-            android:layout_alignParentStart="true" />
+            android:layout_alignParentStart="true">
+            
+            <ImageView
+                android:id="@+id/img_barcode"
+                android:layout_width="209.4dp"
+                android:layout_height="45.9dp"
+                android:layout_marginTop="6.7dp"
+                android:layout_gravity="center"/>
+            
+            <LinearLayout
+                android:id="@+id/tv_barcode"
+                android:layout_width="wrap_content"
+                android:layout_height="15.7dp"
+                android:orientation="horizontal"
+                android:layout_marginTop="1dp"
+                android:layout_gravity="center"
+                android:textSize="13.3sp">
+
+            </LinearLayout>
+        </LinearLayout>
 
         <TextView
             android:layout_width="match_parent"
@@ -86,7 +113,7 @@
             android:textSize="5sp"
             android:text="This button is permissioned only for staff member."
             android:id="@+id/textView3"
-            android:layout_below="@+id/img_barcode"
+            android:layout_below="@+id/layout_barcode"
             android:layout_alignParentLeft="true"
             android:layout_alignParentStart="true"
             android:layout_marginTop="8dp"
