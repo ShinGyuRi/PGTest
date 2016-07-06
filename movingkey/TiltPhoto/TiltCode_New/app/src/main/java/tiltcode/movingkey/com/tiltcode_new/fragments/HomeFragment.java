@@ -12,10 +12,12 @@ import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.AlertDialog;
 import android.util.Log;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.WindowManager;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -41,7 +43,6 @@ import tiltcode.movingkey.com.tiltcode_new.library.swipe.Swipe;
 import tiltcode.movingkey.com.tiltcode_new.library.swipe.SwipeListener;
 import tiltcode.movingkey.com.tiltcode_new.library.util.JsinPreference;
 import tiltcode.movingkey.com.tiltcode_new.library.util.NetworkUtil;
-import tiltcode.movingkey.com.tiltcode_new.library.util.Util;
 import tiltcode.movingkey.com.tiltcode_new.view.ScaleView;
 
 /**
@@ -89,6 +90,7 @@ public class HomeFragment extends ParentFragment implements View.OnClickListener
     ScaleView scaleView;
     ImageView imgTilt1, imgTilt2, imgTilt3;
     ImageView dialogImg, imgMark;
+    TextView tvDlgTitle, tvDlgMessage;
 
     Context context;
 
@@ -285,7 +287,7 @@ public class HomeFragment extends ParentFragment implements View.OnClickListener
         return values[2]; // 0 은 x 각도, 1은 y각도, 2는 z각도
     }
 
-    String imgUrl, option, brandname, desc, exp;
+    String imgUrl, thumnailImgUrl;
     String _id = null;
 
     public void getResult(ArrayList<String> tiltList)    {
@@ -310,22 +312,21 @@ public class HomeFragment extends ParentFragment implements View.OnClickListener
                     public void success(CouponPhotoResult couponPhotoResult, Response response) throws NullPointerException {
                         Log.d(TAG, "getResult to string: " + couponPhotoResult.toString());
 
-                       if (couponPhotoResult.result != null) {
+                       if (couponPhotoResult.coupon != null) {
                            layoutTilt.removeView(scaleView);
                            imgMark.setImageResource(R.drawable.detected_mark);
                            tvAlert.setText(R.string.str_home_detected);
-
 
                            JSONObject jsonObject = null;
                            try {
                                jsonObject = new JSONObject((String) couponPhotoResult.getCoupon());
                                Log.d(TAG, "JSONObject.tostring: " + jsonObject.toString());
                                imgUrl = jsonObject.getString("image");
-                               option = jsonObject.getString("option");
-                               brandname = jsonObject.getString("brandname");
-                               desc = jsonObject.getString("description");
-                               exp = Util.unixTimeToDate(Long.parseLong(jsonObject.getString("exp")));
-                               Log.d(TAG, "imgUrl: " + imgUrl.replace("\\", ""));
+//                               option = jsonObject.getString("option");
+//                               brandname = jsonObject.getString("brandname");
+//                               desc = jsonObject.getString("description");
+//                               exp = Util.unixTimeToDate(Long.parseLong(jsonObject.getString("exp")));
+//                               Log.d(TAG, "imgUrl: " + imgUrl.replace("\\", ""));
                                _id = jsonObject.getString("_id");
                            } catch (JSONException e) {
                                e.printStackTrace();
@@ -337,6 +338,10 @@ public class HomeFragment extends ParentFragment implements View.OnClickListener
                            LayoutInflater inflater = getActivity().getLayoutInflater();
                            View dialogView = inflater.inflate(R.layout.dialog_coupon, null);
                            dialogImg = (ImageView) dialogView.findViewById(R.id.img_dig_coupon);
+                           tvDlgTitle = (TextView) dialogView.findViewById(R.id.tv_dlg_title);
+                           tvDlgMessage = (TextView) dialogView.findViewById(R.id.tv_dlg_message);
+                           tvDlgTitle.setText(R.string.str_dialog_title_coupon);
+                           tvDlgMessage.setText(R.string.str_dialog_message);
                            Picasso.with(getContext())
                                    .load(imgUrl.replace("\\", ""))
                                    .into(dialogImg);
@@ -346,46 +351,111 @@ public class HomeFragment extends ParentFragment implements View.OnClickListener
                                        public void onClick(DialogInterface dialog, int which) {
 //                                           couponFragment = CouponFragment.newInstance(imgUrl.replace("\\", ""), option, brandname, desc, exp);
 
-
                                            Log.d(TAG, "username: "+username + " coupon_id: "+_id);
                                            ownCouponOrPhoto(username, _id, null);
 //                                           ((CouponFragment)getTargetFragment()).getCouponList();
                                            couponFragment = CouponFragment.newInstance();
                                            ((ParentActivity) getActivity()).switchContent(couponFragment, R.id.container, true, false);
                                            touchFlag = false;
-
                                        }
                                    })
                                    .setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
                                        @Override
                                        public void onClick(DialogInterface dialog, int which) {
-                                           layoutTilt.removeAllViews();
-                                           layoutTilt.addView(scaleView);
-                                           tvAlert.setText(R.string.str_home_alert);
-                                           touchFlag = false;
+                                           onUIRefresh();
 
                                        }
                                    });
 
                            AlertDialog alertDialog = builder.create();
                            alertDialog.show();
+                           if(couponPhotoResult.photo != null) {
+                               WindowManager.LayoutParams params = alertDialog.getWindow().getAttributes();
+                               params.y = Gravity.TOP-250;
+                               alertDialog.getWindow().setAttributes(params);
+                           }
                            alertDialog.getWindow().setLayout((int) getResources().getDimension(R.dimen.dialog_width), (int) getResources().getDimension(R.dimen.dialog_height));
 
                        }
-                        if(couponPhotoResult.message != null)  {
-                           AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
-                           builder.setMessage("쿠폰이 없습니다")
-                           .setNegativeButton("확인", new DialogInterface.OnClickListener()  {
-                               @Override
-                               public void onClick(DialogInterface dialog, int which) {
-                                   touchFlag = false;
+                        if(couponPhotoResult.photo != null)  {
+                           layoutTilt.removeView(scaleView);
+                           imgMark.setImageResource(R.drawable.detected_mark);
+                           tvAlert.setText(R.string.str_home_detected);
 
-                               }
-                           });
+
+                           JSONObject jsonObject = null;
+                           try {
+                               jsonObject = new JSONObject((String) couponPhotoResult.getPhoto());
+                               Log.d(TAG, "JSONObject.tostring: " + jsonObject.toString());
+                               thumnailImgUrl = jsonObject.getString("thumnailimage");
+//                               option = jsonObject.getString("option");
+//                               brandname = jsonObject.getString("brandname");
+//                               desc = jsonObject.getString("description");
+//                               exp = Util.unixTimeToDate(Long.parseLong(jsonObject.getString("exp")));
+//                               Log.d(TAG, "imgUrl: " + imgUrl.replace("\\", ""));
+                               _id = jsonObject.getString("_id");
+                           } catch (JSONException e) {
+                               e.printStackTrace();
+                           } catch (NullPointerException e) {
+                               e.printStackTrace();
+                           }
+
+                           AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+                           LayoutInflater inflater = getActivity().getLayoutInflater();
+                           View dialogView = inflater.inflate(R.layout.dialog_coupon, null);
+                           dialogImg = (ImageView) dialogView.findViewById(R.id.img_dig_coupon);
+                            tvDlgTitle = (TextView) dialogView.findViewById(R.id.tv_dlg_title);
+                            tvDlgMessage = (TextView) dialogView.findViewById(R.id.tv_dlg_message);
+                           tvDlgTitle.setText(R.string.str_dialog_title_photo);
+                           tvDlgMessage.setText(R.string.str_dialog_message);
+                           Picasso.with(getContext())
+                                   .load(thumnailImgUrl.replace("\\", ""))
+                                   .into(dialogImg);
+                           builder.setView(dialogView)
+                                   .setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                                       @Override
+                                       public void onClick(DialogInterface dialog, int which) {
+//                                           couponFragment = CouponFragment.newInstance(imgUrl.replace("\\", ""), option, brandname, desc, exp);
+
+                                           Log.d(TAG, "username: "+username + " coupon_id: "+_id);
+                                           ownCouponOrPhoto(username, null, _id);
+//                                           ((CouponFragment)getTargetFragment()).getCouponList();
+                                           couponFragment = CouponFragment.newInstance();
+                                           ((ParentActivity) getActivity()).switchContent(couponFragment, R.id.container, true, false);
+                                           touchFlag = false;
+                                       }
+                                   })
+                                   .setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+                                       @Override
+                                       public void onClick(DialogInterface dialog, int which) {
+                                           onUIRefresh();
+
+                                       }
+                                   });
+
+                           AlertDialog alertDialog = builder.create();
+                           alertDialog.show();
+                            if(couponPhotoResult.coupon != null) {
+                                WindowManager.LayoutParams params = alertDialog.getWindow().getAttributes();
+                                params.y = Gravity.BOTTOM+250;
+                                alertDialog.getWindow().setAttributes(params);
+                            }
+                           alertDialog.getWindow().setLayout((int) getResources().getDimension(R.dimen.dialog_width), (int) getResources().getDimension(R.dimen.dialog_height));
+                       }
+                        if(couponPhotoResult.coupon == null && couponPhotoResult.photo == null) {
+                            AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+                            builder.setMessage("쿠폰이 없습니다")
+                                    .setNegativeButton("확인", new DialogInterface.OnClickListener()  {
+                                        @Override
+                                        public void onClick(DialogInterface dialog, int which) {
+                                            touchFlag = false;
+
+                                        }
+                                    });
 
                             AlertDialog alertDialog = builder.create();
                             alertDialog.show();
-                       }
+                        }
                     }
 
                     @Override
@@ -497,5 +567,14 @@ public class HomeFragment extends ParentFragment implements View.OnClickListener
         swipe.dispatchTouchEvent(event);
         Log.d(TAG, "touchFlag: "+touchFlag);
         return touchFlag;
+    }
+
+    @Override
+    public void onUIRefresh() {
+        super.onUIRefresh();
+        layoutTilt.removeAllViews();
+        layoutTilt.addView(scaleView);
+        tvAlert.setText(R.string.str_home_alert);
+        touchFlag = false;
     }
 }

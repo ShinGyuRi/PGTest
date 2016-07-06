@@ -11,7 +11,7 @@ public class CouponPhotoResult {
     @SerializedName("coupon")
     public Object coupon;
 
-    @SerializedName("photo")
+    @SerializedName("Photo")
     public Object photo;
 
     @SerializedName("result")
@@ -24,5 +24,11 @@ public class CouponPhotoResult {
         Gson gson = new Gson();
 
         return gson.toJson(coupon);
+    }
+
+    public Object getPhoto()    {
+        Gson gson = new Gson();
+
+        return  gson.toJson(photo);
     }
 }

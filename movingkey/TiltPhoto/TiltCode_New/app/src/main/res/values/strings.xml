@@ -28,6 +28,9 @@
     <string name="str_signup_tiltcode_success_message">Successfully added a new member.</string>
     <string name="str_signup_sns_overlap_message">sns login success</string>
     <string name="str_signup_tiltcode_overlap_message">username already exists.</string>
+    <string name="str_dialog_title_coupon">Incoming Coupon</string>
+    <string name="str_dialog_title_photo">Incoming Photo</string>
+    <string name="str_dialog_message">Would you like to receive it?</string>
 
     <string name="str_confirm">확인</string>
     <string name="str_cancel">취소</string>
