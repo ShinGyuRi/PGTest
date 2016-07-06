@@ -7,6 +7,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
@@ -14,8 +15,15 @@ import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
 
+import retrofit.Callback;
+import retrofit.RetrofitError;
+import retrofit.client.Response;
+import tiltcode.movingkey.com.tiltcode_new.Model.ListCouponResult;
 import tiltcode.movingkey.com.tiltcode_new.Model.ListViewItem;
 import tiltcode.movingkey.com.tiltcode_new.R;
+import tiltcode.movingkey.com.tiltcode_new.library.BaseApplication;
+import tiltcode.movingkey.com.tiltcode_new.library.util.JsinPreference;
+import tiltcode.movingkey.com.tiltcode_new.library.util.NetworkUtil;
 import tiltcode.movingkey.com.tiltcode_new.library.util.Util;
 
 /**
@@ -28,6 +36,9 @@ public class ListViewAdapter extends BaseAdapter {
 
     private RelativeLayout listView1, listView2;
     private ImageView imgOption, imgClose;
+    private LinearLayout layoutClose;
+
+    JsinPreference jsinPreference;
 
     public ListViewAdapter()    {
 
@@ -40,7 +51,7 @@ public class ListViewAdapter extends BaseAdapter {
     }
 
     @Override
-    public View getView(int position, View convertView, ViewGroup parent) {
+    public View getView(final int position, View convertView, ViewGroup parent) {
         Log.d(TAG, "getView");
 
         final int pos = position;
@@ -63,9 +74,10 @@ public class ListViewAdapter extends BaseAdapter {
         listView2 = (RelativeLayout)convertView.findViewById(R.id.listview2);
         imgOption = (ImageView)convertView.findViewById(R.id.img_circle_option);
         imgClose = (ImageView)convertView.findViewById(R.id.img_close);
+        layoutClose = (LinearLayout)convertView.findViewById(R.id.layout_close);
 
         // Data Set(listViewItemList)에서 position에 위치한 데이터 참조 획득
-        ListViewItem listViewItem = listViewItemList.get(position);
+        final ListViewItem listViewItem = listViewItemList.get(position);
 
         // 아이템 내 각 위젯에 데이터 반영
         Picasso.with(context)
@@ -82,6 +94,17 @@ public class ListViewAdapter extends BaseAdapter {
         listView2.setBackgroundResource(R.color.colorListView);
         imgOption.setImageResource(R.drawable.oval_47);
         imgClose.setImageResource(R.drawable.material_icons_blackclose);
+        layoutClose.setOnClickListener(new View.OnClickListener()   {
+
+            @Override
+            public void onClick(View v) {
+                jsinPreference = new JsinPreference(BaseApplication.getContext());
+                jsinPreference.put("couponId", listViewItem.getCouponId());
+                usedCoupon();
+                removeItem(position);
+                notifyDataSetChanged();
+            }
+        });
         return convertView;
     }
 
@@ -118,4 +141,24 @@ public class ListViewAdapter extends BaseAdapter {
     public void removeItem(int position)    {
         listViewItemList.remove(position);
     }
+
+    String username, couponId;
+
+    public void usedCoupon()    {
+        username = jsinPreference.getValue("username", "");
+        couponId = jsinPreference.getValue("couponId", "");
+        NetworkUtil.getHttpSerivce().usedCoupon(couponId, username,
+                new Callback<ListCouponResult>() {
+                    @Override
+                    public void success(ListCouponResult listCouponResult, Response response) {
+                        Log.d(TAG, "usedCoupon success");
+                    }
+
+                    @Override
+                    public void failure(RetrofitError error) {
+                        Log.d(TAG, "error.getLocalizedMessage(): "+error.getLocalizedMessage());
+                    }
+                });
+    }
+
 }

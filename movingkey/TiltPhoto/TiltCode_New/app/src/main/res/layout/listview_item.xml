@@ -50,50 +50,66 @@
         android:layout_alignParentEnd="true"
         android:id="@+id/listview2">
 
-        <LinearLayout
-            android:orientation="vertical"
+        <FrameLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_marginLeft="11.2dp"
             android:layout_weight="4">
 
-            <ImageView
-                android:id="@+id/img_close"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="4dp"
-                android:layout_marginLeft="139dp"/>
+            <LinearLayout
+                android:id="@+id/layout_close"
+                android:layout_width="35dp"
+                android:layout_height="35dp"
+                android:orientation="vertical"
+                android:layout_gravity="right">
 
-            <TextView
-                android:id="@+id/tv_brandname"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:textColor="#575756"
-                android:textSize="15sp"/>
+                <ImageView
+                    android:id="@+id/img_close"
+                    android:layout_width="12dp"
+                    android:layout_height="12dp"
+                    android:layout_gravity="right"
+                    android:layout_marginTop="4dp"
+                    android:layout_marginRight="4dp"/>
 
-            <TextView
-                android:id="@+id/tv_productname"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="3dp"
-                android:textColor="#575756"
-                android:textSize="9sp"/>
+            </LinearLayout>
 
-            <TextView
-                android:id="@+id/tv_dday"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="3dp"
-                android:textSize="8sp"/>
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_marginTop="13.3dp"
+                android:orientation="vertical">
 
-            <TextView
-                android:id="@+id/tv_expdate"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="3dp"
-                android:textColor="#575756"
-                android:textSize="6.7sp"/>
-        </LinearLayout>
+                <TextView
+                    android:id="@+id/tv_brandname"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textColor="#575756"
+                    android:textSize="15sp"/>
+
+                <TextView
+                    android:id="@+id/tv_productname"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="3dp"
+                    android:textColor="#575756"
+                    android:textSize="9sp"/>
+
+                <TextView
+                    android:id="@+id/tv_dday"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="3dp"
+                    android:textSize="8sp"/>
+
+                <TextView
+                    android:id="@+id/tv_expdate"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="3dp"
+                    android:textColor="#575756"
+                    android:textSize="6.7sp"/>
+            </LinearLayout>
+        </FrameLayout>
     </RelativeLayout>
 
 </RelativeLayout>

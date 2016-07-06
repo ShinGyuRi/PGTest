@@ -88,12 +88,6 @@ public class CouponFragment extends ParentFragment{
                 dialog.setOnShowListener(new DialogInterface.OnShowListener()   {
                     @Override
                     public void onShow(DialogInterface dia) {
-//                        dialog.setImgBrandUrl(item.getImgBrand());
-//                        dialog.setImgUrl(item.getImgProduct());
-//                        dialog.setBrandname(item.getTvBrandname());
-//                        dialog.setDesc(item.getTvProduct());
-//                        dialog.setExp(item.getTvExpDate());
-
                         dialog.setImgBrand(item.getImgBrand());
                         dialog.setImgProduct(item.getImgProduct());
                         dialog.setTvBrandname(item.getTvBrandname());
