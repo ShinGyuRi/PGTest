@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+
+    <android.support.v4.view.ViewPager
+        android:id="@+id/viewPager"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"/>
+
+
+    <!-- 영역이 이상하게 잡혀서 bottom margin 40 더줬다 -0- -->
+
+    <FrameLayout
+        android:id="@+id/layout_indicator"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal|bottom"
+        android:layout_marginBottom="@dimen/dp_27">
+
+        <kr.innisfree.playgreen.common.view.viewpagerindicator.CirclePageIndicator
+            android:id="@+id/indicator"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@android:color/transparent"
+            android:paddingBottom="@dimen/dp_1"
+            android:paddingTop="@dimen/dp_1"
+            app:fillColor="@color/c_4b9b50"
+            app:pageColor="@android:color/transparent"
+            app:radius="@dimen/dp_3"
+            app:strokeColor="@color/c_999999"/>
+    </FrameLayout>
+
+</FrameLayout>

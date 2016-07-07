@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+             android:layout_width="match_parent"
+             android:layout_height="match_parent">
+
+    <ImageView
+        android:id="@+id/img_bg"
+        android:scaleType="fitXY"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" />
+
+    <LinearLayout
+        android:id="@+id/layout_bg"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:gravity="center_horizontal"
+        android:orientation="vertical">
+
+        <kr.innisfree.playgreen.common.view.InnisfreeGothicTextView
+            android:id="@+id/txt_cover_title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/dp_76"
+            android:gravity="center"
+            android:minHeight="@dimen/dp_100"
+            android:textColor="@color/c_ffffff"
+            android:textSize="@dimen/dp_36"/>
+
+        <kr.innisfree.playgreen.common.view.InnisfreeGothicBoldTextView
+            android:id="@+id/txt_cover_hashtag"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/dp_8"
+            android:gravity="center"
+            android:minHeight="@dimen/dp_24"
+            android:textColor="@color/c_ffffff"
+            android:textSize="@dimen/dp_14"/>
+
+        <Button
+            android:id="@+id/btn_start"
+            android:layout_width="@dimen/dp_105"
+            android:layout_height="@dimen/dp_105"
+            android:visibility="gone"
+            android:layout_marginTop="@dimen/dp_50"
+            android:background="@drawable/btn_cover_play"/>
+
+        <View
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:layout_weight="1"
+            />
+
+        <kr.innisfree.playgreen.common.view.InnisfreeGothicTextView
+            android:id="@+id/txt_cover_bottom"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="@dimen/dp_60"
+            android:textColor="@color/c_ffffff"
+            android:textSize="@dimen/dp_13"/>
+
+    </LinearLayout>
+
+</FrameLayout>

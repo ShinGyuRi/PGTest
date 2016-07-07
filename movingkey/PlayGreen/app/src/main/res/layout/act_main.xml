@@ -1,0 +1,150 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+
+        <FrameLayout
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1">
+        <FrameLayout
+            android:id="@+id/container"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"></FrameLayout>
+
+        <FrameLayout
+            android:id="@+id/container_2"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"></FrameLayout>
+
+        </FrameLayout>
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/dp_0.5"
+            android:background="@color/c_bebebe"/>
+
+        <LinearLayout
+            android:id="@+id/layout_navi"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/dp_50"
+            android:orientation="horizontal">
+
+            <FrameLayout
+                android:id="@+id/layout_navi_home"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:background="@drawable/btn_color_navi">
+
+                <ImageView
+                    android:layout_width="@dimen/dp_24"
+                    android:layout_height="@dimen/dp_24"
+                    android:layout_gravity="center"
+                    android:background="@drawable/btn_navi_home"
+                    android:duplicateParentState="true"/>
+            </FrameLayout>
+
+            <View
+                android:layout_width="@dimen/dp_0.5"
+                android:layout_height="match_parent"
+                android:background="@color/c_e1e1e1"/>
+
+            <FrameLayout
+                android:id="@+id/layout_navi_timeline"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:background="@drawable/btn_color_navi">
+
+                <ImageView
+                    android:layout_width="@dimen/dp_24"
+                    android:layout_height="@dimen/dp_24"
+                    android:layout_gravity="center"
+                    android:background="@drawable/btn_navi_timeline"
+                    android:duplicateParentState="true"/>
+            </FrameLayout>
+
+            <View
+                android:layout_width="@dimen/dp_0.5"
+                android:layout_height="match_parent"
+                android:background="@color/c_e1e1e1"/>
+
+            <FrameLayout
+                android:id="@+id/layout_navi_camera"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:background="@drawable/btn_color_navi">
+
+                <ImageView
+                    android:layout_width="@dimen/dp_24"
+                    android:layout_height="@dimen/dp_24"
+                    android:layout_gravity="center"
+                    android:background="@drawable/btn_navi_camera"
+                    android:duplicateParentState="true"/>
+            </FrameLayout>
+
+            <View
+                android:layout_width="@dimen/dp_0.5"
+                android:layout_height="match_parent"
+                android:background="@color/c_e1e1e1"/>
+
+            <FrameLayout
+                android:id="@+id/layout_navi_mypage"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:background="@drawable/btn_color_navi">
+
+                <ImageView
+                    android:layout_width="@dimen/dp_24"
+                    android:layout_height="@dimen/dp_24"
+                    android:layout_gravity="center"
+                    android:background="@drawable/btn_navi_mypage"
+                    android:duplicateParentState="true"/>
+
+                <kr.innisfree.playgreen.common.view.InnisfreeGothicBoldTextView
+                    android:id="@+id/txt_badge"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:layout_marginBottom="@dimen/dp_10"
+                    android:layout_marginLeft="@dimen/dp_10"
+                    android:background="@drawable/bg_badge"
+                    android:duplicateParentState="true"
+                    android:gravity="center"
+                    android:paddingBottom="@dimen/dp_2"
+                    android:paddingLeft="@dimen/dp_5"
+                    android:paddingRight="@dimen/dp_5"
+                    android:paddingTop="@dimen/dp_2"
+                    android:text="1"
+                    android:textColor="@color/c_ffffff"
+                    android:textSize="@dimen/dp_10"
+                    android:visibility="gone"/>
+            </FrameLayout>
+        </LinearLayout>
+
+    </LinearLayout>
+
+    <FrameLayout
+        android:id="@+id/container_full"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"></FrameLayout>
+
+    <!--
+    <include
+        layout="@layout/view_guide"
+        android:visibility="gone"
+        android:id="@+id/layout_guide"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"/>
+        -->
+
+</FrameLayout>

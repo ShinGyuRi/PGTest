@@ -1,0 +1,841 @@
+package kr.innisfree.playgreen.fragment.camera;
+
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.graphics.Point;
+import android.graphics.Rect;
+import android.hardware.Camera;
+import android.media.MediaRecorder;
+import android.os.Build;
+import android.os.Bundle;
+import android.os.Handler;
+import android.support.annotation.Nullable;
+import android.support.v4.app.Fragment;
+import android.support.v7.widget.Toolbar;
+import android.view.LayoutInflater;
+import android.view.SurfaceHolder;
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.CheckBox;
+import android.widget.FrameLayout;
+import android.widget.ImageButton;
+import android.widget.LinearLayout;
+import android.widget.TextView;
+
+import com.ParentAct;
+import com.ParentFrag;
+import com.android.volley.VolleyError;
+import com.moyusoft.util.DeviceUtil;
+import com.moyusoft.util.JYLog;
+import com.moyusoft.util.TextUtil;
+import com.volley.network.NetworkConstantUtil;
+import com.volley.network.NetworkConstantUtil.APIKEY;
+import com.volley.network.dto.NetworkJson;
+
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Timer;
+import java.util.TimerTask;
+
+import kr.innisfree.playgreen.R;
+import kr.innisfree.playgreen.activity.CameraActivity;
+import kr.innisfree.playgreen.dialog.CinemagraphInfoDialog;
+import kr.innisfree.playgreen.widget.CameraSurfaceView;
+
+public class CameraFrag extends ParentFrag implements View.OnClickListener, SurfaceHolder.Callback {
+
+    private final static String TAG = "CameraFrag";
+
+    public static final int TYPE_CAMERA = 0;
+    public static final int TYPE_CINEMAGRAPH = 1;
+    public static final int TYPE_LIBRARY = 2;
+    public static final int TYPE_CAMERA_FILTER = 3;
+    public static final int TYPE_CINEMAGRAPH_OVERAY = 4;
+    public static final int TYPE_CINEMAGRAPH_FIRST_FRAME = 5;
+
+    private int typeCamera = TYPE_CAMERA;
+    private int typeSelectedCamera = Camera.CameraInfo.CAMERA_FACING_BACK;
+
+    private Toolbar mToolbar;
+    private TextView txtTitle;
+    private CheckBox cbFlash;
+    private FrameLayout flWrapperFooter;
+    private LinearLayout llWrapperFooterCamera, llWrapperFooterCinemagraph;
+    private ImageButton btnShotCamera, btnShotCinemagraph;
+
+    /**
+     * 수정본
+     **/
+    private Camera camera;
+    private CameraSurfaceView cameraSurfaceView;
+    private SurfaceHolder surfaceHolder;
+    private Camera.Size mOptimalSize;
+    private Camera.Size mOptimalVideoSize;
+    private Camera.Size mOptimalPictureSize;
+    private boolean isPreviewing = false;
+    private boolean isTaking = false;
+    private boolean isRecording = false;
+    private MediaRecorder mediaRecorder;
+    private int duration = 10;
+    private String videoAbsolutePath = null;
+    private String phtoAbsolutePath = null;
+    private boolean cameraConfigured = false;
+    private FrameLayout flSurfaceview;
+    private Handler uiHandler;
+
+    private CameraActivity cameraActivity;
+
+    public CameraFrag() {
+    }
+
+    public static CameraFrag newInstance() {
+        CameraFrag frag = new CameraFrag();
+        return frag;
+    }
+
+    public int getTypeCamera() {
+        return typeCamera;
+    }
+
+    public void setTypeCamera(int typeCamera) {
+        this.typeCamera = typeCamera;
+//        getActivity().runOnUiThread(new Runnable() {
+//            @Override
+//            public void run() {
+//                refreshTypeCamera();
+//                setSelectedCamera(surfaceHolder);
+//            }
+//        });
+        refreshTypeCamera();
+        setSelectedCamera(surfaceHolder);
+    }
+
+    @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+
+        if (getActivity() instanceof CameraActivity)
+            cameraActivity = (CameraActivity) getActivity();
+
+        uiHandler = new Handler();
+    }
+
+    @Nullable
+    @Override
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        View view = inflater.inflate(R.layout.frag_camera, null);
+
+        /** Init Toolbar*/
+        mToolbar = (Toolbar) view.findViewById(R.id.toolbar);
+        txtTitle = (TextView) view.findViewById(R.id.txt_title);
+        cbFlash = (CheckBox) view.findViewById(R.id.camera_cb_flash);
+
+        /** **/
+        flSurfaceview = (FrameLayout) view.findViewById(R.id.camera_fl_surfaceview);
+
+        FrameLayout.LayoutParams lpSv = new FrameLayout.LayoutParams(cameraActivity.svWidth, cameraActivity.svHeight);
+        cameraSurfaceView = new CameraSurfaceView(getActivity());
+        flSurfaceview.addView(cameraSurfaceView, lpSv);
+
+        cameraSurfaceView.setCameraFrag(this);
+        surfaceHolder = cameraSurfaceView.getHolder();
+        surfaceHolder.addCallback(this);
+        surfaceHolder.setType(SurfaceHolder.SURFACE_TYPE_PUSH_BUFFERS);
+
+        /** **/
+        flWrapperFooter = (FrameLayout) view.findViewById(R.id.camera_footer_wrapper);
+        llWrapperFooterCamera = (LinearLayout) view.findViewById(R.id.camera_footer_camera);
+        llWrapperFooterCinemagraph = (LinearLayout) view.findViewById(R.id.camera_footer_cinemagraph);
+
+        btnShotCamera = (ImageButton) view.findViewById(R.id.camera_btn_camera);
+        btnShotCinemagraph = (ImageButton) view.findViewById(R.id.camera_btn_cinemagraph);
+
+        view.findViewById(R.id.camera_imgbtn_close).setOnClickListener(this);
+        view.findViewById(R.id.camera_btn_flash).setOnClickListener(this);
+        view.findViewById(R.id.camera_imgbtn_rotate).setOnClickListener(this);
+        view.findViewById(R.id.camera_btn_cinemagraph_info).setOnClickListener(this);
+        btnShotCamera.setOnClickListener(this);
+        btnShotCinemagraph.setOnClickListener(this);
+
+        refreshTypeCamera();
+
+        return view;
+    }
+
+
+    @Override
+    public void onPause() {
+        super.onPause();
+
+        if (isRecording) {
+//            mediaRecorder.stop();
+            releaseMediaRecorder();
+        }
+
+        cancelTimer();
+
+    }
+
+    @Override
+    public void onClick(View v) {
+        switch (v.getId()) {
+            case R.id.camera_imgbtn_close:
+                ((CameraActivity) getActivity()).onBackPressed();
+                break;
+            case R.id.camera_btn_flash:
+                if (!isRecording || !isTaking)
+                    setIsFlash();
+                break;
+            case R.id.camera_imgbtn_rotate:
+                if (!isRecording || !isTaking) {
+                    if (typeSelectedCamera == Camera.CameraInfo.CAMERA_FACING_BACK) {
+                        typeSelectedCamera = Camera.CameraInfo.CAMERA_FACING_FRONT;
+                    } else {
+                        typeSelectedCamera = Camera.CameraInfo.CAMERA_FACING_BACK;
+                    }
+                    setSelectedCamera(surfaceHolder);
+                }
+                break;
+            case R.id.camera_btn_camera:
+                if (!isTaking)
+                    doTakePicture();
+                break;
+            case R.id.camera_btn_cinemagraph:
+                if (!isRecording) {
+                    JYLog.D("TAG::recordVideo", new Throwable());
+                    startRecordingVideo();
+                } else {
+                    JYLog.D("TAG::stopRecordingVideo", new Throwable());
+                    stopRecordingVideo();
+                }
+                break;
+            case R.id.camera_btn_cinemagraph_info:
+                Fragment cinemagraphInfoDialog = CinemagraphInfoDialog.newInstance();
+                ((ParentAct) getActivity()).dialogShow(cinemagraphInfoDialog, "cinemagraphInfoDialog");
+                break;
+        }
+    }
+
+    @Override
+    public void onNetworkResult(int idx, NetworkJson json) {
+        super.onNetworkResult(idx, json);
+        switch (idx) {
+            case APIKEY.NOTIFY_REGIST:
+                getActivity().onBackPressed();
+                break;
+        }
+    }
+
+    @Override
+    public void onNetworkError(int idx, VolleyError error, NetworkJson json) {
+        super.onNetworkError(idx, error, json);
+        if (json == null || json.RESULT_CODE == null) return;
+        switch (json.RESULT_CODE) {
+            case NetworkConstantUtil.NETWORK_RESULT_CODE.NOT_EXIST_DATA:
+                break;
+        }
+    }
+
+    private Camera.Size getOptimalSize(List<Camera.Size> sizes, int w, int h) {
+        final double ASPECT_TOLERANCE = 0.1;
+        double targetRatio = (double) w / h; //1.3333333333
+        if (sizes == null) return null;
+
+        Camera.Size optimalSize = null;
+        double minDiff = Double.MAX_VALUE;
+
+        int targetHeight = h;
+
+        // Try to find an size match aspect ratio and size
+        for (Camera.Size size : sizes) {
+            double ratio = (double) size.width / size.height;
+            if (Math.abs(ratio - targetRatio) > ASPECT_TOLERANCE) continue;
+            if (Math.abs(size.height - targetHeight) < minDiff) {
+                optimalSize = size;
+                minDiff = Math.abs(size.height - targetHeight);
+            }
+        }
+
+        // Cannot find the one match the aspect ratio, ignore the requirement
+        if (optimalSize == null) {
+            minDiff = Double.MAX_VALUE;
+            for (Camera.Size size : sizes) {
+                if (Math.abs(size.height - targetHeight) < minDiff) {
+                    optimalSize = size;
+                    minDiff = Math.abs(size.height - targetHeight);
+                }
+            }
+        }
+
+        return optimalSize;
+    }
+
+    private void refreshTypeCamera() {
+
+        if (llWrapperFooterCinemagraph == null || llWrapperFooterCinemagraph == null)
+            return;
+
+        llWrapperFooterCamera.setVisibility(View.GONE);
+        llWrapperFooterCinemagraph.setVisibility(View.GONE);
+        cbFlash.setChecked(false);
+
+        switch (typeCamera) {
+            case TYPE_CINEMAGRAPH:
+                llWrapperFooterCinemagraph.setVisibility(View.VISIBLE);
+                txtTitle.setText(getString(R.string.str_camera_tab_cinemagraph));
+                break;
+            default:
+                llWrapperFooterCamera.setVisibility(View.VISIBLE);
+                txtTitle.setText(getString(R.string.str_camera_tab_camera));
+                break;
+        }
+
+    }
+
+    public void setSelectedCamera(SurfaceHolder holder) {
+        if (camera != null) {
+            camera.stopPreview();
+            camera.setPreviewCallback(null);
+            camera.release();
+            camera = null;
+            isPreviewing = false;
+        }
+
+//        cbFlash.setChecked(false);
+        openCamera(typeSelectedCamera, surfaceHolder);
+
+        if (camera == null)
+            return;
+
+        try {
+            Camera.Parameters parameters = camera.getParameters();
+
+            List<Camera.Size> previewSizes = parameters.getSupportedPreviewSizes();
+//            for (Camera.Size size : previewSizes) {
+//                JYLog.D(TAG + "::size::previewSizes::width::" + size.width, new Throwable());
+//                JYLog.D(TAG + "::size::previewSizes::height::" + size.height, new Throwable());
+//            }
+            List<Camera.Size> pictureSizes = parameters.getSupportedPictureSizes();
+//            for (Camera.Size size : pictureSizes) {
+//                JYLog.D(TAG + "::size::pictureSizes::width::" + size.width, new Throwable());
+//                JYLog.D(TAG + "::size::pictureSizes::height::" + size.height, new Throwable());
+//            }
+
+//            JYLog.D(TAG + "::size::videoSizes::width::" + cameraActivity.svWidth, new Throwable());
+//            JYLog.D(TAG + "::size::videoSizes::height::" + cameraActivity.svHeight, new Throwable());
+
+            List<Camera.Size> videoSizes = parameters.getSupportedVideoSizes();
+//            for (Camera.Size size : videoSizes) {
+//                JYLog.D(TAG + "::size::videoSizes::width::" + size.width, new Throwable());
+//                JYLog.D(TAG + "::size::videoSizes::height::" + size.height, new Throwable());
+//            }
+
+            mOptimalSize = getOptimalSize(previewSizes, cameraActivity.svHeight, cameraActivity.svWidth);
+            mOptimalPictureSize = getOptimalSize(pictureSizes, cameraActivity.svHeight, cameraActivity.svWidth);
+            mOptimalVideoSize = getOptimalSize(videoSizes, cameraActivity.svHeight, cameraActivity.svWidth);
+
+            JYLog.D(TAG + "::size::surfaceview::width::" + cameraActivity.svWidth, new Throwable());
+            JYLog.D(TAG + "::size::surfaceview::height::" + cameraActivity.svHeight, new Throwable());
+            JYLog.D(TAG + "::size::optimalSize::width::" + mOptimalSize.width, new Throwable());
+            JYLog.D(TAG + "::size::optimalSize::height::" + mOptimalSize.height, new Throwable());
+            JYLog.D(TAG + "::size::mOptimalPictureSize::width::" + mOptimalPictureSize.width, new Throwable());
+            JYLog.D(TAG + "::size::mOptimalPictureSize::height::" + mOptimalPictureSize.height, new Throwable());
+            JYLog.D(TAG + "::size::mOptimalVideoSize::width::" + mOptimalVideoSize.width, new Throwable());
+            JYLog.D(TAG + "::size::mOptimalVideoSize::height::" + mOptimalVideoSize.height, new Throwable());
+
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.FROYO) {
+                camera.setDisplayOrientation(90);
+            } else {
+                parameters.setRotation(90);
+            }
+
+            if (typeSelectedCamera != Camera.CameraInfo.CAMERA_FACING_FRONT) {
+                if (typeCamera == TYPE_CINEMAGRAPH) {
+                    parameters.setFocusMode(Camera.Parameters.FOCUS_MODE_CONTINUOUS_VIDEO);
+                } else {
+                    parameters.setFocusMode(Camera.Parameters.FOCUS_MODE_CONTINUOUS_PICTURE);
+                }
+            }
+
+            parameters.setPreviewSize(mOptimalSize.width, mOptimalSize.height);
+            parameters.setPictureSize(mOptimalPictureSize.width, mOptimalPictureSize.height);
+
+            camera.setParameters(parameters);
+            camera.setPreviewDisplay(holder);
+
+        } catch (IOException exception) {
+            camera.release();
+        }
+
+        camera.startPreview();
+        isPreviewing = true;
+
+    }
+
+    /**
+     * new function
+     **/
+
+    private void setIsFlash() {
+
+        if (typeSelectedCamera == Camera.CameraInfo.CAMERA_FACING_BACK) {
+            cbFlash.setChecked(!cbFlash.isChecked());
+        } else {
+            cbFlash.setChecked(false);
+        }
+
+        if (camera != null) {
+            camera.stopPreview();
+            Camera.Parameters parameters = camera.getParameters();
+            if (cbFlash.isChecked()) {
+                if (typeCamera == TYPE_CAMERA) {
+                    parameters.setFlashMode(Camera.Parameters.FLASH_MODE_ON);
+                } else {
+                    parameters.setFlashMode(Camera.Parameters.FLASH_MODE_TORCH);
+                }
+            } else {
+                parameters.setFlashMode(Camera.Parameters.FLASH_MODE_OFF);
+            }
+            camera.setParameters(parameters);
+            camera.startPreview();
+        }
+    }
+
+    @Override
+    public void surfaceCreated(SurfaceHolder holder) {
+        JYLog.D("TAG::surfaceCreated()::", new Throwable());
+
+        openCamera(typeSelectedCamera, holder);
+
+        /** to detect face **/
+//        camera.setFaceDetectionListener(faceDetectionListener);
+    }
+
+    @Override
+    public void surfaceChanged(SurfaceHolder holder, int format, int width, int height) {
+        JYLog.D(TAG + "::surfaceHolder::width::" + width, new Throwable());
+        JYLog.D(TAG + "::surfaceHolder::height::" + height, new Throwable());
+
+        setSelectedCamera(holder);
+
+    }
+
+    @Override
+    public void surfaceDestroyed(SurfaceHolder holder) {
+        if (camera == null)
+            return;
+//        camera.stopFaceDetection();
+        camera.stopPreview();
+        camera.release();
+        camera = null;
+        isPreviewing = false;
+    }
+
+    private void openCamera(int typeSelectedCamera, SurfaceHolder holder) {
+        Camera.CameraInfo cameraInfo = new Camera.CameraInfo();
+        int cameraCount = Camera.getNumberOfCameras();
+        JYLog.D("TAG::CameraNumber: " + cameraCount, new Throwable());
+        for (int i = 0; i < cameraCount; i++) {
+            Camera.getCameraInfo(i, cameraInfo);
+            if (cameraInfo.facing == typeSelectedCamera) {
+                try {
+                    camera = Camera.open(i);
+                    camera.setPreviewDisplay(holder);
+                } catch (RuntimeException e) {
+                    JYLog.D("TAG::Camera failed to open: " + e.getLocalizedMessage() + "::" + i, new Throwable());
+                } catch (IOException e) {
+                    e.printStackTrace();
+                    JYLog.D("TAG::Camera failed to be showed : " + e.getLocalizedMessage() + "::" + i, new Throwable());
+                }
+                this.typeSelectedCamera = typeSelectedCamera;
+            }
+        }
+    }
+
+    Camera.AutoFocusCallback myAutoFocusCallback = new Camera.AutoFocusCallback() {
+
+        @Override
+        public void onAutoFocus(boolean arg0, Camera arg1) {
+            // TODO Auto-generated method stub
+            if (arg0) {
+//                buttonTakePicture.setEnabled(true);
+                isTaking = false;
+                camera.cancelAutoFocus();
+            }
+
+            float focusDistances[] = new float[3];
+            arg1.getParameters().getFocusDistances(focusDistances);
+//            prompt.setText("Optimal Focus Distance(meters): "
+//                    + focusDistances[Camera.Parameters.FOCUS_DISTANCE_OPTIMAL_INDEX]);
+
+        }
+    };
+
+    public void touchFocus(final int posX, final int posY) {
+
+        if (isTaking)
+            return;
+
+        if (isRecording)
+            return;
+
+        if (typeCamera == TYPE_CAMERA) {
+            isTaking = true;
+        } else {
+            isRecording = true;
+        }
+
+//        camera.stopFaceDetection();
+
+//    	//Convert from View's width and height to +/- 1000
+//		final Rect targetFocusRect = new Rect(
+//				tfocusRect.left * 2000/drawingView.getWidth() - 1000,
+//				tfocusRect.top * 2000/drawingView.getHeight() - 1000,
+//				tfocusRect.right * 2000/drawingView.getWidth() - 1000,
+//				tfocusRect.bottom * 2000/drawingView.getHeight() - 1000);
+//
+//		final List<Camera.Area> focusList = new ArrayList<Camera.Area>();
+//		Camera.Area focusArea = new Camera.Area(targetFocusRect, 1000);
+//		focusList.add(focusArea);
+//
+//		Parameters para = camera.getParameters();
+//		para.setFocusAreas(focusList);
+//		para.setMeteringAreas(focusList);
+//		camera.setParameters(para);
+
+        setAutoFocusArea(camera, posX, posY, 128, true, new Point(cameraSurfaceView.getWidth(), cameraSurfaceView.getHeight()));
+
+        camera.autoFocus(myAutoFocusCallback);
+
+//		drawingView.setHaveTouch(true, tfocusRect);
+//  		drawingView.invalidate();
+    }
+
+    private void setAutoFocusArea(Camera camera, int posX, int posY, int focusRange, boolean flag, Point point) {
+        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.ICE_CREAM_SANDWICH) {
+            /** 영역을 지정해서 포커싱을 맞추는 기능은 ICS 이상 버전에서만 지원됩니다.  **/
+            return;
+        }
+
+        if (posX < 0 || posY < 0) {
+            setArea(camera, null);
+            return;
+        }
+
+        int touchPointX;
+        int touchPointY;
+        int endFocusY;
+        int startFocusY;
+
+        if (!flag) {
+            /** Camera.setDisplayOrientation()을 이용해서 영상을 세로로 보고 있는 경우. **/
+            touchPointX = point.y >> 1;
+            touchPointY = point.x >> 1;
+
+            startFocusY = posX;
+            endFocusY = posY;
+        } else {
+            /** Camera.setDisplayOrientation()을 이용해서 영상을 가로로 보고 있는 경우. **/
+            touchPointX = point.x >> 1;
+            touchPointY = point.y >> 1;
+
+            startFocusY = posY;
+            endFocusY = point.x - posX;
+        }
+
+        float startFocusX = 1000F / (float) touchPointY;
+        float endFocusX = 1000F / (float) touchPointX;
+
+        startFocusX = (int) (startFocusX * (float) (startFocusY - touchPointY)) - focusRange;
+        startFocusY = (int) (endFocusX * (float) (endFocusY - touchPointX)) - focusRange;
+        endFocusX = startFocusX + focusRange;
+        endFocusY = startFocusY + focusRange;
+
+        if (startFocusX < -1000)
+            startFocusX = -1000;
+
+        if (startFocusY < -1000)
+            startFocusY = -1000;
+
+        if (endFocusX > 1000) {
+            endFocusX = 1000;
+        }
+
+        if (endFocusY > 1000) {
+            endFocusY = 1000;
+        }
+
+        Rect rect = new Rect((int) startFocusX, (int) startFocusY, (int) endFocusX, (int) endFocusY);
+        ArrayList<Camera.Area> arraylist = new ArrayList<Camera.Area>();
+        arraylist.add(new Camera.Area(rect, 1000));
+
+        setArea(camera, arraylist);
+    }
+
+    private void setArea(Camera camera, List<Camera.Area> list) {
+
+        if (camera == null)
+            return;
+
+        Camera.Parameters parameters;
+        parameters = camera.getParameters();
+        if (parameters.getMaxNumFocusAreas() > 0) {
+            parameters.setFocusAreas(list);
+        }
+
+        if (parameters.getMaxNumMeteringAreas() > 0) {
+            parameters.setMeteringAreas(list);
+        }
+
+        parameters.setFocusMode(Camera.Parameters.FOCUS_MODE_MACRO);
+        camera.setParameters(parameters);
+    }
+
+    private Camera.PictureCallback pictureCallback = new Camera.PictureCallback() {
+        @Override
+        public void onPictureTaken(final byte[] data, Camera camera) {
+            try {
+
+                Thread thread = new Thread(new Runnable() {
+                    @Override
+                    public void run() {
+                        Bitmap bm = cameraActivity.mByteToBitmapConvert(data);
+
+                        switch (CameraActivity.mOrientation) {
+                            case CameraActivity.ORIENTATION_PORTRAIT_NORMAL:
+                                if (typeSelectedCamera == Camera.CameraInfo.CAMERA_FACING_FRONT) {
+                                    bm = CameraActivity.rotate(bm, -90);
+                                } else {
+                                    bm = CameraActivity.rotate(bm, 90);
+                                }
+                                break;
+                            case CameraActivity.ORIENTATION_LANDSCAPE_NORMAL:
+                                bm = CameraActivity.rotate(bm, 0);
+                                break;
+                            case CameraActivity.ORIENTATION_PORTRAIT_INVERTED:
+                                if (typeSelectedCamera == Camera.CameraInfo.CAMERA_FACING_FRONT) {
+                                    bm = CameraActivity.rotate(bm, 90);
+                                } else {
+                                    bm = CameraActivity.rotate(bm, -90);
+                                }
+                                break;
+                            case CameraActivity.ORIENTATION_LANDSCAPE_INVERTED:
+                                bm = CameraActivity.rotate(bm, 180);
+                                break;
+                        }
+
+                        String path =
+                                CameraActivity.savaImageToSdcard(
+                                        TYPE_CAMERA,
+                                        CameraActivity.getOutputMediaFile(TYPE_CAMERA),
+                                        bm,
+                                        getActivity());
+                        isTaking = false;
+                        ((CameraActivity) getActivity()).gotoToolFrag(CameraFrag.TYPE_CAMERA, path);
+
+                    }
+                });
+                thread.start();
+
+            } catch (Exception er) {
+
+            }
+        }
+    };
+
+
+    public void doTakePicture() {
+        isTaking = true;
+        if (camera != null) {
+            camera.takePicture(null, null, pictureCallback);
+        }
+    }
+
+
+    public boolean startRecordingVideo() {
+
+        if (camera == null)
+            return false;
+
+        mediaRecorder = new MediaRecorder();
+        camera.lock();           // lock camera for later use
+
+        // Step 1: Unlock and set camera to MediaRecorder
+        camera.unlock();
+
+        mediaRecorder.setCamera(camera);
+        mediaRecorder.setPreviewDisplay(surfaceHolder.getSurface());
+
+        // Step 2: Set sources
+        mediaRecorder.setVideoSource(MediaRecorder.VideoSource.DEFAULT);
+        mediaRecorder.setOutputFormat(MediaRecorder.OutputFormat.DEFAULT);
+//        mediaRecorder.setAudioSource(MediaRecorder.AudioSource.MIC);
+//        mediaRecorder.setVideoSource(MediaRecorder.VideoSource.CAMERA);
+//        mediaRecorder.setOutputFormat(MediaRecorder.OutputFormat.MPEG_4);
+////        mediaRecorder.setAudioSource(MediaRecorder.AudioEncoder.AMR_NB);
+////        mediaRecorder.setVideoEncoder(MediaRecorder.VideoEncoder.DEFAULT);
+////        mediaRecorder.setVideoEncoder(MediaRecorder.VideoEncoder.H264);
+////        mediaRecorder.setVideoEncoder(MediaRecorder.VideoEncoder.MPEG_4_SP);
+////        mediaRecorder.setVideoEncoder(MediaRecorder.VideoEncoder.H263);
+////        mediaRecorder.setVideoEncoder(MediaRecorder.VideoEncoder.VP8);
+//        // v10 : DEFAULT, H263, MPEG_4_SP
+//        // s6 : DEFAULT, H264
+//        // mi (HM 2LTE-CU) : DEFAULT, H264, MPEG_4_SP, H263
+//        // mi (HM 2LTE-CU) : DEFAULT, H264, MPEG_4_SP, H263
+//        JYLog.D(TAG + "::device::" + DeviceUtil.getDeviceModel(), new Throwable());
+        if (!TextUtil.isNull(DeviceUtil.getDeviceModel()) && DeviceUtil.getDeviceModel().startsWith("LG-F600")) {
+//            mediaRecorder.setVideoEncoder(MediaRecorder.VideoEncoder.H263);
+            mediaRecorder.setVideoEncoder(MediaRecorder.VideoEncoder.DEFAULT);
+        } else {
+            mediaRecorder.setVideoEncoder(MediaRecorder.VideoEncoder.H264);
+        }
+//        mediaRecorder.setVideoFrameRate(25);
+        mediaRecorder.setVideoEncodingBitRate(3000000);
+        mediaRecorder.setVideoSize(mOptimalVideoSize.width, mOptimalVideoSize.height);
+
+        if (typeSelectedCamera == Camera.CameraInfo.CAMERA_FACING_BACK) {
+            mediaRecorder.setOrientationHint(90);
+        } else {
+            mediaRecorder.setOrientationHint(270);
+        }
+
+        // Step 3: Set a CamcorderProfile (requires API Level 8 or higher)
+//        mediaRecorder.setProfile(CamcorderProfile.get(CamcorderProfile.QUALITY_480P));
+
+        // Step 4: Set output file
+        videoAbsolutePath = cameraActivity.getOutputMediaFile(TYPE_CINEMAGRAPH).toString();
+        mediaRecorder.setOutputFile(videoAbsolutePath);
+
+        // Step 5: Set the preview output
+//        mediaRecorder.setPreviewDisplay(cameraSurfaceView.getHolder().getSurface());
+
+        // Step 6: Prepare configured MediaRecorder
+
+        try {
+            mediaRecorder.prepare();
+            mediaRecorder.start();
+            isRecording = true;
+            startTimer();
+        } catch (IllegalStateException e) {
+            JYLog.D(TAG + "::IllegalStateException preparing MediaRecorder: " + e.getMessage(), new Throwable());
+            releaseMediaRecorder();
+            return false;
+        } catch (IOException e) {
+            JYLog.D(TAG + "::IOException preparing MediaRecorder: " + e.getMessage(), new Throwable());
+            releaseMediaRecorder();
+            return false;
+        }
+        return true;
+    }
+
+    private void stopRecordingVideo() {
+        if (isRecording) {
+            if (duration <= 0) {
+                mediaRecorder.stop();
+                releaseMediaRecorder();
+                isRecording = false;
+                cancelTimer();
+                if (!TextUtil.isNull(videoAbsolutePath)) {
+                    ((CameraActivity) getActivity()).gotoToolFrag(CameraFrag.TYPE_CINEMAGRAPH, videoAbsolutePath);
+                    videoAbsolutePath = null;
+                }
+            } else {
+//                Toast.makeText(getActivity(), "최대 10초 이상 촬영을 하여야합니다.", Toast.LENGTH_SHORT).show();
+            }
+        }
+    }
+
+    public void releaseMediaRecorder() {
+        if (mediaRecorder != null) {
+            mediaRecorder.reset();   // clear recorder configuration
+            mediaRecorder.release(); // release the recorder object
+            mediaRecorder = null;
+            camera.lock();// lock camera for later use
+        }
+    }
+
+    private Timer timer = null;
+    private TimerTask measureDuration = null;
+
+    private boolean isTimerStarting() {
+        return (timer != null && measureDuration != null);
+    }
+
+    private void startTimer() {
+        cancelTimer();
+        timer = new Timer();
+        measureDuration = new TimerTask() {
+            @Override
+            public void run() {
+                duration--;
+                JYLog.D("TAG::duration::" + duration, new Throwable());
+                if (duration == 0) {
+                    /** 자동으로 화면 넘어감. **/
+                    stopRecordingVideo();
+                }
+                changeBitmapInBtnShotCineamgraph(duration);
+                /** change image **/
+
+            }
+        };
+        timer.schedule(measureDuration, 1000, 1000);
+    }
+
+    private void cancelTimer() {
+        if (isTimerStarting()) {
+            duration = 10;
+            changeBitmapInBtnShotCineamgraph(duration);
+            timer.cancel();
+            measureDuration.cancel();
+            timer = null;
+            measureDuration = null;
+        }
+    }
+
+    private void changeBitmapInBtnShotCineamgraph(final int duration) {
+        final BitmapFactory.Options options = new BitmapFactory.Options();
+        options.inSampleSize = 1;
+        uiHandler.post(new Runnable() {
+            @Override
+            public void run() {
+                switch (duration) {
+                    case 10:
+                        btnShotCinemagraph.setImageBitmap(BitmapFactory.decodeResource(getResources(), R.drawable.btn_cg_shoot01, options));
+                        break;
+                    case 9:
+                        btnShotCinemagraph.setImageBitmap(BitmapFactory.decodeResource(getResources(), R.drawable.btn_cg_shoot02, options));
+                        break;
+                    case 8:
+                        btnShotCinemagraph.setImageBitmap(BitmapFactory.decodeResource(getResources(), R.drawable.btn_cg_shoot03, options));
+                        break;
+                    case 7:
+                        btnShotCinemagraph.setImageBitmap(BitmapFactory.decodeResource(getResources(), R.drawable.btn_cg_shoot04, options));
+                        break;
+                    case 6:
+                        btnShotCinemagraph.setImageBitmap(BitmapFactory.decodeResource(getResources(), R.drawable.btn_cg_shoot05, options));
+                        break;
+                    case 5:
+                        btnShotCinemagraph.setImageBitmap(BitmapFactory.decodeResource(getResources(), R.drawable.btn_cg_shoot06, options));
+                        break;
+                    case 4:
+                        btnShotCinemagraph.setImageBitmap(BitmapFactory.decodeResource(getResources(), R.drawable.btn_cg_shoot07, options));
+                        break;
+                    case 3:
+                        btnShotCinemagraph.setImageBitmap(BitmapFactory.decodeResource(getResources(), R.drawable.btn_cg_shoot08, options));
+                        break;
+                    case 2:
+                        btnShotCinemagraph.setImageBitmap(BitmapFactory.decodeResource(getResources(), R.drawable.btn_cg_shoot09, options));
+                        break;
+                    case 1:
+                        btnShotCinemagraph.setImageBitmap(BitmapFactory.decodeResource(getResources(), R.drawable.btn_cg_shoot10, options));
+                        break;
+//            default:
+//                btnShotCinemagraph.setImageBitmap(BitmapFactory.decodeResource(getResources(), R.drawable.btn_cg_shoot10, options));
+//                break;
+                }
+            }
+        });
+    }
+
+}

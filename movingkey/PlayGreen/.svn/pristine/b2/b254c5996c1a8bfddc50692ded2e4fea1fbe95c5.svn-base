@@ -1,0 +1,159 @@
+package kr.innisfree.playgreen.ImageFilter.glideTransformation;
+
+import android.content.Context;
+import android.graphics.Bitmap;
+import android.graphics.Matrix;
+
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.Transformation;
+import com.bumptech.glide.load.engine.Resource;
+import com.bumptech.glide.load.engine.bitmap_recycle.BitmapPool;
+import com.bumptech.glide.load.resource.bitmap.BitmapResource;
+
+import jp.co.cyberagent.android.gpuimage.GPUImage;
+import jp.co.cyberagent.android.gpuimage.GPUImageColorBalanceFilter;
+import jp.co.cyberagent.android.gpuimage.GPUImageExposureFilter;
+import jp.co.cyberagent.android.gpuimage.GPUImageGammaFilter;
+import jp.co.cyberagent.android.gpuimage.GPUImageHueFilter;
+import jp.co.cyberagent.android.gpuimage.GPUImageSaturationFilter;
+import jp.co.cyberagent.android.gpuimage.GPUImageToneCurveFilter;
+
+/**
+ * Created by wonderland on 16. 4. 14..
+ */
+public class ColdorichidTransformation implements Transformation<Bitmap> {
+
+    private Context mContext;
+    private BitmapPool mBitmapPool;
+
+    public ColdorichidTransformation(Context context) {
+        this(context, Glide.get(context).getBitmapPool());
+    }
+
+
+    public ColdorichidTransformation(Context context, BitmapPool pool) {
+        mContext = context.getApplicationContext();
+        pool.clearMemory();
+        mBitmapPool = pool;
+    }
+
+    @Override
+    public Resource<Bitmap> transform(Resource<Bitmap> resource, int outWidth, int outHeight) {
+        Bitmap source = resource.get();
+
+//        int width = source.getWidth();
+//        int height = source.getHeight();
+//        int scaledWidth = width / mSampling;
+//        int scaledHeight = height / mSampling;
+//
+//        DoColorFilter colorFilter = new DoColorFilter(source, 0.7, 0.59, 0.4);
+//        source = colorFilter.executeFilter();
+//        source = ImageFilterUtil.updateSaturation(source, 1.3f);
+//        DoBrightness doBrightness00 = new DoBrightness(source, 65);
+//        source = doBrightness00.executeFilter();
+//        source = ImageFilterUtil.updateExposure(source, 0.5f);
+//        DoGamma doGamma00 = new DoGamma(source, 0.82, 0.82, 0.82);
+//        source = doGamma00.executeFilter();
+
+//        source = resizeBitmap(source, source.getWidth()/5);
+
+        /** color balance **/
+        GPUImageColorBalanceFilter colorBalanceFilter = new GPUImageColorBalanceFilter();
+        colorBalanceFilter.setMidtones(new float[]{-0.02f, -0.07f, 0.16f});
+
+        GPUImage colorBalanceFilterGPUImage = new GPUImage(mContext);
+        colorBalanceFilterGPUImage.setImage(source);
+        colorBalanceFilterGPUImage.setFilter(colorBalanceFilter);
+        Bitmap colorBalanceFilterBitmap = colorBalanceFilterGPUImage.getBitmapWithFilterApplied();
+
+        /** source recycle **/
+        source.recycle();
+
+        /** exposure **/
+        GPUImageExposureFilter gpuImageExposureFilter = new GPUImageExposureFilter();
+        gpuImageExposureFilter.setExposure(0.355f);
+
+        GPUImage gpuImageExposureFilterGPUImage = new GPUImage(mContext);
+        gpuImageExposureFilterGPUImage.setImage(colorBalanceFilterBitmap);
+        gpuImageExposureFilterGPUImage.setFilter(gpuImageExposureFilter);
+        Bitmap gpuImageExposureBitmap = gpuImageExposureFilterGPUImage.getBitmapWithFilterApplied();
+
+        /** colorBalanceFilterBitmap recycle **/
+        colorBalanceFilterBitmap.recycle();
+
+        /** gamma **/
+        GPUImageGammaFilter gpuImageGammaFilter = new GPUImageGammaFilter();
+        gpuImageGammaFilter.setGamma(1.0f);
+
+        GPUImage gpuImageGammaFilterGPUImage = new GPUImage(mContext);
+        gpuImageGammaFilterGPUImage.setImage(gpuImageExposureBitmap);
+        gpuImageGammaFilterGPUImage.setFilter(gpuImageGammaFilter);
+        Bitmap gpuImageGammaBitmap = gpuImageGammaFilterGPUImage.getBitmapWithFilterApplied();
+
+        /** gpuImageExposureBitmap recycle **/
+        gpuImageExposureBitmap.recycle();
+
+        /** saturation **/
+        GPUImageSaturationFilter gpuImageSaturationFilter = new GPUImageSaturationFilter();
+        gpuImageSaturationFilter.setSaturation(1.1f);
+
+        GPUImage gpuImageSaturationFilterGPUImage = new GPUImage(mContext);
+        gpuImageSaturationFilterGPUImage.setImage(gpuImageGammaBitmap);
+        gpuImageSaturationFilterGPUImage.setFilter(gpuImageSaturationFilter);
+        Bitmap gpuImageSaturationBitmap = gpuImageSaturationFilterGPUImage.getBitmapWithFilterApplied();
+
+
+        /** gpuImageGammaBitmap recycle **/
+        gpuImageGammaBitmap.recycle();
+
+        GPUImageHueFilter gpuImageHueFilter = new GPUImageHueFilter();
+        gpuImageHueFilter.setHue(-6f);
+
+        GPUImage gpuImageHueFilterGPUImage = new GPUImage(mContext);
+        gpuImageHueFilterGPUImage.setImage(gpuImageSaturationBitmap);
+        gpuImageHueFilterGPUImage.setFilter(gpuImageHueFilter);
+        Bitmap gpuImageHueFilterBitmap = gpuImageHueFilterGPUImage.getBitmapWithFilterApplied();
+
+        /** curve balance **/
+//        GPUImageToneCurveFilter gpuImageToneCurveFilter = new GPUImageToneCurveFilter();
+
+        /** exposure recycle **/
+//        exposureFilterBitmap.recycle();
+//
+//        /** color **/
+//        GPUImageColorMatrixFilter colorMatrixFilter = new GPUImageColorMatrixFilter();
+//        colorMatrixFilter.setColorMatrix();
+
+        /** color balance bitmap recycle **/
+//        colorBalanceFilterBitmap.recycle();
+
+        return BitmapResource.obtain(gpuImageHueFilterBitmap, mBitmapPool);
+    }
+
+    @Override
+    public String getId() {
+        return "GreenPermissionformation";
+    }
+
+    public Bitmap resizeBitmap(Bitmap b, int newWidthDp) {
+        Float density = mContext.getResources().getDisplayMetrics().density;
+        int newWidth = newWidthDp * Math.round(density);
+
+        int width = b.getWidth();
+        int height = b.getHeight();
+
+        float scaleWidth = ((float) newWidth) / width;
+        float ratio = (float) width / newWidth;
+        int newHeight = (int) (height / ratio);
+        float scaleHeight = ((float) newHeight) / height;
+
+        Matrix matrix = new Matrix();
+        matrix.postScale(scaleWidth, scaleHeight);
+
+        Bitmap resizedBitmap =
+                Bitmap.createBitmap(b, 0, 0,
+                        width, height, matrix, true);
+        return (resizedBitmap);
+    }
+
+}

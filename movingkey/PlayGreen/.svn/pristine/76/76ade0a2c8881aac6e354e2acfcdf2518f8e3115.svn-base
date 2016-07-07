@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/dp_48"
+        android:background="@color/c_ffffff"
+        android:gravity="center_vertical"
+        android:orientation="horizontal"
+        android:paddingLeft="@dimen/dp_10">
+
+        <ImageView
+            android:layout_width="@dimen/dp_14"
+            android:layout_height="@dimen/dp_14"
+            android:background="@drawable/icon_place1" />
+
+        <kr.innisfree.playgreen.common.view.NanumGothicTextView
+            android:id="@+id/camera_upload.tv_location"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:ellipsize="end"
+            android:gravity="center_vertical|left"
+            android:hint="@string/str_search_location_txt_guide"
+            android:paddingLeft="@dimen/dp_4"
+            android:paddingRight="@dimen/dp_4"
+            android:singleLine="true" />
+
+        <ImageButton
+            android:id="@+id/camera_upload.imgbtn_delete_location"
+            android:layout_width="@dimen/dp_40"
+            android:layout_height="match_parent"
+            android:background="@drawable/ripple_dark"
+            android:src="@drawable/btn_delete2"
+            android:visibility="gone" />
+
+    </LinearLayout>
+
+</FrameLayout>

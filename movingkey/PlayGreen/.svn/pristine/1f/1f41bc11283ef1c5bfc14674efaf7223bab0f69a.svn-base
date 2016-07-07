@@ -1,0 +1,149 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              android:layout_width="match_parent"
+              android:layout_height="match_parent"
+              android:orientation="vertical">
+
+    <LinearLayout
+        android:layout_width="@dimen/dp_272"
+        android:layout_height="@dimen/dp_210"
+        android:background="@color/c_ffffff"
+        android:orientation="vertical">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1"
+            android:orientation="horizontal">
+
+            <LinearLayout
+                android:id="@+id/layout_copy_url"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:background="@drawable/ripple_dark"
+                android:layout_weight="1"
+                android:gravity="center"
+                android:orientation="vertical">
+
+                <ImageView
+                    android:layout_width="@dimen/dp_36"
+                    android:layout_height="@dimen/dp_36"
+                    android:background="@drawable/icon_url"
+                    android:duplicateParentState="true"/>
+
+                <kr.innisfree.playgreen.common.view.InnisfreeGothicTextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textSize="@dimen/dp_10"
+                    android:text="@string/str_copy_url"
+                    android:duplicateParentState="true"
+                    android:layout_marginTop="@dimen/dp_10"
+                    android:textColor="@color/c_333333"/>
+            </LinearLayout>
+
+            <View
+                android:layout_width="@dimen/dp_0.5"
+                android:layout_height="match_parent"
+                android:layout_marginTop="@dimen/dp_10"
+                android:background="@color/c_e1e1e1"/>
+
+            <LinearLayout
+                android:id="@+id/layout_facebook"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:background="@drawable/ripple_dark"
+                android:gravity="center"
+                android:orientation="vertical">
+
+                <ImageView
+                    android:layout_width="@dimen/dp_36"
+                    android:layout_height="@dimen/dp_36"
+                    android:background="@drawable/icon_facebook2"
+                    android:duplicateParentState="true"/>
+
+                <kr.innisfree.playgreen.common.view.InnisfreeGothicTextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textSize="@dimen/dp_10"
+                    android:duplicateParentState="true"
+                    android:text="@string/str_facebook"
+                    android:layout_marginTop="@dimen/dp_10"
+                    android:textColor="@color/c_333333"/>
+            </LinearLayout>
+        </LinearLayout>
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/dp_0.5"
+            android:layout_marginLeft="@dimen/dp_10"
+            android:layout_marginRight="@dimen/dp_10"
+            android:background="@color/c_e1e1e1"/>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1"
+            android:orientation="horizontal">
+
+            <LinearLayout
+                android:id="@+id/layout_instagram"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:background="@drawable/ripple_dark"
+                android:gravity="center"
+                android:orientation="vertical">
+
+                <ImageView
+                    android:layout_width="@dimen/dp_36"
+                    android:layout_height="@dimen/dp_36"
+                    android:background="@drawable/icon_instagram2"
+                    android:duplicateParentState="true"/>
+
+                <kr.innisfree.playgreen.common.view.InnisfreeGothicTextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textSize="@dimen/dp_10"
+                    android:duplicateParentState="true"
+                    android:text="@string/str_instagram"
+                    android:layout_marginTop="@dimen/dp_10"
+                    android:textColor="@color/c_333333"/>
+            </LinearLayout>
+
+            <View
+                android:layout_width="@dimen/dp_0.5"
+                android:layout_height="match_parent"
+                android:layout_marginBottom="@dimen/dp_10"
+                android:background="@color/c_e1e1e1"/>
+
+            <LinearLayout
+                android:id="@+id/layout_kakaostory"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:background="@drawable/ripple_dark"
+                android:layout_weight="1"
+                android:gravity="center"
+                android:orientation="vertical">
+
+                <ImageView
+                    android:layout_width="@dimen/dp_36"
+                    android:layout_height="@dimen/dp_36"
+                    android:background="@drawable/icon_kakaostory1"
+                    android:duplicateParentState="true"/>
+
+                <kr.innisfree.playgreen.common.view.InnisfreeGothicTextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textSize="@dimen/dp_10"
+                    android:text="@string/str_kakaostory"
+                    android:duplicateParentState="true"
+                    android:layout_marginTop="@dimen/dp_10"
+                    android:textColor="@color/c_333333"/>
+            </LinearLayout>
+        </LinearLayout>
+
+    </LinearLayout>
+
+
+</LinearLayout>

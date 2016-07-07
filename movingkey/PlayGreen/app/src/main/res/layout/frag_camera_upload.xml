@@ -1,0 +1,115 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/c_ffffff"
+    android:orientation="vertical">
+
+    <android.support.design.widget.AppBarLayout
+        android:id="@+id/appBarLayout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@android:color/transparent"
+        app:elevation="@dimen/dp_1">
+
+        <FrameLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@android:color/transparent">
+
+            <FrameLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:alpha="0.6"
+                android:background="@color/c_25272a" />
+
+            <android.support.v7.widget.Toolbar
+                android:id="@+id/toolbar"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/titlebar_height"
+                android:background="@android:color/transparent"
+                android:minHeight="@dimen/titlebar_height"
+                app:contentInsetStart="0dp"
+                app:layout_scrollFlags="enterAlways"
+                app:titleTextColor="@color/c_ffffff">
+
+                <ImageButton
+                    android:id="@+id/camera_upload.imgbtn_back"
+                    android:layout_width="@dimen/dp_40"
+                    android:layout_height="match_parent"
+                    android:layout_gravity="left"
+                    android:background="@drawable/ripple_effect"
+                    android:src="@drawable/btn_back1" />
+
+                <kr.innisfree.playgreen.common.view.InnisfreeGothicBoldTextView
+                    android:id="@+id/txt_title"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:textColor="@color/c_ffffff"
+                    android:textSize="@dimen/dp_20" />
+
+                <kr.innisfree.playgreen.common.view.InnisfreeGothicTextView
+                    android:id="@+id/camera_upload.tv_complete"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:layout_gravity="right|center_vertical"
+                    android:background="@drawable/ripple_effect"
+                    android:gravity="center"
+                    android:minWidth="@dimen/dp_48"
+                    android:text="@string/str_complete"
+                    android:textColor="@color/c_74d17a"
+                    android:textSize="@dimen/dp_17" />
+
+            </android.support.v7.widget.Toolbar>
+
+        </FrameLayout>
+
+    </android.support.design.widget.AppBarLayout>
+
+    <include
+        layout="@layout/view_camera_upload_content"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1" />
+
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <LinearLayout
+            android:id="@+id/camera_upload.ll_wrapper_location_share"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:visibility="gone">
+
+            <include layout="@layout/view_camera_upload_location" />
+
+            <include layout="@layout/view_camera_upload_share" />
+
+        </LinearLayout>
+
+        <FrameLayout
+            android:id="@+id/camera_upload.fl_wrapper_tag"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/dp_188"
+            android:visibility="gone">
+
+            <include layout="@layout/view_recent_tag" />
+
+            <android.support.v7.widget.RecyclerView
+                android:id="@+id/camera_upload.rv_search_similar_tag_that_is_input"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@color/c_eeeeee"
+                android:paddingLeft="@dimen/dp_14"
+                android:paddingRight="@dimen/dp_14"
+                android:visibility="gone"/>
+
+        </FrameLayout>
+
+    </FrameLayout>
+
+</LinearLayout>

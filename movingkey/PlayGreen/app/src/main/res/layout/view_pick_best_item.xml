@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              android:layout_width="match_parent"
+              android:layout_height="match_parent"
+              android:background="@color/c_ffffff"
+              android:orientation="vertical">
+
+    <RelativeLayout
+        android:id="@+id/layout_bestpick_item"
+        android:layout_width="@dimen/dp_174"
+        android:layout_marginLeft="@dimen/dp_2"
+        android:layout_marginRight="@dimen/dp_2"
+        android:layout_marginBottom="@dimen/dp_4"
+        android:layout_height="@dimen/dp_200">
+
+        <ImageView
+            android:id="@+id/img_bestpick_item"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:scaleType="centerCrop"/>
+
+        <ImageView
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/dp_90"
+            android:layout_alignParentBottom="true"
+            android:background="@drawable/img_btm_gd"/>
+
+        <ImageView
+            android:id="@+id/img_bestpick_profile_item"
+            android:layout_width="@dimen/dp_35"
+            android:layout_height="@dimen/dp_35"
+            android:layout_alignParentBottom="true"
+            android:layout_marginBottom="@dimen/dp_13"
+            android:layout_marginLeft="@dimen/dp_13"
+            android:background="@drawable/img_user_null2"/>
+
+        <ImageView
+            android:id="@+id/img_bestpick_badge_item"
+            android:layout_width="@dimen/dp_14"
+            android:layout_height="@dimen/dp_14"
+            android:layout_alignParentBottom="true"
+            android:layout_marginBottom="@dimen/dp_35"
+            android:layout_marginLeft="@dimen/dp_35"/>
+
+        <kr.innisfree.playgreen.common.view.NanumGothicBoldTextView
+            android:id="@+id/txt_bestpick_name_item"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:layout_marginBottom="@dimen/dp_28"
+            android:layout_marginLeft="@dimen/dp_6"
+            android:layout_marginRight="@dimen/dp_10"
+            android:layout_toRightOf="@id/img_bestpick_profile_item"
+            android:ellipsize="end"
+            android:gravity="center_vertical"
+            android:minHeight="@dimen/dp_20"
+            android:singleLine="true"
+            android:textColor="@color/c_ffffff"
+            android:textSize="@dimen/dp_13"/>
+
+        <kr.innisfree.playgreen.common.view.NanumGothicTextView
+            android:id="@+id/txt_bestpick_date_item"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:layout_marginBottom="@dimen/dp_13"
+            android:layout_marginLeft="@dimen/dp_6"
+            android:layout_marginRight="@dimen/dp_10"
+            android:layout_toRightOf="@id/img_bestpick_profile_item"
+            android:ellipsize="end"
+            android:gravity="center_vertical"
+            android:minHeight="@dimen/dp_15"
+            android:singleLine="true"
+            android:textColor="@color/c_ffffff"
+            android:textSize="@dimen/dp_10"/>
+
+    </RelativeLayout>
+
+
+</LinearLayout>

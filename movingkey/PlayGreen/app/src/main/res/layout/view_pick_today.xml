@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              xmlns:app="http://schemas.android.com/apk/res-auto"
+              android:layout_width="match_parent"
+              android:layout_height="match_parent"
+              android:background="@color/c_ffffff"
+              android:orientation="vertical">
+
+    <kr.innisfree.playgreen.common.view.GothamTextView
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/dp_64"
+        android:gravity="center_vertical"
+        android:paddingLeft="@dimen/dp_10"
+        android:text="@string/str_todays_pick"
+        android:textColor="@color/c_333333"
+        android:textSize="@dimen/dp_20"/>
+
+    <android.support.v4.view.ViewPager
+        android:id="@+id/viewpager"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/dp_400">
+    </android.support.v4.view.ViewPager>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/dp_46"
+        android:gravity="center">
+
+        <kr.innisfree.playgreen.common.view.viewpagerindicator.CirclePageIndicator
+            android:id="@+id/indicator"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:padding="@dimen/dp_1"
+            android:background="@android:color/transparent"
+            app:fillColor="@color/c_4b9b50"
+            app:centered="true"
+            app:pageColor="@android:color/transparent"
+            app:radius="@dimen/dp_3"
+            app:strokeColor="@color/c_999999"/>
+
+    </LinearLayout>
+
+
+</LinearLayout>

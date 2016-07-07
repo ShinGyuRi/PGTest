@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <LinearLayout
+        android:id="@+id/image_filter.ll_wrapper"
+        android:layout_width="110dp"
+        android:layout_height="wrap_content"
+        android:gravity="center_horizontal"
+        android:orientation="vertical">
+
+        <ImageView
+            android:id="@+id/image_filter.iv_preview"
+            android:layout_width="@dimen/dp_80"
+            android:layout_height="@dimen/dp_80"
+            android:duplicateParentState="false"
+            android:scaleType="centerCrop" />
+
+        <kr.innisfree.playgreen.common.view.NanumGothicTextView
+            android:id="@+id/image_filter.tv_name"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:paddingBottom="@dimen/dp_20"
+            android:paddingTop="@dimen/dp_20"
+            android:duplicateParentState="true"
+            android:gravity="center"
+            android:maxLines="2"
+            android:singleLine="false"
+            android:textColor="@color/txt_camera_cg_tool"
+            android:textSize="@dimen/dp_13" />
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/dp_2"
+            android:background="@drawable/bg_camera_image_filter_select"
+            android:duplicateParentState="true" />
+    </LinearLayout>
+
+</FrameLayout>

@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              android:layout_width="match_parent"
+              android:layout_height="match_parent"
+              android:orientation="vertical">
+
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/dp_170"
+        android:layout_marginBottom="@dimen/dp_4">
+
+        <FrameLayout
+            android:id="@+id/layout_complete_mission"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <ImageView
+                android:id="@+id/img_pg21_item_bg"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:scaleType="fitXY"/>
+
+            <RelativeLayout
+                android:layout_width="wrap_content"
+                android:layout_height="@dimen/dp_52"
+                android:layout_marginTop="@dimen/dp_18"
+                android:background="@color/c_ffffff"
+                android:gravity="center_vertical"
+                android:minWidth="@dimen/dp_120"
+                android:orientation="vertical"
+                android:paddingLeft="@dimen/dp_10"
+                android:paddingRight="@dimen/dp_10">
+
+                <kr.innisfree.playgreen.common.view.NanumGothicBoldTextView
+                    android:id="@+id/txt_pg21_day"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/str_pg21_day"
+                    android:textColor="@color/c_4b9b50"
+                    android:textSize="@dimen/dp_13"/>
+
+                <kr.innisfree.playgreen.common.view.NanumGothicBoldTextView
+                    android:id="@+id/txt_pg21_mission_name"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_toRightOf="@id/txt_pg21_day"
+                    android:singleLine="true"
+                    android:text="@string/str_pg21_today_mission"
+                    android:textColor="@color/c_333333"
+                    android:textSize="@dimen/dp_13"/>
+
+                <kr.innisfree.playgreen.common.view.NanumGothicBoldTextView
+                    android:id="@+id/txt_pg21_mission_info"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@id/txt_pg21_day"
+                    android:layout_marginTop="@dimen/dp_3"
+                    android:singleLine="true"
+                    android:textColor="@color/c_333333"
+                    android:textSize="@dimen/dp_9"/>
+
+            </RelativeLayout>
+
+            <TextView
+                android:id="@+id/txt_add_mission"
+                android:layout_width="@dimen/dp_70"
+                android:layout_height="@dimen/dp_71"
+                android:layout_gravity="center_horizontal"
+                android:layout_marginTop="@dimen/dp_84"
+                android:background="@drawable/btn_select_mission"
+                android:visibility="gone"/>
+
+        </FrameLayout>
+
+    </FrameLayout>
+
+    <View
+        android:id="@+id/view_margin"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/dp_20"
+        android:visibility="gone"/>
+
+</LinearLayout>

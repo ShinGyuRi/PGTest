@@ -1,0 +1,128 @@
+package kr.innisfree.playgreen.adapter;
+
+import android.content.Context;
+import android.graphics.Color;
+import android.support.v7.widget.RecyclerView;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.ImageButton;
+import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
+import android.widget.TextView;
+
+import com.moyusoft.util.JYLog;
+import com.moyusoft.util.TextUtil;
+import com.volley.network.dto.NetworkData;
+
+import java.util.ArrayList;
+
+import kr.innisfree.playgreen.R;
+import kr.innisfree.playgreen.listener.AdapterItemClickListener;
+
+/**
+ * Created by jooyoung on 2016-02-19.
+ */
+public class SearchTagAdapter extends RecyclerView.Adapter<SearchTagAdapter.ViewHolder> {
+
+	private Context context;
+	private ArrayList<NetworkData> itemArray;
+	private AdapterItemClickListener adapterItemClickListener;
+	private boolean isSearchHistory;
+	private String searchKeyword;
+
+	public SearchTagAdapter(Context context, AdapterItemClickListener listener) {
+		this.context = context;
+		this.adapterItemClickListener = listener;
+	}
+
+	public void setSearchKeyword(String keyword){
+		this.searchKeyword = keyword;
+	}
+
+	public void setItemArray(ArrayList<NetworkData> array, boolean isSearchHistory) {
+		this.itemArray = array;
+		this.isSearchHistory = isSearchHistory;
+		notifyDataSetChanged();
+	}
+
+	public NetworkData getItem(int position) {
+		if (itemArray == null || itemArray.size() <= position) return null;
+		return itemArray.get(position);
+	}
+
+	@Override
+	public int getItemCount() {
+		if (itemArray == null) {
+			return 0;
+		}
+		return itemArray.size();
+	}
+
+	@Override
+	public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+		View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_search_tag, parent, false);
+		ViewHolder vh = new ViewHolder(view);
+		return vh;
+	}
+
+	@Override
+	public void onBindViewHolder(ViewHolder holder, final int position) {
+		if (itemArray == null || itemArray.size() <= position) return;
+		NetworkData item = itemArray.get(position);
+
+		/** 검색기록 */
+		if(isSearchHistory){
+			holder.btnRemoveHistory.setVisibility(View.VISIBLE);
+			if(!TextUtil.isNull(item.SEARCH_KEYWORD)){
+				holder.txtSearchTag.setText(item.SEARCH_KEYWORD);
+			}
+
+			if(position == itemArray.size()-1){
+				holder.layoutRemoveAllHistory.setVisibility(View.VISIBLE);
+			}else{
+				holder.layoutRemoveAllHistory.setVisibility(View.GONE);
+			}
+
+		}
+		/** 검색 */
+		else{
+			holder.layoutRemoveAllHistory.setVisibility(View.GONE);
+			holder.btnRemoveHistory.setVisibility(View.GONE);
+			if(!TextUtil.isNull(item.HASHTAG)){
+				holder.txtSearchTag.setText(item.HASHTAG);
+				if(!TextUtil.isNull(searchKeyword)){
+					JYLog.D("search keyword:" + searchKeyword + ", tag :" + item.HASHTAG,new Throwable());
+					TextUtil.setTextViewColorPartial(holder.txtSearchTag, item.HASHTAG, searchKeyword, Color.parseColor("#4b9b50"));
+				}
+			}
+		}
+
+
+	}
+
+	public class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
+		public LinearLayout layoutItem;
+		public RelativeLayout layoutRemoveAllHistory;
+		public TextView txtSearchTag;
+		public ImageButton btnRemoveHistory;
+
+		public ViewHolder(View v) {
+			super(v);
+			layoutItem = (LinearLayout) v.findViewById(R.id.layout_item);
+			layoutRemoveAllHistory = (RelativeLayout) v.findViewById(R.id.layout_item_remove_all_history);
+			txtSearchTag = (TextView) v.findViewById(R.id.txt_item_tag);
+			btnRemoveHistory = (ImageButton) v.findViewById(R.id.btn_item_remove_history);
+
+			layoutItem.setOnClickListener(this);
+			btnRemoveHistory.setOnClickListener(this);
+			layoutRemoveAllHistory.setOnClickListener(this);
+		}
+
+		@Override
+		public void onClick(View v) {
+			if (adapterItemClickListener != null)
+				adapterItemClickListener.onAdapterItemClick(v, getLayoutPosition());
+		}
+	}
+}

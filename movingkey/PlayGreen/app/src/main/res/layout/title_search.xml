@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              xmlns:app="http://schemas.android.com/apk/res-auto"
+              android:layout_width="match_parent"
+              android:layout_height="match_parent"
+              android:orientation="vertical">
+
+    <android.support.v7.widget.Toolbar
+        android:id="@+id/toolbar"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/titlebar_height"
+        android:background="@color/c_69b06c"
+        android:minHeight="@dimen/titlebar_height"
+        app:contentInsetStart="0dp"
+        app:layout_scrollFlags="enterAlways"
+        app:titleTextColor="@color/c_ffffff">
+        <!--scroll|-->
+
+        <FrameLayout
+            android:id="@+id/layout_back"
+            android:layout_width="@dimen/dp_40"
+            android:layout_height="match_parent"
+            android:background="@drawable/ripple_effect"
+            android:visibility="visible">
+
+            <ImageView
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="@drawable/btn_back1"
+                android:duplicateParentState="true"/>
+        </FrameLayout>
+
+        <kr.innisfree.playgreen.common.view.InnisfreeGothicEditText
+            android:id="@+id/edit_search"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:background="@null"
+            android:gravity="left"
+            android:paddingLeft="@dimen/dp_8"
+            android:hint="@string/str_tag_search"
+            android:paddingRight="@dimen/dp_40"
+            android:singleLine="true"
+            android:imeOptions="actionSearch"
+            android:textColorHint="@color/c_bae2b2"
+            android:drawableLeft="@drawable/icon_search2"
+            android:drawablePadding="@dimen/dp_8"
+            android:textColor="@color/c_ffffff"
+            android:textSize="@dimen/dp_14"/>
+
+        <Button
+            android:id="@+id/btn_delete"
+            android:layout_width="@dimen/dp_34.5"
+            android:layout_height="match_parent"
+            android:layout_gravity="right|center_vertical"
+            android:visibility="visible"
+            android:background="@drawable/btn_delete4"/>
+
+
+    </android.support.v7.widget.Toolbar>
+
+</LinearLayout>

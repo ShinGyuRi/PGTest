@@ -1,0 +1,606 @@
+package kr.innisfree.playgreen.activity;
+
+import android.app.AlertDialog;
+import android.content.ClipData;
+import android.content.ClipboardManager;
+import android.content.Context;
+import android.content.DialogInterface;
+import android.content.Intent;
+import android.media.MediaPlayer;
+import android.net.Uri;
+import android.os.Build;
+import android.os.Bundle;
+import android.os.Handler;
+import android.support.v7.widget.Toolbar;
+import android.text.SpannableString;
+import android.text.Spanned;
+import android.text.TextPaint;
+import android.text.TextUtils;
+import android.text.method.LinkMovementMethod;
+import android.text.style.ClickableSpan;
+import android.view.View;
+import android.widget.Button;
+import android.widget.ImageButton;
+import android.widget.ImageView;
+import android.widget.ProgressBar;
+import android.widget.RelativeLayout;
+import android.widget.TextView;
+
+import com.ParentAct;
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.engine.DiskCacheStrategy;
+import com.facebook.CallbackManager;
+import com.facebook.FacebookCallback;
+import com.facebook.FacebookException;
+import com.facebook.FacebookSdk;
+import com.facebook.share.Sharer;
+import com.facebook.share.model.ShareLinkContent;
+import com.moyusoft.util.BitmapHeightResizeForGlide;
+import com.moyusoft.util.Debug;
+import com.moyusoft.util.Definitions;
+import com.moyusoft.util.Definitions.GOTO;
+import com.moyusoft.util.Definitions.INTENT_KEY;
+import com.moyusoft.util.JYLog;
+import com.moyusoft.util.TextUtil;
+import com.moyusoft.util.ToforUtil;
+import com.moyusoft.util.UIUtils;
+import com.moyusoft.util.Util;
+import com.sprylab.android.widget.TextureVideoView;
+import com.volley.network.NetworkConstantUtil.APIKEY;
+import com.volley.network.dto.NetworkData;
+import com.volley.network.dto.NetworkJson;
+
+import java.net.URLDecoder;
+
+import kr.innisfree.playgreen.R;
+import kr.innisfree.playgreen.Util.ShareToSNSManager;
+import kr.innisfree.playgreen.activity.search.HashtagDetailAct;
+import kr.innisfree.playgreen.data.DialogData;
+import kr.innisfree.playgreen.dialog.ShareDialog;
+import kr.innisfree.playgreen.fragment.ReportFrag;
+import kr.innisfree.playgreen.listener.DialogListener;
+
+/**
+ * Created by jooyoung on 2016-03-22.
+ */
+public class TimelineDetailAct extends ParentAct implements View.OnClickListener {
+
+	public TextView txtTitle;
+	public ImageView imgContent, imgMp4Scene;
+	public TextView txtName, txtRegistInfo, txtLikeCount, txtContent, txtHashtag;
+	public Button btnFollow;
+	public ImageButton imgBtnLike, imgBtnShare, imgBtnComment, imgBtnEtc, imgBtnPlay;
+	public TextureVideoView videoView;
+	public ProgressBar pbVideo;
+
+	private NetworkData timelineData;
+	private String timelineID;
+
+	private boolean isClickImgContent = false;
+
+	@Override
+	protected void onCreate(Bundle savedInstanceState) {
+		super.onCreate(savedInstanceState);
+		setContentView(R.layout.act_bestpick_detail);
+		setLoading(this);
+		initToolbar();
+
+		JYLog.D("djfklajkldfjakldjflka", new Throwable());
+
+		timelineData = (NetworkData) getIntent().getSerializableExtra(INTENT_KEY.DATA);
+		timelineID = getIntent().getStringExtra(INTENT_KEY.TIMELINE_ID);
+
+		txtTitle = (TextView) findViewById(R.id.txt_title);
+		imgContent = (ImageView) findViewById(R.id.img_item_content);
+		//txtName = (TextView) findViewById(R.id.txt_item_name);
+		//txtRegistInfo = (TextView) findViewById(R.id.txt_item_regist_info);
+		txtLikeCount = (TextView) findViewById(R.id.txt_item_like_count);
+		txtHashtag = (TextView) findViewById(R.id.txt_item_hashtag);
+		txtContent = (TextView) findViewById(R.id.txt_item_content);
+		//btnFollow = (Button) findViewById(R.id.btn_item_follow);
+		imgBtnLike = (ImageButton) findViewById(R.id.btn_item_like);
+		imgBtnShare = (ImageButton) findViewById(R.id.btn_item_share);
+		imgBtnComment = (ImageButton) findViewById(R.id.btn_item_reply);
+		imgBtnEtc = (ImageButton) findViewById(R.id.btn_item_etc);
+
+		imgMp4Scene = (ImageView) findViewById(R.id.img_item_mp4_scene);
+		imgBtnPlay = (ImageButton) findViewById(R.id.btn_item_play);
+		videoView = (TextureVideoView) findViewById(R.id.video_item_content);
+		pbVideo = (ProgressBar) findViewById(R.id.pb_video_load);
+
+		txtLikeCount.setOnClickListener(this);
+		imgBtnLike.setOnClickListener(this);
+		imgBtnShare.setOnClickListener(this);
+		imgBtnComment.setOnClickListener(this);
+		imgBtnEtc.setOnClickListener(this);
+
+		if (!TextUtil.isNull(timelineID)) {
+			netFunc.requestTimeline(null, null, null, timelineID);
+		}
+	}
+
+	private void initToolbar() {
+		Toolbar mToolbar = (Toolbar) findViewById(R.id.toolbar);
+		findViewById(R.id.layout_back).setOnClickListener(this);
+		setSupportActionBar(mToolbar);
+		getSupportActionBar().setDisplayShowTitleEnabled(false);
+	}
+
+	@Override
+	public void onUIRefresh() {
+		super.onUIRefresh();
+		if (timelineData == null) return;
+		if (!TextUtil.isNull(timelineData.MEMB_NAME)) {
+			txtTitle.setText(timelineData.MEMB_NAME);
+		}
+//		if (!TextUtil.isNull(timelineData.TIMELINE_MP4_SCENE)) {
+//			int newWidth, newHeight;
+//			newWidth = ToforUtil.PHONE_W;
+//			newHeight = Math.round(((float) newWidth / timelineData.TIMELINE_IMG_WIDTH * timelineData.TIMELINE_IMG_HEIGHT));
+//			JYLog.D("TIMELINE_MP4_SCENE::h:" + timelineData.TIMELINE_IMG_HEIGHT + "//newheight:" + newHeight, new Throwable());
+//			RelativeLayout.LayoutParams layoutParams = new RelativeLayout.LayoutParams(newWidth, newHeight);
+//			imgMp4Scene.setLayoutParams(layoutParams);
+//			Glide.with(this).load(timelineData.TIMELINE_MP4_SCENE).bitmapTransform(new BitmapHeightResizeForGlide(this, newHeight)).into(imgMp4Scene);
+//		}
+//		if (!TextUtil.isNull(timelineData.TIMELINE_IMG)) {
+//			int newWidth, newHeight;
+//			newWidth = ToforUtil.PHONE_W;
+//			newHeight = Math.round(((float) newWidth / timelineData.TIMELINE_IMG_WIDTH * timelineData.TIMELINE_IMG_HEIGHT));
+//			RelativeLayout.LayoutParams layoutParams = new RelativeLayout.LayoutParams(newWidth, newHeight);
+//			imgContent.setLayoutParams(layoutParams);
+//			Glide.with(this).load(timelineData.TIMELINE_IMG).bitmapTransform(new BitmapHeightResizeForGlide(this, newHeight)).into(imgContent);
+//		}
+		if (!TextUtil.isNull(timelineData.TIMELINE_MP4)) {
+			if (!TextUtil.isNull(timelineData.TIMELINE_MP4_SCENE)) {
+				int newWidth, newHeight;
+				newWidth = ToforUtil.PHONE_W;
+				newHeight = Math.round(((float) newWidth / timelineData.TIMELINE_IMG_WIDTH * timelineData.TIMELINE_IMG_HEIGHT));
+				JYLog.D("TIMELINE_MP4_SCENE::h:" + timelineData.TIMELINE_IMG_HEIGHT + "//newheight:" + newHeight, new Throwable());
+				RelativeLayout.LayoutParams layoutParams = new RelativeLayout.LayoutParams(newWidth, newHeight);
+				imgContent.setLayoutParams(layoutParams);
+				Glide.with(this).load(timelineData.TIMELINE_MP4_SCENE).bitmapTransform(new BitmapHeightResizeForGlide(this, newHeight)).into(imgContent);
+			}
+			if (!TextUtil.isNull(timelineData.TIMELINE_IMG)) {
+				int newWidth, newHeight;
+				newWidth = ToforUtil.PHONE_W;
+				newHeight = Math.round(((float) newWidth / timelineData.TIMELINE_IMG_WIDTH * timelineData.TIMELINE_IMG_HEIGHT));
+				RelativeLayout.LayoutParams layoutParams = new RelativeLayout.LayoutParams(newWidth, newHeight);
+				imgMp4Scene.setLayoutParams(layoutParams);
+				Glide.with(this).load(timelineData.TIMELINE_IMG).bitmapTransform(new BitmapHeightResizeForGlide(this, newHeight)).into(imgMp4Scene);
+			}
+			new Handler().postDelayed(new Runnable() {
+				@Override
+				public void run() {
+
+					imgBtnPlay.setVisibility(View.VISIBLE);
+					imgMp4Scene.setVisibility(View.VISIBLE);
+					videoView.setVisibility(View.VISIBLE);
+					videoView.setVideoPath(timelineData.TIMELINE_MP4);
+				}
+			}, 200);
+			handleVideo();
+		} else {
+			imgBtnPlay.setVisibility(View.GONE);
+			imgMp4Scene.setVisibility(View.GONE);
+			videoView.setVisibility(View.GONE);
+			if (!TextUtil.isNull(timelineData.TIMELINE_IMG)) {
+				JYLog.D("TIMELINE_IMG::h:" + timelineData.TIMELINE_IMG_HEIGHT + "//newheight:", new Throwable());
+				int newWidth, newHeight;
+				newWidth = ToforUtil.PHONE_W;
+				newHeight = Math.round(((float) newWidth / timelineData.TIMELINE_IMG_WIDTH * timelineData.TIMELINE_IMG_HEIGHT));
+				RelativeLayout.LayoutParams layoutParams = new RelativeLayout.LayoutParams(newWidth, newHeight);
+				imgContent.setLayoutParams(layoutParams);
+				Glide.with(this).load(timelineData.TIMELINE_IMG).bitmapTransform(new BitmapHeightResizeForGlide(this, newHeight)).into(imgContent);
+			}
+		}
+//		if (!TextUtil.isNull(timelineData.TIMELINE_IMG)) {
+//			Glide.with(this).load(timelineData.TIMELINE_IMG).diskCacheStrategy(DiskCacheStrategy.SOURCE).into(imgContent);
+//			//Picasso.with(this).load(timelineData.TIMELINE_IMG).transform(new BitmapWidthResize(ToforUtil.PHONE_W)).into(imgContent);
+//		}
+		if (timelineData.LIKE_COUNT > 0) {
+			txtLikeCount.setVisibility(View.VISIBLE);
+			txtLikeCount.setText(getString(R.string.str_like_count, timelineData.LIKE_COUNT));
+		} else {
+			txtLikeCount.setVisibility(View.GONE);
+		}
+		if (!TextUtil.isNull(timelineData.LIKE_YN) && timelineData.LIKE_YN.equals(Definitions.YN.YES))
+			imgBtnLike.setImageResource(R.drawable.btn_like1_selected);
+		else
+			imgBtnLike.setImageResource(R.drawable.btn_like1);
+
+		if (!TextUtil.isNull(timelineData.TIMELINE_TEXT)) {
+			String timelineContent = "";
+			try {
+				timelineContent = URLDecoder.decode(timelineData.TIMELINE_TEXT, "UTF-8");
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+			txtContent.setText(timelineContent);
+		}
+
+		/** HASH TAG */
+		if (timelineData.HASHTAG_LIST != null && timelineData.HASHTAG_LIST.size() > 0) {
+			StringBuffer hashtag = new StringBuffer();
+			txtHashtag.setVisibility(View.VISIBLE);
+			for (NetworkData hashtagItem : timelineData.HASHTAG_LIST) {
+				hashtag.append("#" + hashtagItem.HASHTAG + " ");
+			}
+
+			// 해시태그 각각 선택할수있게 Spannable Click
+			SpannableString span = new SpannableString(hashtag.toString());
+			for (final NetworkData hashtagItem : timelineData.HASHTAG_LIST) {
+				int startIndex = hashtag.toString().indexOf(hashtagItem.HASHTAG);
+				span.setSpan(new ClickableSpan() {
+					@Override
+					public void onClick(View v) {
+						Intent intent = new Intent(TimelineDetailAct.this, HashtagDetailAct.class);
+						intent.putExtra(Definitions.INTENT_KEY.DATA, hashtagItem.HASHTAG);
+						Util.moveActivity(TimelineDetailAct.this, intent, -1, -1, false, false);
+					}
+
+					@Override
+					public void updateDrawState(TextPaint ds) {
+					}
+				}, startIndex, startIndex + hashtagItem.HASHTAG.length(), Spanned.SPAN_INCLUSIVE_EXCLUSIVE);
+			}
+			txtHashtag.setText(span);
+			txtHashtag.setMovementMethod(LinkMovementMethod.getInstance());
+		}
+	}
+
+	public void handleVideo() {
+//		videoView.setOnErrorListener(new MediaPlayer.OnErrorListener() {
+//			@Override
+//			public boolean onError(MediaPlayer mp, int what, int extra) {
+//				//TODO 에러처리
+//				return true;
+//			}
+//		});
+//		videoView.setOnPreparedListener(new MediaPlayer.OnPreparedListener() {
+//			@Override
+//			public void onPrepared(final MediaPlayer mp) {
+//				JYLog.D("TimeLineAdapter::setOnPreparedListener::", new Throwable());
+//				mp.setVolume(0f, 0f);
+//				UIUtils.resizeView(videoView, ToforUtil.PHONE_W, imgContent.getHeight());
+//			}
+//		});
+//		videoView.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+//			@Override
+//			public void onFocusChange(View v, boolean hasFocus) {
+//				//JYLog.D("onFocusChange : " + hasFocus, new Throwable());
+//				if (!hasFocus) {
+//					videoView.pause();
+//				}
+//				imgBtnPlay.setVisibility(View.VISIBLE);
+//			}
+//		});
+//		videoView.setOnInfoListener(new MediaPlayer.OnInfoListener() {
+//			@Override
+//			public boolean onInfo(MediaPlayer mp, int what, int extra) {
+//				JYLog.D("onInfo" + what + " " + extra, new Throwable());
+//				switch (what) {
+//					case MediaPlayer.MEDIA_INFO_BUFFERING_END:
+//						pbVideo.setVisibility(View.INVISIBLE);
+//						imgMp4Scene.setVisibility(View.GONE);
+//						break;
+//					case MediaPlayer.MEDIA_INFO_BUFFERING_START:
+//						pbVideo.setVisibility(View.VISIBLE);
+//						imgBtnPlay.setVisibility(View.GONE);
+//						//imgMp4Scene.setVisibility(View.VISIBLE);
+//						break;
+//				}
+//				return false;
+//			}
+//		});
+//		videoView.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
+//			@Override
+//			public void onCompletion(MediaPlayer mp) {
+//				JYLog.D("complete", new Throwable());
+//				//imgBtnPlay.setVisibility(View.VISIBLE);
+//				videoView.requestFocus();
+//				videoView.seekTo(0);
+//				videoView.start();
+//			}
+//		});
+//		imgBtnPlay.setOnClickListener(new View.OnClickListener() {
+//			@Override
+//			public void onClick(View v) {
+//				imgBtnPlay.setVisibility(View.GONE);
+//				videoView.requestFocus();
+//				videoView.seekTo(0);
+//				videoView.start();
+//			}
+//		});
+
+		videoView.setOnErrorListener(new MediaPlayer.OnErrorListener() {
+			@Override
+			public boolean onError(MediaPlayer mp, int what, int extra) {
+				//TODO 에러처리
+				return true;
+			}
+		});
+		videoView.setOnPreparedListener(new MediaPlayer.OnPreparedListener() {
+			@Override
+			public void onPrepared(final MediaPlayer mp) {
+				JYLog.D("TimeLineAdapter::setOnPreparedListener::", new Throwable());
+				JYLog.D("TimeLineAdapter::setOnPreparedListener::getRotation::" + videoView.getRotation(), new Throwable());
+				JYLog.D("TimeLineAdapter::setOnPreparedListener::getRotation::" + Build.VERSION.SDK_INT, new Throwable());
+				mp.setVolume(0f, 0f);
+				if (Build.VERSION.SDK_INT > 17) {
+					UIUtils.resizeView(videoView, ToforUtil.PHONE_W, imgContent.getHeight());
+				}
+			}
+		});
+		videoView.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+			@Override
+			public void onFocusChange(View v, boolean hasFocus) {
+				if (!hasFocus) {
+					videoView.pause();
+					imgBtnPlay.setVisibility(View.VISIBLE);
+					imgMp4Scene.setVisibility(View.VISIBLE);
+					isClickImgContent = false;
+				}
+			}
+		});
+		videoView.setOnInfoListener(new MediaPlayer.OnInfoListener() {
+			@Override
+			public boolean onInfo(MediaPlayer mp, int what, int extra) {
+				JYLog.D("onInfo::what::" + what + "::extra::" + extra, new Throwable());
+				switch (what) {
+					case MediaPlayer.MEDIA_INFO_VIDEO_RENDERING_START:
+						new Handler().postDelayed(new Runnable() {
+							@Override
+							public void run() {
+								if (videoView.isPlaying()) {
+									pbVideo.setVisibility(View.INVISIBLE);
+									imgMp4Scene.setVisibility(View.GONE);
+								}
+							}
+						}, 30);
+						break;
+					case MediaPlayer.MEDIA_INFO_BUFFERING_START:
+						new Handler().postDelayed(new Runnable() {
+							@Override
+							public void run() {
+								if (!videoView.isPlaying()) {
+//									imgBtnPlay.setVisibility(View.GONE);
+									imgMp4Scene.setVisibility(View.VISIBLE);
+									pbVideo.setVisibility(View.VISIBLE);
+								}
+							}
+						}, 10);
+						break;
+					case MediaPlayer.MEDIA_INFO_BUFFERING_END:
+						new Handler().postDelayed(new Runnable() {
+							@Override
+							public void run() {
+								if (!videoView.isPlaying()) {
+									pbVideo.setVisibility(View.GONE);
+								}
+							}
+						}, 10);
+						break;
+				}
+				return true;
+			}
+		});
+		videoView.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
+			@Override
+			public void onCompletion(MediaPlayer mp) {
+				JYLog.D("complete", new Throwable());
+				//vh.imgBtnPlay.setVisibility(View.VISIBLE);
+				videoView.requestFocus();
+				videoView.seekTo(0);
+				videoView.start();
+			}
+		});
+		imgContent.setOnClickListener(new View.OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				if (videoView.isPlaying()) {
+					videoView.pause();
+					imgBtnPlay.setVisibility(View.VISIBLE);
+					imgMp4Scene.setVisibility(View.VISIBLE);
+					isClickImgContent = true;
+				}
+			}
+		});
+		imgBtnPlay.setOnClickListener(new View.OnClickListener() {
+			@Override
+			public void onClick(View v) {
+
+				imgBtnPlay.setVisibility(View.GONE);
+				videoView.requestFocus();
+				videoView.start();
+
+				imgBtnPlay.setVisibility(View.GONE);
+
+				if (isClickImgContent) {
+					imgMp4Scene.setVisibility(View.GONE);
+					isClickImgContent = false;
+				} else {
+					new Handler().post(new Runnable() {
+						@Override
+						public void run() {
+							imgMp4Scene.setVisibility(View.VISIBLE);
+							pbVideo.setVisibility(View.VISIBLE);
+						}
+					});
+				}
+
+			}
+		});
+	}
+
+	@Override
+	public void onClick(View v) {
+		Intent intent = null;
+		switch (v.getId()) {
+			case R.id.layout_back:
+				onBackPressed();
+				break;
+			case R.id.btn_item_like:
+				if (!TextUtil.isNull(timelineData.LIKE_YN) && timelineData.LIKE_YN.equals(Definitions.YN.YES))
+					netFunc.requestLike(timelineData.TIMELINE_ID, Definitions.YN.NO, timelineData.LIKE_ID);
+				else
+					netFunc.requestLike(timelineData.TIMELINE_ID, Definitions.YN.YES, null);
+				break;
+			case R.id.txt_item_like_count:
+				intent = new Intent(TimelineDetailAct.this, BridgeAct.class);
+				intent.putExtra(Definitions.INTENT_KEY.DATA, GOTO.LIKE_USER_LIST);
+				intent.putExtra(INTENT_KEY.TIMELINE_ID, timelineData.TIMELINE_ID);
+				intent.putExtra(INTENT_KEY.CATEGORY, "T");
+				Util.moveActivity(TimelineDetailAct.this, intent, -1, -1, false, false);
+				break;
+			case R.id.btn_item_reply:
+				intent = new Intent(TimelineDetailAct.this, BridgeAct.class);
+				intent.putExtra(Definitions.INTENT_KEY.DATA, GOTO.COMMENT_LIST);
+				intent.putExtra(INTENT_KEY.TIMELINE_ID, timelineData.TIMELINE_ID);
+				intent.putExtra(INTENT_KEY.CATEGORY, "T");
+				Util.moveActivity(TimelineDetailAct.this, intent, -1, -1, false, false);
+				break;
+			case R.id.btn_item_share:
+				ShareDialog dialog = new ShareDialog();
+				dialog.setDialogListener(dialogListener);
+				dialogShow(dialog, "share");
+				break;
+			case R.id.btn_item_etc:
+				AlertDialog.Builder builder = new AlertDialog.Builder(this);
+				if (!TextUtil.isNull(timelineData.OWN_YN) && timelineData.OWN_YN.equals(Definitions.YN.YES)) {
+					builder.setItems(R.array.alert_etc_mine, new DialogInterface.OnClickListener() {
+						@Override
+						public void onClick(DialogInterface dialog, int which) {
+							netFunc.requestTimelineDelete(timelineData.TIMELINE_ID);
+						}
+					});
+				} else {
+					builder.setItems(R.array.alert_etc, new DialogInterface.OnClickListener() {
+						@Override
+						public void onClick(DialogInterface dialog, int which) {
+							Intent intent = new Intent(TimelineDetailAct.this, BridgeAct.class);
+							intent.putExtra(Definitions.INTENT_KEY.DATA, GOTO.REPORT);
+							intent.putExtra(INTENT_KEY.TIMELINE_ID, timelineData.TIMELINE_ID);
+							intent.putExtra(INTENT_KEY.CATEGORY, ReportFrag.NOTIFY_CATEGORY_T);
+							Util.moveActivity(TimelineDetailAct.this, intent, -1, -1, false, false);
+						}
+					});
+				}
+				builder.show();
+				break;
+		}
+	}
+
+	@Override
+	public void onNetworkResult(int idx, NetworkJson json) {
+		super.onNetworkResult(idx, json);
+		switch (idx) {
+			case APIKEY.TIMELINE_LIST:
+				if (json.LIST != null && json.LIST.size() > 0) {
+					timelineData = json.LIST.get(0);
+				}
+				onUIRefresh();
+				break;
+			case APIKEY.LIKE_ACTION:
+				if (timelineData != null && !TextUtil.isNull(timelineData.LIKE_YN) && timelineData.LIKE_YN.equals(Definitions.YN.NO)) {
+					timelineData.LIKE_YN = Definitions.YN.YES;
+					timelineData.LIKE_ID = json.LIKE_ID;
+					timelineData.LIKE_COUNT += 1;
+				} else {
+					timelineData.LIKE_YN = Definitions.YN.NO;
+					timelineData.LIKE_ID = "";
+					timelineData.LIKE_COUNT -= 1;
+				}
+				onUIRefresh();
+				break;
+		}
+	}
+
+
+	/**
+	 * 공유
+	 */
+	public DialogListener dialogListener = new DialogListener() {
+		@Override
+		public void onSendDlgData(DialogData dialogData) {
+			if (timelineData == null) return;
+			ShareToSNSManager shareToSNSManager = null;
+
+			String shareImageUrl;
+			if (!TextUtils.isEmpty(timelineData.TIMELINE_MP4_SCENE)) {
+				shareImageUrl = timelineData.TIMELINE_MP4_SCENE;
+			} else {
+				shareImageUrl = timelineData.TIMELINE_IMG;
+			}
+
+			if (TextUtil.isNull(shareImageUrl)) return;
+
+			switch (dialogData.dialogButtonType) {
+				case Definitions.DIALOG_SELECT.SHARE_COPY_URL:
+					ClipboardManager clipboard = (ClipboardManager) getSystemService(Context.CLIPBOARD_SERVICE);
+					ClipData clip = null;
+					clip = ClipData.newPlainText("simple text", shareImageUrl);
+					clipboard.setPrimaryClip(clip);
+					Debug.showToast(TimelineDetailAct.this, R.string.str_share_to_clipboard_message);
+					break;
+				case Definitions.DIALOG_SELECT.SHARE_FACEBOOK:
+					shareToFacebook(shareImageUrl);
+					break;
+				case Definitions.DIALOG_SELECT.SHARE_INSTAGRAM:
+					shareToSNSManager = new ShareToSNSManager(TimelineDetailAct.this, shareImageUrl);
+					shareToSNSManager.shareToInstagram();
+					break;
+				case Definitions.DIALOG_SELECT.SHARE_KAKAOSTORY:
+					shareToSNSManager = new ShareToSNSManager(TimelineDetailAct.this, shareImageUrl);
+					shareToSNSManager.shareToKakaoStory();
+					break;
+			}
+		}
+	};
+
+	@Override
+	public void onActivityResult(int requestCode, int resultCode, Intent data) {
+		if (requestCode == Definitions.ACTIVITY_REQUEST_CODE.FACEBOOK_SHARE) {
+			callbackManager.onActivityResult(requestCode, resultCode, data);
+		} else {
+			super.onActivityResult(requestCode, resultCode, data);
+		}
+	}
+
+	CallbackManager callbackManager;
+	public com.facebook.share.widget.ShareDialog facebookShareDialog;
+
+	public void shareToFacebook(String imageUrl) {
+		FacebookSdk.sdkInitialize(this);
+		callbackManager = CallbackManager.Factory.create();
+		facebookShareDialog = new com.facebook.share.widget.ShareDialog(this);
+		facebookShareDialog.registerCallback(callbackManager, new FacebookCallback<Sharer.Result>() {
+			@Override
+			public void onSuccess(Sharer.Result result) {
+			}
+
+			@Override
+			public void onCancel() {
+			}
+
+			@Override
+			public void onError(FacebookException error) {
+			}
+		});
+
+		String timelineContent = "";
+		try {
+			timelineContent = URLDecoder.decode(timelineData.TIMELINE_TEXT, "UTF-8");
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+
+		Uri contentUri = Uri.parse(imageUrl);
+		ShareLinkContent content = new ShareLinkContent.Builder()
+				.setContentUrl(contentUri)            //페북에서 클릭하면 들어가는 링크, (사이트이면 사이트로 이동, 동영상 링크이면 링크를 통해 동영상 재생됨)
+				.setContentTitle(getString(R.string.str_share_to_facebook_title))
+				.setImageUrl(Uri.parse(imageUrl))
+				.setContentDescription(timelineContent)
+				.build();
+		facebookShareDialog.show(content, com.facebook.share.widget.ShareDialog.Mode.AUTOMATIC);
+	}
+}

@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              android:layout_width="match_parent"
+              android:layout_height="match_parent"
+              android:background="@color/c_000000"
+              android:orientation="vertical">
+
+    <ImageButton
+        android:id="@+id/btn_close"
+        android:layout_width="@dimen/dp_40"
+        android:layout_height="@dimen/dp_48"
+        android:background="@drawable/ripple_light"
+        android:src="@drawable/btn_close3"/>
+
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+
+        <uk.co.senab.photoview.PhotoView
+            android:id="@+id/img_expand"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_gravity="center"/>
+    </FrameLayout>
+
+</LinearLayout>

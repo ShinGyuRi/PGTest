@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    app:layout_behavior="@string/appbar_scrolling_view_behavior"
+    tools:context="kr.innisfree.playgreen.activity.CameraActivity"
+    tools:showIn="@layout/activity_camera">
+
+    <!--<FrameLayout-->
+    <!--android:id="@+id/camera.fl_container"-->
+    <!--android:layout_width="match_parent"-->
+    <!--android:layout_height="0dp"-->
+    <!--android:layout_weight="1" />-->
+
+    <kr.innisfree.playgreen.widget.CustomViewPager
+        android:id="@+id/camera.vp"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1" />
+    <!--
+    <kr.innisfree.playgreen.common.view.InnisfreeTabLayout
+        android:id="@+id/camera.tab"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/tab_height"
+        android:background="@color/c_ffffff"
+        app:tabIndicatorColor="@color/c_69b06c"
+        app:tabIndicatorHeight="@dimen/dp_2"
+        app:tabSelectedTextColor="@color/c_4b9b50"
+        app:tabTextAppearance="@style/tabTextAppearance"
+        app:tabTextColor="@color/c_666666"/>
+-->
+
+    <kr.innisfree.playgreen.widget.CustomTabLayout
+        android:id="@+id/camera.tab"
+        style="@style/MyCustomTabLayout"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:layout_alignParentBottom="true"
+        android:background="@color/c_25272a"
+        app:tabGravity="fill"
+        app:tabMaxWidth="0dp"
+        app:tabMode="fixed" />
+
+</LinearLayout>

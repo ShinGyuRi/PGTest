@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical">
+
+    <FrameLayout
+        android:id="@+id/fl_camera_footer"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/dp_116"
+        android:background="@color/c_25272a">
+        <!--android:layout_height="@dimen/dp_116"-->
+        <ImageButton
+            android:id="@+id/camera.btn_camera"
+            android:layout_width="@dimen/dp_70"
+            android:layout_height="@dimen/dp_70"
+            android:layout_gravity="center"
+            android:background="@drawable/ripple_light"
+            android:src="@drawable/btn_photo_shoot" />
+
+    </FrameLayout>
+
+</LinearLayout>

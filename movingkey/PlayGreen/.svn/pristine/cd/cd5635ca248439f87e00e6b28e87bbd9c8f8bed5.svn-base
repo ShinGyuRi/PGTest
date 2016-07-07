@@ -1,0 +1,165 @@
+package kr.innisfree.playgreen.ImageFilter.glideTransformation;
+
+import android.content.Context;
+import android.graphics.Bitmap;
+import android.graphics.Canvas;
+import android.graphics.Paint;
+import android.os.Build;
+import android.renderscript.RSRuntimeException;
+
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.Transformation;
+import com.bumptech.glide.load.engine.Resource;
+import com.bumptech.glide.load.engine.bitmap_recycle.BitmapPool;
+import com.bumptech.glide.load.resource.bitmap.BitmapResource;
+import com.moyusoft.util.ImageFilterUtil;
+
+import de.arkan85.android.image.editing.library.filters.DoBrightness;
+import de.arkan85.android.image.editing.library.filters.DoColorFilter;
+import de.arkan85.android.image.editing.library.filters.DoGamma;
+import jp.co.cyberagent.android.gpuimage.GPUImage;
+import jp.co.cyberagent.android.gpuimage.GPUImageBrightnessFilter;
+import jp.co.cyberagent.android.gpuimage.GPUImageColorBalanceFilter;
+import jp.co.cyberagent.android.gpuimage.GPUImageColorBlendFilter;
+import jp.co.cyberagent.android.gpuimage.GPUImageColorDodgeBlendFilter;
+import jp.co.cyberagent.android.gpuimage.GPUImageColorMatrixFilter;
+import jp.co.cyberagent.android.gpuimage.GPUImageExposureFilter;
+import jp.co.cyberagent.android.gpuimage.GPUImageGammaFilter;
+import jp.co.cyberagent.android.gpuimage.GPUImageLevelsFilter;
+import jp.wasabeef.glide.transformations.internal.FastBlur;
+import jp.wasabeef.glide.transformations.internal.RSBlur;
+
+/**
+ * Created by wonderland on 16. 4. 14..
+ */
+public class TangerineTransformation implements Transformation<Bitmap> {
+
+    private static int MAX_RADIUS = 25;
+    private static int DEFAULT_DOWN_SAMPLING = 1;
+
+    private Context mContext;
+    private BitmapPool mBitmapPool;
+
+    private int mRadius;
+    private int mSampling;
+
+    public TangerineTransformation(Context context) {
+        this(context, Glide.get(context).getBitmapPool(), MAX_RADIUS, DEFAULT_DOWN_SAMPLING);
+    }
+
+    public TangerineTransformation(Context context, BitmapPool pool) {
+        this(context, pool, MAX_RADIUS, DEFAULT_DOWN_SAMPLING);
+    }
+
+    public TangerineTransformation(Context context, BitmapPool pool, int radius, int sampling) {
+        mContext = context.getApplicationContext();
+        pool.clearMemory();
+        mBitmapPool = pool;
+        mRadius = radius;
+        mSampling = sampling;
+    }
+
+    @Override
+    public Resource<Bitmap> transform(Resource<Bitmap> resource, int outWidth, int outHeight) {
+        Bitmap source = resource.get();
+
+//        int width = source.getWidth();
+//        int height = source.getHeight();
+//        int scaledWidth = width / mSampling;
+//        int scaledHeight = height / mSampling;
+//
+//        DoColorFilter colorFilter = new DoColorFilter(source, 0.7, 0.59, 0.4);
+//        source = colorFilter.executeFilter();
+//        source = ImageFilterUtil.updateSaturation(source, 1.3f);
+//        DoBrightness doBrightness00 = new DoBrightness(source, 65);
+//        source = doBrightness00.executeFilter();
+//        source = ImageFilterUtil.updateExposure(source, 0.5f);
+//        DoGamma doGamma00 = new DoGamma(source, 0.82, 0.82, 0.82);
+//        source = doGamma00.executeFilter();
+
+        /** color balance **/
+        GPUImageColorBalanceFilter colorBalanceFilter = new GPUImageColorBalanceFilter();
+        colorBalanceFilter.setMidtones(new float[]{0.30f, 0.19f, -0.40f});
+
+        GPUImage colorBalanceFilterGPUImage = new GPUImage(mContext);
+        colorBalanceFilterGPUImage.setImage(source);
+        colorBalanceFilterGPUImage.setFilter(colorBalanceFilter);
+        Bitmap colorBalanceFilterBitmap = colorBalanceFilterGPUImage.getBitmapWithFilterApplied();
+
+        /** source recycle **/
+        source.recycle();
+
+        /** exposure **/
+        GPUImageExposureFilter gpuImageExposureFilter = new GPUImageExposureFilter();
+        gpuImageExposureFilter.setExposure(0.515f);
+
+        GPUImage gpuImageExposureFilterGPUImage = new GPUImage(mContext);
+        gpuImageExposureFilterGPUImage.setImage(colorBalanceFilterBitmap);
+        gpuImageExposureFilterGPUImage.setFilter(gpuImageExposureFilter);
+        Bitmap gpuImageExposureBitmap = gpuImageExposureFilterGPUImage.getBitmapWithFilterApplied();
+
+        /** colorBalance recycle **/
+        colorBalanceFilterBitmap.recycle();
+
+
+        /** gamma **/
+        GPUImageGammaFilter gpuImageGammaFilter = new GPUImageGammaFilter();
+        gpuImageGammaFilter.setGamma(1.3f);
+
+        GPUImage gpuImageGammaFilterGPUImage = new GPUImage(mContext);
+        gpuImageGammaFilterGPUImage.setImage(gpuImageExposureBitmap);
+        gpuImageGammaFilterGPUImage.setFilter(gpuImageGammaFilter);
+        Bitmap gpuImageGammaBitmap = gpuImageGammaFilterGPUImage.getBitmapWithFilterApplied();
+
+        /** gpuImageExposureBitmap recycle **/
+        gpuImageExposureBitmap.recycle();
+
+        /** level **/
+//        GPUImageLevelsFilter gpuImageLevelsFilter = new GPUImageLevelsFilter();
+//        gpuImageLevelsFilter.setRedMin(0, 0, 0);
+//        gpuImageLevelsFilter.setGreenMin(0.94f, 0, 0);
+//        gpuImageLevelsFilter.setGreenMin(225, 0, 0);
+
+//        GPUImage gpuImageLevelsFilterGPUImage = new GPUImage(mContext);
+//        gpuImageLevelsFilterGPUImage.setImage(exposureFilterBitmap);
+//        gpuImageLevelsFilterGPUImage.setFilter(gpuImageBrightnessFilter);
+//        Bitmap gpuImageLevelsFilterBitmap = gpuImageLevelsFilterGPUImage.getBitmapWithFilterApplied();
+
+        /** exposure recycle **/
+//        exposureFilterBitmap.recycle();
+//
+//        /** color **/
+//        GPUImageColorMatrixFilter colorMatrixFilter = new GPUImageColorMatrixFilter();
+//        colorMatrixFilter.setColorMatrix();
+
+
+//        Bitmap bitmap = mBitmapPool.get(scaledWidth, scaledHeight, Bitmap.Config.ARGB_8888);
+//        if (bitmap == null) {
+//            bitmap = Bitmap.createBitmap(scaledWidth, scaledHeight, Bitmap.Config.ARGB_8888);
+//        }
+//
+//        Canvas canvas = new Canvas(bitmap);
+//        canvas.scale(1 / (float) mSampling, 1 / (float) mSampling);
+//        Paint paint = new Paint();
+//        paint.setFlags(Paint.FILTER_BITMAP_FLAG);
+//        canvas.drawBitmap(source, 0, 0, paint);
+//
+//        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR1) {
+//            try {
+//                bitmap = RSBlur.blur(mContext, bitmap, mRadius);
+//            } catch (RSRuntimeException e) {
+//                bitmap = FastBlur.blur(bitmap, mRadius, true);
+//            }
+//        } else {
+//            bitmap = FastBlur.blur(bitmap, mRadius, true);
+//        }
+
+        return BitmapResource.obtain(gpuImageGammaBitmap, mBitmapPool);
+    }
+
+    @Override
+    public String getId() {
+        return "BlurTransformation(radius=" + mRadius + ", sampling=" + mSampling + ")";
+    }
+
+}

@@ -1,0 +1,204 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/coordinatorLayout"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical">
+
+            <android.support.design.widget.AppBarLayout
+                android:id="@+id/appBarLayout"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:elevation="@dimen/dp_1">
+
+                <android.support.v7.widget.Toolbar
+                    android:id="@+id/toolbar"
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/titlebar_height"
+                    android:background="@color/c_69b06c"
+                    android:minHeight="@dimen/titlebar_height"
+                    app:layout_scrollFlags="enterAlways"
+                    app:titleTextColor="@color/c_ffffff">
+                    <!--scroll|-->
+
+                    <ImageView
+                        android:layout_width="@dimen/dp_62"
+                        android:layout_height="@dimen/dp_35"
+                        android:layout_gravity="center"
+                        android:background="@drawable/img_logo1" />
+
+
+                    <ImageButton
+                        android:id="@+id/btn_option"
+                        android:layout_width="@dimen/dp_40"
+                        android:layout_height="@dimen/dp_48"
+                        android:layout_gravity="right|center_vertical"
+                        android:background="@drawable/ripple_effect"
+                        android:src="@drawable/btn_search" />
+
+                </android.support.v7.widget.Toolbar>
+
+            </android.support.design.widget.AppBarLayout>
+
+            <FrameLayout
+                android:id="@+id/layout_top"
+                android:layout_width="match_parent"
+                android:layout_weight="1"
+                android:layout_height="0dp">
+
+                <ImageView
+                    android:id="@+id/img_top"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:duplicateParentState="true"
+                    android:scaleType="centerCrop" />
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:background="@color/c_000000_10"
+                    android:duplicateParentState="true" />
+
+                <kr.innisfree.playgreen.common.view.InnisfreeGothicBoldTextView
+                    android:id="@+id/txt_top"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:duplicateParentState="true"
+                    android:textColor="@color/c_ffffff"
+                    android:textSize="@dimen/dp_30" />
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:background="?android:attr/selectableItemBackground" />
+            </FrameLayout>
+
+            <FrameLayout
+                android:id="@+id/layout_middle"
+                android:layout_width="match_parent"
+                android:layout_weight="1"
+                android:layout_height="0dp"
+                android:layout_marginTop="@dimen/dp_3"
+                android:background="@drawable/ripple_dark">
+
+                <ImageView
+                    android:id="@+id/img_middle"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:scaleType="centerCrop" />
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:background="@color/c_000000_10" />
+
+                <kr.innisfree.playgreen.common.view.InnisfreeGothicBoldTextView
+                    android:id="@+id/txt_middle"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:textColor="@color/c_ffffff"
+                    android:textSize="@dimen/dp_30" />
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:background="?android:attr/selectableItemBackground" />
+
+            </FrameLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_weight="1"
+                android:layout_height="0dp"
+                android:layout_marginTop="@dimen/dp_3"
+                android:orientation="horizontal">
+
+                <FrameLayout
+                    android:id="@+id/layout_bottom_left"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1">
+
+                    <ImageView
+                        android:id="@+id/img_bottom_left"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:scaleType="centerCrop" />
+
+                    <View
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:background="@color/c_000000_10" />
+
+                    <kr.innisfree.playgreen.common.view.InnisfreeGothicBoldTextView
+                        android:id="@+id/txt_bottom_left"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:textColor="@color/c_ffffff"
+                        android:textSize="@dimen/dp_25" />
+
+                    <View
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:background="?android:attr/selectableItemBackground" />
+
+                </FrameLayout>
+
+                <FrameLayout
+                    android:id="@+id/layout_bottom_right"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_marginLeft="@dimen/dp_3"
+                    android:layout_weight="1">
+
+                    <ImageView
+                        android:id="@+id/img_bottom_right"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:scaleType="centerCrop" />
+
+                    <View
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:background="@color/c_000000_10" />
+
+                    <kr.innisfree.playgreen.common.view.InnisfreeGothicBoldTextView
+                        android:id="@+id/txt_bottom_right"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:gravity="center"
+                        android:textColor="@color/c_ffffff"
+                        android:textSize="@dimen/dp_25" />
+
+                    <View
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:background="?android:attr/selectableItemBackground" />
+
+                </FrameLayout>
+
+            </LinearLayout>
+
+
+        </LinearLayout>
+
+
+    </FrameLayout>
+
+</LinearLayout>

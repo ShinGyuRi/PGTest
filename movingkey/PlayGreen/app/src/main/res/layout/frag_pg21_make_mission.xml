@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+             xmlns:app="http://schemas.android.com/apk/res-auto"
+             android:layout_width="match_parent"
+             android:layout_height="match_parent">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/c_ffffff"
+        android:orientation="vertical">
+
+        <android.support.v7.widget.Toolbar
+            android:id="@+id/toolbar"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/titlebar_height"
+            android:background="@color/c_69b06c"
+            android:minHeight="@dimen/titlebar_height"
+            app:contentInsetStart="0dp"
+            app:layout_scrollFlags="enterAlways"
+            app:titleTextColor="@color/c_ffffff">
+            <!--scroll|-->
+
+            <FrameLayout
+                android:id="@+id/layout_back"
+                android:layout_width="@dimen/dp_40"
+                android:layout_height="match_parent"
+                android:background="@drawable/ripple_effect"
+                android:visibility="visible">
+
+                <ImageView
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:background="@drawable/btn_back1"
+                    android:duplicateParentState="true"/>
+
+            </FrameLayout>
+
+            <kr.innisfree.playgreen.common.view.InnisfreeGothicBoldTextView
+                android:id="@+id/txt_title"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:text="@string/str_make_my_mission"
+                android:textColor="@color/c_ffffff"
+                android:textSize="@dimen/dp_20"/>
+
+            <kr.innisfree.playgreen.common.view.InnisfreeGothicTextView
+                android:id="@+id/txt_confirm"
+                android:layout_width="@dimen/dp_48"
+                android:layout_height="match_parent"
+                android:background="@drawable/ripple_effect"
+                android:textSize="@dimen/dp_17"
+                android:textColor="@color/c_ffffff"
+                android:layout_gravity="right"
+                android:gravity="center"
+                android:text="@string/str_confirm"/>
+
+
+        </android.support.v7.widget.Toolbar>
+
+        <kr.innisfree.playgreen.common.view.NanumGothicEditView
+            android:id="@+id/edit_my_mission"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/dp_44"
+            android:layout_marginLeft="0dp"
+            android:layout_marginRight="0dp"
+            style="@style/edit_common"
+            android:hint="@string/str_hint_make_my_mission"
+            android:layout_marginTop="@dimen/dp_10"/>
+
+    </LinearLayout>
+</FrameLayout>

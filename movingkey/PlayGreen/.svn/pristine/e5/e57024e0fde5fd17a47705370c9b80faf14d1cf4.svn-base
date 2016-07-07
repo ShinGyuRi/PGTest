@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html >
+  <head>
+    <meta charset="UTF-8">	
+</header>
+<style>
+body {
+    font-size: 13px;
+    line-height: 1.6em;
+    color: gray;
+    margin:36px 36px 36px 36px;
+}
+</style>
+<body><font face="NanumGothic">
+<p><strong><font color="black">누구나 사진을 올릴 수 있나요?</font></strong></p>
+
+로그인한 사용자는 누구나 사진 및 GIF(시네마그래프)를 올릴 수 있습니다.<p />
+회원가입 시, 자동 로그인이 되며 최초 1회 가입 후에 자유롭게 이용하실 수 있습니다.<p />
+<br />
+
+<p><strong><font color="black">누가 내 사진을 볼 수 있나요?</font></strong></p>
+PLAYGREEN 모바일 앱을 사용하는 사람은 누구나 내 사진 및 시네마그래프를 볼 수 있습니다.<p />
+따로 친구를 맺지 않아도 PLAYGREEN 모바일 앱 사용자(플레이그리너)들은 서로의 그린라이프 사진 및 시네마그래프를 공유하게 됩니다.<p />
+<font color="green">다른 서비스(SNS)로 공유</font>하거나 <font color="green">URL 복사</font> 등을 통하여 포스팅의 URL을 알고 있는 사람은 누구나 해당 콘텐츠를 볼 수 있습니다.<p />
+즉 PLAYGREEN 모바일 앱의 모든 사진 및 시네마그래프는 공개되어 있습니다.<p />
+개인 정보 보호에 유의하시기를 바랍니다.<p />
+<br />
+
+<p><strong><font color="black">닉네임을 변경하고 싶어요</font></strong></p>
+PLAYGREEN 모바일 앱에서 쉽게 변경할 수 있습니다.<p />
+<font color="green">마이페이지 > 설정 페이지</font>에서 사용자 프로필을 변경할 수 있습니다.<p />
+닉네임을 자주 변경하면 다른 사람들이 나를 알아보기 어렵습니다.<p />
+신중하게 생각하고 변경하시기를 바랍니다.<p />
+<br />
+
+<p><strong><font color="black">탈퇴는 어떻게 하나요?</font></strong></p>
+PLAYGREEN 모바일 앱에서 탈퇴할 수 있습니다.<p />
+<font color="green">마이페이지 > 설정 > 계정 관리</font>에서 탈퇴 및 계정 변경을 할 수 있습니다.<p />
+탈퇴 후 모든 정보는 복구할 수 없으므로 주의하시기를 바랍니다.<p />
+
+<br />
+
+<p><strong><font color="black">불쾌감을 주는 사진, 댓글이 있어요</font></strong></p>
+각각에 대하여 신고해 주시면 서비스 운영자가 이용 약관 등에 의거하여 징계 등 필요한 조치를 취할 수 있습니다.<p />
+<li><strong><font color="black">[사진/시네마그래프]</font></strong></li><p />
+포스팅 상세 페이지에서 ‘…‘ 버튼을 누르면 <font color="green">‘신고하기’</font> 버튼이 보입니다.<p />
+해당 신고 사유를 선택하시면 신고처리가 완료됩니다.<p />
+<li><strong><font color="black">[댓글 및 사용자 신고]</font></strong></li><p />
+댓글을 따로 신고할 수 있는 기능은 없습니다.<p />
+단, 해당 사용자 피드에 방문하여 ‘…’ 버튼을 누르면 사용자를 직접 차단하거나 신고하실 수 있습니다.<p />
+신고를 지속적으로 받을 경우, 플레이그린포인트 차감 혹은 계정 정지 처분을 받게 될 수 있습니다.<p />
+타인에게 개인적인 감정에 의해 신고하는 행위는 서로에게 불익을 가져다 줄 수 있으니, 참고하시어 결정하시기를 바랍니다.<p />
+<br />
+
+<p><strong><font color="black">계정 이용 정지를 당했어요</font></strong></p>
+운영정책 및 이용약관에서 이용 제안 사유로 규정한 컨텐츠를 올리면 이용 정지 처리가 될 수 있습니다.<p />
+이용 정지 상태가 되면 다른 사람의 컨텐츠를 보는 것 이외의 사진 올리기, 좋아요, 댓글 작성, #PLAYGREEN21, 태그/사용자 팔로우 및 그 외 모든 PLAYGREEN 모바일 앱에서 제공하는 서비스를 이용하실 수 없습니다.<p />
+<li><font color="green">운영정책 : 마이페이지 > 설정 > 프로그램 정보 > 운영정책</font></li>
+<li><font color="green">이용약관 : 마이페이지 > 설정 > 프로그램 정보 > 이용약관</font></li><p />
+이용 정지 처리에 대하여 이의가 있는 경우 아래 고객센터 메일로 사유를 작성하여 보내 주세요.<p />
+검토 후 답변 드리겠습니다.<p />
+<font color="green">고객센터 : appsupport_playgreen@innisfree.co.kr</font>
+</font></body>
+</html>

@@ -1,0 +1,95 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    >
+
+    <LinearLayout
+        android:id="@+id/layout_intro"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+
+        <FrameLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <android.support.v4.view.ViewPager
+                android:id="@+id/pager"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"/>
+
+            <kr.innisfree.playgreen.common.view.viewpagerindicator.CirclePageIndicator
+                android:id="@+id/indicator"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal|bottom"
+                android:layout_marginBottom="@dimen/dp_27"
+                android:background="@android:color/transparent"
+                android:paddingBottom="@dimen/dp_1"
+                android:paddingTop="@dimen/dp_1"
+                app:fillColor="@color/c_ffffff"
+                app:pageColor="@android:color/transparent"
+                app:radius="@dimen/dp_4"
+                app:strokeColor="@color/c_ffffff"/>
+        </FrameLayout>
+
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/layout_splash"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@drawable/img_splash_bg"
+        android:gravity="center_horizontal"
+        android:orientation="vertical">
+        <!--android:background="@drawable/bg_splash"-->
+
+
+        <kr.innisfree.playgreen.common.view.InnisfreeGothicTextView
+            android:id="@+id/txt_splash"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/dp_91"
+            android:text="@string/str_splash_text"
+            android:textColor="@color/c_ffffff"
+            android:textSize="@dimen/dp_20"/>
+
+        <ImageView
+            android:layout_width="@dimen/dp_150"
+            android:layout_height="@dimen/dp_86"
+            android:layout_marginTop="@dimen/dp_14"
+            android:background="@drawable/img_logo1"/>
+
+        <View
+            android:layout_width="wrap_content"
+            android:layout_height="0dp"
+            android:layout_weight="1"/>
+
+        <View
+            android:layout_width="@dimen/dp_12"
+            android:layout_height="@dimen/dp_1"
+            android:background="@color/c_ffffff"/>
+
+        <kr.innisfree.playgreen.common.view.InnisfreeGothicTextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/dp_4"
+            android:text="@string/str_presented_by"
+            android:textColor="@color/c_ffffff"
+            android:textSize="@dimen/dp_11"/>
+
+        <ImageView
+            android:layout_width="@dimen/dp_56"
+            android:layout_height="@dimen/dp_45"
+            android:layout_marginBottom="@dimen/dp_30"
+            android:layout_marginTop="@dimen/dp_20"
+            android:background="@drawable/img_logo_innisfree"/>
+
+    </LinearLayout>
+
+
+</FrameLayout>

@@ -1,0 +1,43 @@
+{
+  "project_info": {
+    "project_id": "playgreengcm",
+    "project_number": "625122460646",
+    "name": "PlaygreenGCM"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:625122460646:android:f39ef921f58a9b57",
+        "client_id": "android:kr.innisfree.playgreen",
+        "client_type": 1,
+        "android_client_info": {
+          "package_name": "kr.innisfree.playgreen",
+          "certificate_hash": []
+        }
+      },
+      "oauth_client": [],
+      "api_key": [],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "cloud_messaging_service": {
+          "status": 2,
+          "apns_config": []
+        },
+        "appinvite_service": {
+          "status": 1,
+          "other_platform_oauth_client": []
+        },
+        "google_signin_service": {
+          "status": 1
+        },
+        "ads_service": {
+          "status": 1
+        }
+      }
+    }
+  ],
+  "client_info": [],
+  "ARTIFACT_VERSION": "1"
+}

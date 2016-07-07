@@ -1,0 +1,110 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              android:layout_width="match_parent"
+              android:layout_height="match_parent"
+              android:background="@color/c_ffffff"
+              android:orientation="vertical">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <FrameLayout
+            android:id="@+id/layout_supergreener_title"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/dp_64">
+
+            <kr.innisfree.playgreen.common.view.InnisfreeGothicTextView
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/dp_64"
+                android:background="@color/c_ffffff"
+                android:gravity="center_vertical"
+                android:paddingLeft="@dimen/dp_10"
+                android:text="@string/str_super_greener"
+                android:textColor="@color/c_333333"
+                android:textSize="@dimen/dp_20"/>
+
+            <ImageButton
+                android:id="@+id/btn_supergreener_info"
+                android:layout_width="@dimen/dp_42"
+                android:layout_height="@dimen/dp_64"
+                android:layout_gravity="right"
+                android:background="@drawable/ripple_dark"
+                android:src="@drawable/btn_info"/>
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/dp_0.5"
+                android:layout_gravity="bottom"
+                android:layout_marginLeft="@dimen/dp_15"
+                android:layout_marginRight="@dimen/dp_15"
+                android:background="@color/c_d2d2d2"/>
+        </FrameLayout>
+
+        <LinearLayout
+            android:id="@+id/layout_supergreener_content"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/layout_supergreener_title"
+            android:orientation="vertical">
+
+
+        </LinearLayout>
+
+
+        <LinearLayout
+            android:id="@+id/layout_supergreener_more"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/dp_40"
+            android:layout_below="@id/layout_supergreener_content"
+            android:background="@drawable/ripple_dark"
+            android:gravity="center"
+            android:orientation="horizontal">
+
+            <kr.innisfree.playgreen.common.view.NanumGothicTextView
+                android:id="@+id/txt_supergreener_more"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:drawablePadding="@dimen/dp_8"
+                android:drawableRight="@drawable/icon_unfold1"
+                android:text="@string/str_open_all_ranker"
+                android:textColor="@color/c_333333"
+                android:textSize="@dimen/dp_13"/>
+
+        </LinearLayout>
+
+
+        <LinearLayout
+            android:id="@+id/layout_tooltip"
+            android:layout_width="@dimen/dp_265"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_below="@id/layout_supergreener_title"
+            android:background="@drawable/img_tooltip"
+            android:orientation="vertical"
+            android:padding="@dimen/dp_20"
+            android:visibility="gone">
+
+            <kr.innisfree.playgreen.common.view.NanumGothicBoldTextView
+                android:id="@+id/txt_supergreener_tooltip_title"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:minHeight="@dimen/dp_24"
+                android:text="@string/str_supergreener_tooltip_title"
+                android:textColor="@color/c_333333"
+                android:textSize="@dimen/dp_13"/>
+
+            <kr.innisfree.playgreen.common.view.NanumGothicTextView
+                android:id="@+id/txt_supergreener_tooltip_content"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/dp_4"
+                android:text="@string/str_supergreener_tooltip_content"
+                android:textColor="@color/c_333333"
+                android:textSize="@dimen/dp_13"/>
+
+        </LinearLayout>
+
+
+    </RelativeLayout>
+</LinearLayout>

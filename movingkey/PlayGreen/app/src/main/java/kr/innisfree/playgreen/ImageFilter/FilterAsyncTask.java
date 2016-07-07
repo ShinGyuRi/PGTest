@@ -1,0 +1,945 @@
+package kr.innisfree.playgreen.ImageFilter;
+
+import android.app.ProgressDialog;
+import android.content.Context;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.os.AsyncTask;
+import android.os.Bundle;
+import android.os.Handler;
+import android.os.Message;
+
+import jp.co.cyberagent.android.gpuimage.GPUImage;
+import jp.co.cyberagent.android.gpuimage.GPUImageAlphaBlendFilter;
+import jp.co.cyberagent.android.gpuimage.GPUImageBrightnessFilter;
+import jp.co.cyberagent.android.gpuimage.GPUImageContrastFilter;
+import jp.co.cyberagent.android.gpuimage.GPUImageGammaFilter;
+import jp.co.cyberagent.android.gpuimage.GPUImageGaussianBlurFilter;
+import jp.co.cyberagent.android.gpuimage.GPUImageHueFilter;
+import jp.co.cyberagent.android.gpuimage.GPUImageSaturationFilter;
+import jp.co.cyberagent.android.gpuimage.GPUImageSharpenFilter;
+import kr.innisfree.playgreen.R;
+
+/**
+ * Created by wonderland on 16. 5. 4..
+ */
+public class FilterAsyncTask extends AsyncTask<Void, Void, Void> {
+
+    private ProgressDialog progressDialog;
+
+    private Context mContext;
+    private String absoluthPath;
+    private Bitmap source;
+    private Handler handler;
+
+    public FilterAsyncTask(Context context, String absoluthPath, Bitmap bitmap, Handler handler) {
+        this.mContext = context;
+        this.absoluthPath = absoluthPath;
+        this.source = bitmap;
+        this.handler = handler;
+    }
+
+    @Override
+    protected void onPreExecute() {
+        super.onPreExecute();
+
+        progressDialog = new ProgressDialog(mContext);
+        progressDialog.setMessage("loading..");
+        progressDialog.setCancelable(false);
+        progressDialog.show();
+
+    }
+
+    @Override
+    protected Void doInBackground(Void... params) {
+
+        /** 1. inni **/
+        makeInni01();
+
+        /** 2. inni **/
+        makeInni02();
+
+        /** 3. inni **/
+        makeInni03();
+
+        /** 4. play **/
+        makePlay01();
+
+        /** 5. play **/
+        makePlay02();
+
+        /** 6. play **/
+        makePlay03();
+
+        /** 7. earth **/
+        makeEarth01();
+
+        /** 8. earth **/
+        makeEarth02();
+
+        /** 9. earth **/
+        makeEarth03();
+
+        progressDialog.dismiss();
+
+        return null;
+    }
+
+    private void makeInni01() {
+
+        /** alpha blend **/
+        BitmapFactory.Options options = new BitmapFactory.Options();
+        options.inSampleSize = 5;
+        Bitmap inniFilterBitmap = BitmapFactory.decodeResource(mContext.getResources(), R.drawable.f_d7c9ac, options);
+
+        GPUImageAlphaBlendFilter alphaBlendFilter = new GPUImageAlphaBlendFilter();
+        alphaBlendFilter.setBitmap(inniFilterBitmap);
+        alphaBlendFilter.setMix(0.18f);
+
+        GPUImage gpuImageWithAlphaBlend = new GPUImage(mContext);
+        gpuImageWithAlphaBlend.setImage(source);
+        gpuImageWithAlphaBlend.setFilter(alphaBlendFilter);
+
+        Bitmap bitmapWithAlphaBlend = gpuImageWithAlphaBlend.getBitmapWithFilterApplied();
+
+//        source.recycle();
+
+        /** 1. brightness **/
+        GPUImageBrightnessFilter brightnessFilter = new GPUImageBrightnessFilter();
+        brightnessFilter.setBrightness(0.06f);
+
+        GPUImage gpuImageWithBrightness = new GPUImage(mContext);
+        gpuImageWithBrightness.setImage(bitmapWithAlphaBlend);
+        gpuImageWithBrightness.setFilter(brightnessFilter);
+
+        Bitmap bitmapWithBrightness = gpuImageWithBrightness.getBitmapWithFilterApplied();
+
+        /** 1. alphablend recycle **/
+        bitmapWithAlphaBlend.recycle();
+
+        /** 2. contrast **/
+        GPUImageContrastFilter contrastFilter = new GPUImageContrastFilter();
+        contrastFilter.setContrast(0.9f);
+
+        GPUImage gpuImageWithContrast = new GPUImage(mContext);
+        gpuImageWithContrast.setImage(bitmapWithBrightness);
+        gpuImageWithContrast.setFilter(contrastFilter);
+
+        Bitmap bitmapWithContrast = gpuImageWithContrast.getBitmapWithFilterApplied();
+
+        /** 2. brightness recycle **/
+        bitmapWithBrightness.recycle();
+
+        /** 3. saturation **/
+        GPUImageSaturationFilter saturationFilter = new GPUImageSaturationFilter();
+        saturationFilter.setSaturation(0.9f);
+
+        GPUImage gpuImageWithSaturation = new GPUImage(mContext);
+        gpuImageWithSaturation.setImage(bitmapWithContrast);
+        gpuImageWithSaturation.setFilter(saturationFilter);
+
+        Bitmap bitmapWithSaturation = gpuImageWithSaturation.getBitmapWithFilterApplied();
+
+        /** 3. contrast recycle **/
+        bitmapWithContrast.recycle();
+
+//        /** 4. gaussian hue **/
+//        GPUImageHueFilter hueFilter = new GPUImageHueFilter();
+//        hueFilter.setHue(6.3f);
+
+        /** 4. sharpen **/
+        GPUImageSharpenFilter sharpenFilter = new GPUImageSharpenFilter();
+        sharpenFilter.setSharpness(0.4f);
+
+        GPUImage inniGpuImage = new GPUImage(mContext);
+        inniGpuImage.setImage(bitmapWithSaturation);
+        inniGpuImage.setFilter(sharpenFilter);
+
+        Bitmap resultBitmap = inniGpuImage.getBitmapWithFilterApplied();
+
+        /** 4. saturation recycle **/
+        bitmapWithSaturation.recycle();
+
+        if (handler != null) {
+            Bundle bundle = new Bundle();
+            bundle.putParcelable("bitmap", resultBitmap);
+            Message message = new Message();
+            message.setData(bundle);
+            handler.sendMessage(message);
+        }
+    }
+
+    private void makeInni02() {
+
+        /** alpha blend **/
+        BitmapFactory.Options options = new BitmapFactory.Options();
+        options.inSampleSize = 5;
+        Bitmap inniFilterBitmap = BitmapFactory.decodeResource(mContext.getResources(), R.drawable.f_bedfc9, options);
+
+        GPUImageAlphaBlendFilter alphaBlendFilter = new GPUImageAlphaBlendFilter();
+        alphaBlendFilter.setBitmap(inniFilterBitmap);
+        alphaBlendFilter.setMix(0.18f);
+
+        GPUImage gpuImageWithAlphaBlend = new GPUImage(mContext);
+        gpuImageWithAlphaBlend.setImage(source);
+        gpuImageWithAlphaBlend.setFilter(alphaBlendFilter);
+
+        Bitmap bitmapWithAlphaBlend = gpuImageWithAlphaBlend.getBitmapWithFilterApplied();
+
+//        source.recycle();
+
+        /** 1. brightness **/
+        GPUImageBrightnessFilter brightnessFilter = new GPUImageBrightnessFilter();
+        brightnessFilter.setBrightness(0.06f);
+
+        GPUImage gpuImageWithBrightness = new GPUImage(mContext);
+        gpuImageWithBrightness.setImage(bitmapWithAlphaBlend);
+        gpuImageWithBrightness.setFilter(brightnessFilter);
+
+        Bitmap bitmapWithBrightness = gpuImageWithBrightness.getBitmapWithFilterApplied();
+
+        /** 1. alpha blend recycle **/
+        bitmapWithAlphaBlend.recycle();
+
+        /** 2. contrast **/
+        GPUImageContrastFilter contrastFilter = new GPUImageContrastFilter();
+        contrastFilter.setContrast(0.9f);
+
+        GPUImage gpuImageWithContrast = new GPUImage(mContext);
+        gpuImageWithContrast.setImage(bitmapWithBrightness);
+        gpuImageWithContrast.setFilter(contrastFilter);
+
+        Bitmap bitmapWithContrast = gpuImageWithContrast.getBitmapWithFilterApplied();
+
+        /** 2. brightness recycle **/
+        bitmapWithAlphaBlend.recycle();
+
+        /** 3. saturation **/
+        GPUImageSaturationFilter saturationFilter = new GPUImageSaturationFilter();
+        saturationFilter.setSaturation(0.9f);
+
+        GPUImage gpuImageWithSaturation = new GPUImage(mContext);
+        gpuImageWithSaturation.setImage(bitmapWithContrast);
+        gpuImageWithSaturation.setFilter(saturationFilter);
+
+        Bitmap bitmapWithSaturation = gpuImageWithSaturation.getBitmapWithFilterApplied();
+
+        /** 3. contrast recycle **/
+        bitmapWithContrast.recycle();
+
+//        /** 4. gaussian hue **/
+//        GPUImageHueFilter hueFilter = new GPUImageHueFilter();
+//        hueFilter.setHue(6.3f);
+
+        /** 4. sharpen **/
+        GPUImageSharpenFilter sharpenFilter = new GPUImageSharpenFilter();
+        sharpenFilter.setSharpness(0.4f);
+
+        GPUImage inniGpuImage = new GPUImage(mContext);
+        inniGpuImage.setImage(bitmapWithSaturation);
+        inniGpuImage.setFilter(sharpenFilter);
+
+        Bitmap resultBitmap = inniGpuImage.getBitmapWithFilterApplied();
+
+        /** 4. stration recycle **/
+        bitmapWithSaturation.recycle();
+
+        if (handler != null) {
+            Bundle bundle = new Bundle();
+            bundle.putParcelable("bitmap", resultBitmap);
+            Message message = new Message();
+            message.setData(bundle);
+            handler.sendMessage(message);
+        }
+    }
+
+    private void makeInni03() {
+
+        /** alpha blend **/
+        BitmapFactory.Options options = new BitmapFactory.Options();
+        options.inSampleSize = 5;
+        Bitmap inniFilterBitmap = BitmapFactory.decodeResource(mContext.getResources(), R.drawable.f_b3d2df, options);
+
+        GPUImageAlphaBlendFilter alphaBlendFilter = new GPUImageAlphaBlendFilter();
+        alphaBlendFilter.setBitmap(inniFilterBitmap);
+        alphaBlendFilter.setMix(0.18f);
+
+        GPUImage gpuImageWithAlphaBlend = new GPUImage(mContext);
+        gpuImageWithAlphaBlend.setImage(source);
+        gpuImageWithAlphaBlend.setFilter(alphaBlendFilter);
+
+        Bitmap bitmapWithAlphaBlend = gpuImageWithAlphaBlend.getBitmapWithFilterApplied();
+
+//        source.recycle();
+
+        /** 1. brightness **/
+        GPUImageBrightnessFilter brightnessFilter = new GPUImageBrightnessFilter();
+        brightnessFilter.setBrightness(0.06f);
+
+        GPUImage gpuImageWithBrightness = new GPUImage(mContext);
+        gpuImageWithBrightness.setImage(bitmapWithAlphaBlend);
+        gpuImageWithBrightness.setFilter(brightnessFilter);
+
+        Bitmap bitmapWithBrightness = gpuImageWithBrightness.getBitmapWithFilterApplied();
+
+        /** 1. alpha blend recycle **/
+        bitmapWithAlphaBlend.recycle();
+
+        /** 2. contrast **/
+        GPUImageContrastFilter contrastFilter = new GPUImageContrastFilter();
+        contrastFilter.setContrast(0.9f);
+
+        GPUImage gpuImageWithContrast = new GPUImage(mContext);
+        gpuImageWithContrast.setImage(bitmapWithBrightness);
+        gpuImageWithContrast.setFilter(contrastFilter);
+
+        Bitmap bitmapWithContrast = gpuImageWithContrast.getBitmapWithFilterApplied();
+
+        /** 2. brightness recycle **/
+        bitmapWithBrightness.recycle();
+
+        /** 3. saturation **/
+        GPUImageSaturationFilter saturationFilter = new GPUImageSaturationFilter();
+        saturationFilter.setSaturation(0.9f);
+
+        GPUImage gpuImageWithSaturation = new GPUImage(mContext);
+        gpuImageWithSaturation.setImage(bitmapWithContrast);
+        gpuImageWithSaturation.setFilter(saturationFilter);
+
+        Bitmap bitmapWithSaturation = gpuImageWithSaturation.getBitmapWithFilterApplied();
+
+        /** 3. contrast recycle **/
+        bitmapWithContrast.recycle();
+
+//        /** 4. gaussian hue **/
+//        GPUImageHueFilter hueFilter = new GPUImageHueFilter();
+//        hueFilter.setHue(6.3f);
+
+        /** 4. sharpen **/
+        GPUImageSharpenFilter sharpenFilter = new GPUImageSharpenFilter();
+        sharpenFilter.setSharpness(0.4f);
+
+        GPUImage inniGpuImage = new GPUImage(mContext);
+        inniGpuImage.setImage(bitmapWithSaturation);
+        inniGpuImage.setFilter(sharpenFilter);
+
+        Bitmap resultBitmap = inniGpuImage.getBitmapWithFilterApplied();
+
+        /** 4. saturation recycle **/
+        bitmapWithSaturation.recycle();
+
+        if (handler != null) {
+            Bundle bundle = new Bundle();
+            bundle.putParcelable("bitmap", resultBitmap);
+            Message message = new Message();
+            message.setData(bundle);
+            handler.sendMessage(message);
+        }
+    }
+
+    private void makePlay01() {
+
+        /** alpha blend **/
+        BitmapFactory.Options options = new BitmapFactory.Options();
+        options.inSampleSize = 5;
+        Bitmap filterBitmap = BitmapFactory.decodeResource(mContext.getResources(), R.drawable.f_9a956d, options);
+
+        GPUImageAlphaBlendFilter alphaBlendFilter = new GPUImageAlphaBlendFilter();
+        alphaBlendFilter.setBitmap(filterBitmap);
+        alphaBlendFilter.setMix(0.18f);
+
+        GPUImage gpuImageWithAlphaBlend = new GPUImage(mContext);
+        gpuImageWithAlphaBlend.setImage(source);
+        gpuImageWithAlphaBlend.setFilter(alphaBlendFilter);
+
+        Bitmap bitmapWithAlphaBlend = gpuImageWithAlphaBlend.getBitmapWithFilterApplied();
+
+        /** source recycle **/
+//        source.recycle();
+
+        /** 1. contrast **/
+        GPUImageContrastFilter contrastFilter = new GPUImageContrastFilter();
+        contrastFilter.setContrast(1.1f);
+
+        GPUImage gpuImageWithContrast = new GPUImage(mContext);
+        gpuImageWithContrast.setImage(bitmapWithAlphaBlend);
+        gpuImageWithContrast.setFilter(contrastFilter);
+
+        Bitmap bitmapWithContrast = gpuImageWithContrast.getBitmapWithFilterApplied();
+
+        /** 1. alphablend recycle **/
+        bitmapWithAlphaBlend.recycle();
+
+        /** 2. sharpen **/
+        GPUImageSharpenFilter sharpenFilter = new GPUImageSharpenFilter();
+        sharpenFilter.setSharpness(1.0f);
+
+        GPUImage gpuImageWithSharpen = new GPUImage(mContext);
+        gpuImageWithSharpen.setImage(bitmapWithContrast);
+        gpuImageWithSharpen.setFilter(sharpenFilter);
+
+        Bitmap bitmapWithSharpen = gpuImageWithSharpen.getBitmapWithFilterApplied();
+
+        /** 2. contrast recycle **/
+        bitmapWithContrast.recycle();
+
+        /** 3. Gamma **/
+        GPUImageGammaFilter gammaFilter = new GPUImageGammaFilter();
+        gammaFilter.setGamma(1.1f);
+
+        GPUImage gpuImageWithGamma = new GPUImage(mContext);
+        gpuImageWithGamma.setImage(bitmapWithSharpen);
+        gpuImageWithGamma.setFilter(gammaFilter);
+
+        Bitmap bitmapWithGamma = gpuImageWithGamma.getBitmapWithFilterApplied();
+
+        /** 3. sharpen recycle **/
+        bitmapWithSharpen.recycle();
+
+        /** 4. brightness **/
+        GPUImageBrightnessFilter brightnessFilter = new GPUImageBrightnessFilter();
+        brightnessFilter.setBrightness(0.09f);
+
+        GPUImage gpuImageWithBrightness = new GPUImage(mContext);
+        gpuImageWithBrightness.setImage(bitmapWithGamma);
+        gpuImageWithBrightness.setFilter(brightnessFilter);
+
+        Bitmap bitmapWithBrightness = gpuImageWithBrightness.getBitmapWithFilterApplied();
+
+        /** 4. gamma recycle **/
+        bitmapWithGamma.recycle();
+
+        /** 5. saturation **/
+        GPUImageSaturationFilter saturationFilter = new GPUImageSaturationFilter();
+        saturationFilter.setSaturation(1.1f);
+
+        GPUImage playGpuImage = new GPUImage(mContext);
+        playGpuImage.setImage(bitmapWithBrightness);
+        playGpuImage.setFilter(saturationFilter);
+
+        Bitmap resultBitmap = playGpuImage.getBitmapWithFilterApplied();
+
+        /** 5. sharpen recycle **/
+        bitmapWithBrightness.recycle();
+
+        if (handler != null) {
+            Bundle bundle = new Bundle();
+            bundle.putParcelable("bitmap", resultBitmap);
+            Message message = new Message();
+            message.setData(bundle);
+            handler.sendMessage(message);
+        }
+    }
+
+    private void makePlay02() {
+
+        /** alpha blend **/
+        BitmapFactory.Options options = new BitmapFactory.Options();
+        options.inSampleSize = 5;
+        Bitmap filterBitmap = BitmapFactory.decodeResource(mContext.getResources(), R.drawable.f_6d9a7c, options);
+
+        GPUImageAlphaBlendFilter alphaBlendFilter = new GPUImageAlphaBlendFilter();
+        alphaBlendFilter.setBitmap(filterBitmap);
+        alphaBlendFilter.setMix(0.22f);
+
+        GPUImage gpuImageWithAlphaBlend = new GPUImage(mContext);
+        gpuImageWithAlphaBlend.setImage(source);
+        gpuImageWithAlphaBlend.setFilter(alphaBlendFilter);
+
+        Bitmap bitmapWithAlphaBlend = gpuImageWithAlphaBlend.getBitmapWithFilterApplied();
+
+        /** source recycle **/
+//        source.recycle();
+
+        /** 1. contrast **/
+        GPUImageContrastFilter contrastFilter = new GPUImageContrastFilter();
+        contrastFilter.setContrast(1.1f);
+
+        GPUImage gpuImageWithContrast = new GPUImage(mContext);
+        gpuImageWithContrast.setImage(bitmapWithAlphaBlend);
+        gpuImageWithContrast.setFilter(contrastFilter);
+
+        Bitmap bitmapWithContrast = gpuImageWithContrast.getBitmapWithFilterApplied();
+
+        /** 1. alphablend recycle **/
+        bitmapWithAlphaBlend.recycle();
+
+        /** 2. sharpen **/
+        GPUImageSharpenFilter sharpenFilter = new GPUImageSharpenFilter();
+        sharpenFilter.setSharpness(1.0f);
+
+        GPUImage gpuImageWithSharpen = new GPUImage(mContext);
+        gpuImageWithSharpen.setImage(bitmapWithContrast);
+        gpuImageWithSharpen.setFilter(sharpenFilter);
+
+        Bitmap bitmapWithSharpen = gpuImageWithSharpen.getBitmapWithFilterApplied();
+
+        /** 2. contrast recycle **/
+        bitmapWithContrast.recycle();
+
+        /** 3. Gamma **/
+        GPUImageGammaFilter gammaFilter = new GPUImageGammaFilter();
+        gammaFilter.setGamma(1.1f);
+
+        GPUImage gpuImageWithGamma = new GPUImage(mContext);
+        gpuImageWithGamma.setImage(bitmapWithSharpen);
+        gpuImageWithGamma.setFilter(gammaFilter);
+
+        Bitmap bitmapWithGamma = gpuImageWithGamma.getBitmapWithFilterApplied();
+
+        /** 3. sharpen recycle **/
+        bitmapWithSharpen.recycle();
+
+        /** 4. brightness **/
+        GPUImageBrightnessFilter brightnessFilter = new GPUImageBrightnessFilter();
+        brightnessFilter.setBrightness(0.09f);
+
+        GPUImage gpuImageWithBrightness = new GPUImage(mContext);
+        gpuImageWithBrightness.setImage(bitmapWithGamma);
+        gpuImageWithBrightness.setFilter(brightnessFilter);
+
+        Bitmap bitmapWithBrightness = gpuImageWithBrightness.getBitmapWithFilterApplied();
+
+        /** 4. gamma recycle **/
+        bitmapWithGamma.recycle();
+
+        /** 5. saturation **/
+        GPUImageSaturationFilter saturationFilter = new GPUImageSaturationFilter();
+        saturationFilter.setSaturation(1.1f);
+
+        GPUImage playGpuImage = new GPUImage(mContext);
+        playGpuImage.setImage(bitmapWithBrightness);
+        playGpuImage.setFilter(saturationFilter);
+
+        Bitmap resultBitmap = playGpuImage.getBitmapWithFilterApplied();
+
+        /** 5. brightness recycle **/
+        bitmapWithBrightness.recycle();
+
+        if (handler != null) {
+            Bundle bundle = new Bundle();
+            bundle.putParcelable("bitmap", resultBitmap);
+            Message message = new Message();
+            message.setData(bundle);
+            handler.sendMessage(message);
+        }
+    }
+
+    private void makePlay03() {
+
+        /** alpha blend **/
+        BitmapFactory.Options options = new BitmapFactory.Options();
+        options.inSampleSize = 5;
+        Bitmap filterBitmap = BitmapFactory.decodeResource(mContext.getResources(), R.drawable.f_6e899a, options);
+
+        GPUImageAlphaBlendFilter alphaBlendFilter = new GPUImageAlphaBlendFilter();
+        alphaBlendFilter.setBitmap(filterBitmap);
+        alphaBlendFilter.setMix(0.18f);
+
+        GPUImage gpuImageWithAlphaBlend = new GPUImage(mContext);
+        gpuImageWithAlphaBlend.setImage(source);
+        gpuImageWithAlphaBlend.setFilter(alphaBlendFilter);
+
+        Bitmap bitmapWithAlphaBlend = gpuImageWithAlphaBlend.getBitmapWithFilterApplied();
+
+        /** source recycle **/
+//        source.recycle();
+
+        /** 1. contrast **/
+        GPUImageContrastFilter contrastFilter = new GPUImageContrastFilter();
+        contrastFilter.setContrast(1.1f);
+
+        GPUImage gpuImageWithContrast = new GPUImage(mContext);
+        gpuImageWithContrast.setImage(bitmapWithAlphaBlend);
+        gpuImageWithContrast.setFilter(contrastFilter);
+
+        Bitmap bitmapWithContrast = gpuImageWithContrast.getBitmapWithFilterApplied();
+
+        /** 1. alphablend recycle **/
+        bitmapWithAlphaBlend.recycle();
+
+        /** 2. sharpen **/
+        GPUImageSharpenFilter sharpenFilter = new GPUImageSharpenFilter();
+        sharpenFilter.setSharpness(1.0f);
+
+        GPUImage gpuImageWithSharpen = new GPUImage(mContext);
+        gpuImageWithSharpen.setImage(bitmapWithContrast);
+        gpuImageWithSharpen.setFilter(sharpenFilter);
+
+        Bitmap bitmapWithSharpen = gpuImageWithSharpen.getBitmapWithFilterApplied();
+
+        /** 2. contrast recycle **/
+        bitmapWithContrast.recycle();
+
+        /** 3. Gamma **/
+        GPUImageGammaFilter gammaFilter = new GPUImageGammaFilter();
+        gammaFilter.setGamma(1.1f);
+
+        GPUImage gpuImageWithGamma = new GPUImage(mContext);
+        gpuImageWithGamma.setImage(bitmapWithSharpen);
+        gpuImageWithGamma.setFilter(gammaFilter);
+
+        Bitmap bitmapWithGamma = gpuImageWithGamma.getBitmapWithFilterApplied();
+
+        /** 3. sharpen recycle **/
+        bitmapWithSharpen.recycle();
+
+        /** 4. brightness **/
+        GPUImageBrightnessFilter brightnessFilter = new GPUImageBrightnessFilter();
+        brightnessFilter.setBrightness(0.09f);
+
+        GPUImage gpuImageWithBrightness = new GPUImage(mContext);
+        gpuImageWithBrightness.setImage(bitmapWithGamma);
+        gpuImageWithBrightness.setFilter(brightnessFilter);
+
+        Bitmap bitmapWithBrightness = gpuImageWithBrightness.getBitmapWithFilterApplied();
+
+        /** 4. gamma recycle **/
+        bitmapWithGamma.recycle();
+
+        /** 3. saturation **/
+        GPUImageSaturationFilter saturationFilter = new GPUImageSaturationFilter();
+        saturationFilter.setSaturation(1.0f);
+
+        GPUImage playGpuImage = new GPUImage(mContext);
+        playGpuImage.setImage(bitmapWithBrightness);
+        playGpuImage.setFilter(saturationFilter);
+
+        Bitmap resultBitmap = playGpuImage.getBitmapWithFilterApplied();
+
+//        /** 3. sharpen recycle **/
+//        bitmapWithSharpen.recycle();
+
+        /** 3. gamma recycle **/
+        bitmapWithGamma.recycle();
+
+        if (handler != null) {
+            Bundle bundle = new Bundle();
+            bundle.putParcelable("bitmap", resultBitmap);
+            Message message = new Message();
+            message.setData(bundle);
+            handler.sendMessage(message);
+        }
+    }
+
+    private void makeEarth01() {
+
+        /** alpha blend **/
+        BitmapFactory.Options options = new BitmapFactory.Options();
+        options.inSampleSize = 5;
+        Bitmap filterBitmap = BitmapFactory.decodeResource(mContext.getResources(), R.drawable.f_d7c9ac, options);
+
+        GPUImageAlphaBlendFilter alphaBlendFilter = new GPUImageAlphaBlendFilter();
+        alphaBlendFilter.setBitmap(filterBitmap);
+        alphaBlendFilter.setMix(0.12f);
+
+        GPUImage gpuImageWithAlphaBlend = new GPUImage(mContext);
+        gpuImageWithAlphaBlend.setImage(source);
+        gpuImageWithAlphaBlend.setFilter(alphaBlendFilter);
+
+        Bitmap bitmapWithAlphaBlend = gpuImageWithAlphaBlend.getBitmapWithFilterApplied();
+
+        /** source recycle **/
+//        source.recycle();
+
+        /** 1. brightness **/
+        GPUImageBrightnessFilter brightnessFilter = new GPUImageBrightnessFilter();
+        brightnessFilter.setBrightness(0.02f);
+
+        GPUImage gpuImageWithBrightness = new GPUImage(mContext);
+        gpuImageWithBrightness.setImage(bitmapWithAlphaBlend);
+        gpuImageWithBrightness.setFilter(brightnessFilter);
+
+        Bitmap bitmapWithBrightness = gpuImageWithBrightness.getBitmapWithFilterApplied();
+
+        /** 1. alphablend recycle **/
+        bitmapWithAlphaBlend.recycle();
+
+        /** 2. gaussian hue **/
+        GPUImageHueFilter hueFilter = new GPUImageHueFilter();
+        hueFilter.setHue(7.1f);
+
+        GPUImage gpuImageWithHue = new GPUImage(mContext);
+        gpuImageWithHue.setImage(bitmapWithBrightness);
+        gpuImageWithHue.setFilter(brightnessFilter);
+
+        Bitmap bitmapWithHue = gpuImageWithHue.getBitmapWithFilterApplied();
+
+        /** 2. brightness recycle **/
+        bitmapWithBrightness.recycle();
+
+        /** 3. saturation **/
+        GPUImageSaturationFilter saturationFilter = new GPUImageSaturationFilter();
+        saturationFilter.setSaturation(1.2f);
+
+        GPUImage gpuImageWithSaturation = new GPUImage(mContext);
+        gpuImageWithSaturation.setImage(bitmapWithHue);
+        gpuImageWithSaturation.setFilter(saturationFilter);
+
+        Bitmap bitmapWithSaturation = gpuImageWithSaturation.getBitmapWithFilterApplied();
+
+        /** 3. gaussian hue recycle **/
+        bitmapWithHue.recycle();
+
+        /** 4. contrast **/
+        GPUImageContrastFilter contrastFilter = new GPUImageContrastFilter();
+        contrastFilter.setContrast(1.4f);
+
+        GPUImage gpuImageWithContrast = new GPUImage(mContext);
+        gpuImageWithContrast.setImage(bitmapWithSaturation);
+        gpuImageWithContrast.setFilter(contrastFilter);
+
+        Bitmap bitmapWithContrast = gpuImageWithContrast.getBitmapWithFilterApplied();
+
+        /** alphablend recycle **/
+        bitmapWithSaturation.recycle();
+
+        /** 2. sharpen **/
+        GPUImageSharpenFilter sharpenFilter = new GPUImageSharpenFilter();
+        sharpenFilter.setSharpness(1.0f);
+
+//        GPUImage gpuImageWithSharpen = new GPUImage(mContext);
+//        gpuImageWithSharpen.setImage(bitmapWithContrast);
+//        gpuImageWithSharpen.setFilter(sharpenFilter);
+//
+//        Bitmap bitmapWithSharpen = gpuImageWithSharpen.getBitmapWithFilterApplied();
+
+        GPUImage playGpuImage = new GPUImage(mContext);
+        playGpuImage.setImage(bitmapWithContrast);
+        playGpuImage.setFilter(sharpenFilter);
+
+        Bitmap resultBitmap = playGpuImage.getBitmapWithFilterApplied();
+
+        bitmapWithContrast.recycle();
+
+        if (handler != null) {
+            Bundle bundle = new Bundle();
+            bundle.putParcelable("bitmap", resultBitmap);
+            Message message = new Message();
+            message.setData(bundle);
+            handler.sendMessage(message);
+        }
+    }
+
+    private void makeEarth02() {
+
+        /** alpha blend **/
+        BitmapFactory.Options options = new BitmapFactory.Options();
+        options.inSampleSize = 5;
+        Bitmap filterBitmap = BitmapFactory.decodeResource(mContext.getResources(), R.drawable.f_b2d0af, options);
+
+        GPUImageAlphaBlendFilter alphaBlendFilter = new GPUImageAlphaBlendFilter();
+        alphaBlendFilter.setBitmap(filterBitmap);
+        alphaBlendFilter.setMix(0.21f);
+
+        GPUImage gpuImageWithAlphaBlend = new GPUImage(mContext);
+        gpuImageWithAlphaBlend.setImage(source);
+        gpuImageWithAlphaBlend.setFilter(alphaBlendFilter);
+
+        Bitmap bitmapWithAlphaBlend = gpuImageWithAlphaBlend.getBitmapWithFilterApplied();
+
+        /** source recycle **/
+//        source.recycle();
+
+        /** 1. brightness **/
+        GPUImageBrightnessFilter brightnessFilter = new GPUImageBrightnessFilter();
+        brightnessFilter.setBrightness(0.02f);
+
+        GPUImage gpuImageWithBrightness = new GPUImage(mContext);
+        gpuImageWithBrightness.setImage(bitmapWithAlphaBlend);
+        gpuImageWithBrightness.setFilter(brightnessFilter);
+
+        Bitmap bitmapWithBrightness = gpuImageWithBrightness.getBitmapWithFilterApplied();
+
+        /** 1. alphablend recycle **/
+        bitmapWithAlphaBlend.recycle();
+
+        /** 2. gaussian hue **/
+        GPUImageHueFilter hueFilter = new GPUImageHueFilter();
+        hueFilter.setHue(7.1f);
+
+        GPUImage gpuImageWithHue = new GPUImage(mContext);
+        gpuImageWithHue.setImage(bitmapWithBrightness);
+        gpuImageWithHue.setFilter(brightnessFilter);
+
+        Bitmap bitmapWithHue = gpuImageWithHue.getBitmapWithFilterApplied();
+
+        /** 2. brightness recycle **/
+        bitmapWithBrightness.recycle();
+
+        /** 3. saturation **/
+        GPUImageSaturationFilter saturationFilter = new GPUImageSaturationFilter();
+        saturationFilter.setSaturation(1.2f);
+
+        GPUImage gpuImageWithSaturation = new GPUImage(mContext);
+        gpuImageWithSaturation.setImage(bitmapWithHue);
+        gpuImageWithSaturation.setFilter(saturationFilter);
+
+        Bitmap bitmapWithSaturation = gpuImageWithSaturation.getBitmapWithFilterApplied();
+
+        /** 3. gaussian hue recycle **/
+        bitmapWithHue.recycle();
+
+        /** 4. contrast **/
+        GPUImageContrastFilter contrastFilter = new GPUImageContrastFilter();
+        contrastFilter.setContrast(1.4f);
+
+        GPUImage gpuImageWithContrast = new GPUImage(mContext);
+        gpuImageWithContrast.setImage(bitmapWithSaturation);
+        gpuImageWithContrast.setFilter(contrastFilter);
+
+        Bitmap bitmapWithContrast = gpuImageWithContrast.getBitmapWithFilterApplied();
+
+        /** alphablend recycle **/
+        bitmapWithSaturation.recycle();
+
+        /** 2. sharpen **/
+        GPUImageSharpenFilter sharpenFilter = new GPUImageSharpenFilter();
+        sharpenFilter.setSharpness(1.0f);
+
+//        GPUImage gpuImageWithSharpen = new GPUImage(mContext);
+//        gpuImageWithSharpen.setImage(bitmapWithContrast);
+//        gpuImageWithSharpen.setFilter(sharpenFilter);
+//
+//        Bitmap bitmapWithSharpen = gpuImageWithSharpen.getBitmapWithFilterApplied();
+
+        GPUImage playGpuImage = new GPUImage(mContext);
+        playGpuImage.setImage(bitmapWithContrast);
+        playGpuImage.setFilter(sharpenFilter);
+
+        Bitmap resultBitmap = playGpuImage.getBitmapWithFilterApplied();
+
+        bitmapWithContrast.recycle();
+
+        if (handler != null) {
+            Bundle bundle = new Bundle();
+            bundle.putParcelable("bitmap", resultBitmap);
+            Message message = new Message();
+            message.setData(bundle);
+            handler.sendMessage(message);
+        }
+    }
+
+    private void makeEarth03() {
+
+        /** alpha blend **/
+        BitmapFactory.Options options = new BitmapFactory.Options();
+        options.inSampleSize = 5;
+        Bitmap filterBitmap = BitmapFactory.decodeResource(mContext.getResources(), R.drawable.f_acb6d7, options);
+
+        GPUImageAlphaBlendFilter alphaBlendFilter = new GPUImageAlphaBlendFilter();
+        alphaBlendFilter.setBitmap(filterBitmap);
+        alphaBlendFilter.setMix(0.20f);
+
+        GPUImage gpuImageWithAlphaBlend = new GPUImage(mContext);
+        gpuImageWithAlphaBlend.setImage(source);
+        gpuImageWithAlphaBlend.setFilter(alphaBlendFilter);
+
+        Bitmap bitmapWithAlphaBlend = gpuImageWithAlphaBlend.getBitmapWithFilterApplied();
+
+        /** source recycle **/
+//        source.recycle();
+
+        /** 1. brightness **/
+        GPUImageBrightnessFilter brightnessFilter = new GPUImageBrightnessFilter();
+        brightnessFilter.setBrightness(0.02f);
+
+        GPUImage gpuImageWithBrightness = new GPUImage(mContext);
+        gpuImageWithBrightness.setImage(bitmapWithAlphaBlend);
+        gpuImageWithBrightness.setFilter(brightnessFilter);
+
+        Bitmap bitmapWithBrightness = gpuImageWithBrightness.getBitmapWithFilterApplied();
+
+        /** 1. alphablend recycle **/
+        bitmapWithAlphaBlend.recycle();
+
+//        /** 2. gaussian hue **/
+//        GPUImageHueFilter hueFilter = new GPUImageHueFilter();
+//        hueFilter.setHue(7.1f);
+//
+//        GPUImage gpuImageWithHue = new GPUImage(mContext);
+//        gpuImageWithHue.setImage(bitmapWithBrightness);
+//        gpuImageWithHue.setFilter(brightnessFilter);
+//
+//        Bitmap bitmapWithHue = gpuImageWithHue.getBitmapWithFilterApplied();
+
+        /** 2. gamma **/
+        GPUImageGammaFilter gammaFilter = new GPUImageGammaFilter();
+        gammaFilter.setGamma(0.9f);
+
+        GPUImage gpuImageWithGamma = new GPUImage(mContext);
+        gpuImageWithGamma.setImage(bitmapWithBrightness);
+        gpuImageWithGamma.setFilter(gammaFilter);
+
+        Bitmap bitmapWithGamma = gpuImageWithGamma.getBitmapWithFilterApplied();
+
+        /** 2. brightness recycle **/
+        bitmapWithBrightness.recycle();
+
+        /** 3. gaussian blur **/
+        GPUImageGaussianBlurFilter gaussianBlurFilter = new GPUImageGaussianBlurFilter();
+        gaussianBlurFilter.setBlurSize(0.1f);
+
+        GPUImage gpuImageWithGaussianBlur = new GPUImage(mContext);
+        gpuImageWithGaussianBlur.setImage(bitmapWithGamma);
+        gpuImageWithGaussianBlur.setFilter(gaussianBlurFilter);
+
+        Bitmap bitmapWithGaussinBlur = gpuImageWithGaussianBlur.getBitmapWithFilterApplied();
+
+        /** 3. gamma recycle **/
+        bitmapWithGamma.recycle();
+
+        /** 3. saturation **/
+        GPUImageSaturationFilter saturationFilter = new GPUImageSaturationFilter();
+        saturationFilter.setSaturation(0.9f);
+
+        GPUImage gpuImageWithSaturation = new GPUImage(mContext);
+        gpuImageWithSaturation.setImage(bitmapWithGaussinBlur);
+        gpuImageWithSaturation.setFilter(saturationFilter);
+
+        Bitmap bitmapWithSaturation = gpuImageWithSaturation.getBitmapWithFilterApplied();
+
+//        /** 3. gaussian hue recycle **/
+//        bitmapWithHue.recycle();
+        /** 3. gaussian blur recycle **/
+        bitmapWithGaussinBlur.recycle();
+
+        /** 4. contrast **/
+        GPUImageContrastFilter contrastFilter = new GPUImageContrastFilter();
+        contrastFilter.setContrast(1.6f);
+
+        GPUImage gpuImageWithContrast = new GPUImage(mContext);
+        gpuImageWithContrast.setImage(bitmapWithSaturation);
+        gpuImageWithContrast.setFilter(contrastFilter);
+
+        Bitmap bitmapWithContrast = gpuImageWithContrast.getBitmapWithFilterApplied();
+
+        /** alphablend recycle **/
+        bitmapWithSaturation.recycle();
+
+        /** 2. sharpen **/
+        GPUImageSharpenFilter sharpenFilter = new GPUImageSharpenFilter();
+        sharpenFilter.setSharpness(1.0f);
+
+//        GPUImage gpuImageWithSharpen = new GPUImage(mContext);
+//        gpuImageWithSharpen.setImage(bitmapWithContrast);
+//        gpuImageWithSharpen.setFilter(sharpenFilter);
+//        Bitmap bitmapWithSharpen = gpuImageWithSharpen.getBitmapWithFilterApplied();
+
+        GPUImage playGpuImage = new GPUImage(mContext);
+        playGpuImage.setImage(bitmapWithContrast);
+        playGpuImage.setFilter(sharpenFilter);
+
+        Bitmap resultBitmap = playGpuImage.getBitmapWithFilterApplied();
+
+        bitmapWithContrast.recycle();
+
+        if (handler != null) {
+            Bundle bundle = new Bundle();
+            bundle.putParcelable("bitmap", resultBitmap);
+            Message message = new Message();
+            message.setData(bundle);
+            handler.sendMessage(message);
+        }
+    }
+}

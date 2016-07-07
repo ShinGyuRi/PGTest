@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.design.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                                                 xmlns:app="http://schemas.android.com/apk/res-auto"
+                                                 android:layout_width="match_parent"
+                                                 android:layout_height="match_parent"
+                                                 android:background="@color/c_ffffff">
+
+    <android.support.design.widget.AppBarLayout
+        android:id="@+id/appBarLayout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:elevation="@dimen/dp_1">
+
+        <android.support.v7.widget.Toolbar
+            android:id="@+id/toolbar"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/titlebar_height"
+            android:background="@color/c_69b06c"
+            android:minHeight="@dimen/titlebar_height"
+            app:contentInsetStart="0dp"
+            app:layout_scrollFlags="enterAlways"
+            app:titleTextColor="@color/c_ffffff">
+            <!--scroll|-->
+
+            <FrameLayout
+                android:id="@+id/layout_back"
+                android:layout_width="@dimen/dp_40"
+                android:layout_height="match_parent"
+                android:background="@drawable/ripple_effect"
+                android:visibility="visible">
+
+                <ImageView
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:background="@drawable/btn_back1"
+                    android:duplicateParentState="true"/>
+            </FrameLayout>
+
+            <kr.innisfree.playgreen.common.view.InnisfreeGothicBoldTextView
+                android:id="@+id/txt_title"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:gravity="center"
+                android:singleLine="true"
+                android:textColor="@color/c_ffffff"
+                android:textSize="@dimen/dp_20"/>
+        </android.support.v7.widget.Toolbar>
+
+    </android.support.design.widget.AppBarLayout>
+
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/recyclerview"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        app:layout_behavior="@string/appbar_scrolling_view_behavior">
+    </android.support.v7.widget.RecyclerView>
+
+    <LinearLayout
+        android:id="@+id/empty_view"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/c_ffffff"
+        android:gravity="center"
+        android:orientation="vertical"
+        android:visibility="gone">
+
+        <kr.innisfree.playgreen.common.view.NanumGothicTextView
+            android:id="@+id/txt_empty_message"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/dp_10"
+            android:gravity="center"
+            android:minHeight="@dimen/dp_40"
+            android:textColor="@color/c_999999"
+            android:textSize="@dimen/dp_13"/>
+
+    </LinearLayout>
+
+
+</android.support.design.widget.CoordinatorLayout>

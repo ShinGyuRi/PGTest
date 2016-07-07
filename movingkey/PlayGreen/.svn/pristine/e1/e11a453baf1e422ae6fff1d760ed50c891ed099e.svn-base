@@ -1,0 +1,193 @@
+package kr.innisfree.playgreen.fragment.home;
+
+import android.annotation.SuppressLint;
+import android.content.Intent;
+import android.os.Bundle;
+import android.support.annotation.Nullable;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentPagerAdapter;
+import android.support.v4.view.ViewPager;
+import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.Toolbar;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.TextView;
+
+import com.ParentAct;
+import com.ParentFrag;
+import com.moyusoft.util.Definitions;
+import com.moyusoft.util.Definitions.PGNOW_CATEGORY;
+import com.moyusoft.util.PrefUtil;
+import com.moyusoft.util.Util;
+
+import kr.innisfree.playgreen.R;
+import kr.innisfree.playgreen.activity.search.SearchAct;
+import kr.innisfree.playgreen.dialog.GuideDialog;
+
+/**
+ * Created by jooyoung on 2016-02-24.
+ */
+public class PGNowFrag extends ParentFrag implements View.OnClickListener {
+
+	private View view;
+	private ViewPager pager;
+	private MyPagerAdapter adapterPager;
+	private TextView txtPGNowTitle;
+
+	private int firstVisiblePosition;
+
+	public PGNowFrag() {
+	}
+
+	@SuppressLint("ValidFragment")
+	public PGNowFrag(int position) {
+		this.firstVisiblePosition = position;
+	}
+
+	public static PGNowFrag newInstance(int position) {
+		PGNowFrag frag = new PGNowFrag(position);
+		return frag;
+	}
+
+	@Nullable
+	@Override
+	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+		view = inflater.inflate(R.layout.frag_home_playgreen_now, null);
+		setCutOffBackgroundTouch(view);
+		initToolbar();
+
+		checkGuideView();
+		txtPGNowTitle = (TextView) view.findViewById(R.id.txt_pgnow_title);
+
+		pager = (ViewPager) view.findViewById(R.id.viewpager);
+		adapterPager = new MyPagerAdapter(getChildFragmentManager());
+		//pager.setOffscreenPageLimit(adapterPager.getCount());
+		//pager.setOffscreenPageLimit(1);
+		pager.setAdapter(adapterPager);
+		pager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
+			@Override
+			public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
+			}
+
+			@Override
+			public void onPageSelected(int position) {
+				for(int i=0; i<adapterPager.getCount();i++){
+					Fragment fragment = adapterPager.getItem(i);
+					if(i == position){
+						fragment.setUserVisibleHint(true);
+					}else{
+						fragment.setUserVisibleHint(false);
+					}
+				}
+				txtPGNowTitle.setText(adapterPager.getPageTitle(position));
+			}
+
+			@Override
+			public void onPageScrollStateChanged(int state) {
+			}
+		});
+
+		if (firstVisiblePosition > -1) {
+			pager.setCurrentItem(firstVisiblePosition);
+		} else {
+			pager.setCurrentItem(1);
+		}
+
+		view.findViewById(R.id.btn_left).setOnClickListener(this);
+		view.findViewById(R.id.btn_right).setOnClickListener(this);
+
+		return view;
+	}
+
+	public void checkGuideView() {
+		boolean isGuideViewNotShow = PrefUtil.getInstance().getBooleanPreference(Definitions.PREFKEY.IS_PGNOW_GUIDE_VIEW_NEVER_SEE_BOOL);
+		if (isGuideViewNotShow == false) {
+			Fragment guideDialog = GuideDialog.newInstance(true);
+			((ParentAct) getActivity()).dialogShow(guideDialog, "GuideDialog");
+		}
+	}
+
+	private void initToolbar() {
+		Toolbar mToolbar = (Toolbar) view.findViewById(R.id.toolbar);
+		view.findViewById(R.id.layout_back).setOnClickListener(this);
+		view.findViewById(R.id.btn_option).setOnClickListener(this);
+		((AppCompatActivity) getActivity()).setSupportActionBar(mToolbar);
+		((AppCompatActivity) getActivity()).getSupportActionBar().setDisplayShowTitleEnabled(false);
+	}
+
+	@Override
+	public void onClick(View v) {
+		switch (v.getId()) {
+			case R.id.layout_back:
+				getActivity().onBackPressed();
+				break;
+			case R.id.btn_option:
+				Intent intent = new Intent(getActivity(), SearchAct.class);
+				Util.moveActivity(getActivity(), intent, 0, 0, false, false);
+				break;
+			case R.id.btn_left:
+				if (pager.getCurrentItem() > 0) {
+					pager.setCurrentItem(pager.getCurrentItem() - 1, true);
+				}
+				break;
+			case R.id.btn_right:
+				if (pager.getCurrentItem() + 1 < pager.getAdapter().getCount()) {
+					pager.setCurrentItem(pager.getCurrentItem() + 1, true);
+				}
+				break;
+		}
+	}
+
+
+	public class MyPagerAdapter extends FragmentPagerAdapter {
+
+		String[] titles;
+
+		public MyPagerAdapter(android.support.v4.app.FragmentManager fm) {
+			super(fm);
+			titles = getResources().getStringArray(R.array.array_pgnow);
+		}
+
+		@Override
+		public int getItemPosition(Object object) {
+			return POSITION_NONE;
+		}
+
+		@Override
+		public CharSequence getPageTitle(int position) {
+			return titles[position];
+		}
+
+		@Override
+		public int getCount() {
+			return titles.length;
+		}
+
+		@Override
+		public Fragment getItem(int position) {
+			String category = null;
+			switch (position) {
+				case 0:
+					category = PGNOW_CATEGORY.EARTH_BOX;
+					break;
+				case 1:
+					category = PGNOW_CATEGORY.CLASS;
+					break;
+				case 2:
+					category = PGNOW_CATEGORY.FESTIVAL;
+					break;
+				case 3:
+					category = PGNOW_CATEGORY.ECO_HANKIE;
+					break;
+				case 4:
+					category = PGNOW_CATEGORY.GREEN_CULTURE;
+					break;
+				case 5:
+					category = PGNOW_CATEGORY.NEWS;
+					break;
+			}
+			return PGNowWebviewFrag.newInstance(category);
+		}
+	}
+}

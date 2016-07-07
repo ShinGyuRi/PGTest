@@ -1,0 +1,75 @@
+<resources>
+
+    <!-- Base application theme. -->
+    <style name="AppTheme" parent="Theme.AppCompat.Light.NoActionBar">
+        <item name="colorPrimary">@color/c_69b06c</item>
+        <item name="colorPrimaryDark">@color/c_69b06c</item>
+        <item name="colorAccent">@color/c_69b06c</item>
+        <item name="android:windowBackground">@color/c_eeeeee</item>
+        <item name="actionMenuTextColor">@color/c_ffffff</item>
+        <item name="android:dropDownListViewStyle">@style/mySpinnerStyle</item>
+    </style>
+
+    <style name="AppTheme_windowTranslucent" parent="Theme.AppCompat.Light.NoActionBar"></style>
+
+    <style name="MyDialog" parent="Theme.AppCompat.Dialog">
+        <item name="android:windowBackground">@android:color/transparent</item>
+    </style>
+
+    <style name="AppTheme.FullScreen">
+        <item name="windowActionBar">false</item>
+        <item name="windowNoTitle">true</item>
+        <item name="android:windowFullscreen">true</item>
+    </style>
+
+    <style name="tabTextAppearance" parent="TextAppearance.Design.Tab">
+        <item name="android:textSize">@dimen/dp_14</item>
+    </style>
+
+    <style name="MIP_theme" parent="AppTheme">
+        <item name="windowActionBar">false</item>
+        <item name="windowNoTitle">true</item>
+    </style>
+
+    <style name="mySpinnerStyle" parent="android:Widget.ListView.DropDown">
+        <item name="android:divider">@color/c_000000_75</item>
+        <item name="android:dividerHeight">@dimen/dp_0.5</item>
+    </style>
+
+    <style name="edit_common">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">@dimen/dp_40</item>
+        <item name="android:layout_marginLeft">@dimen/dp_10</item>
+        <item name="android:layout_marginRight">@dimen/dp_10</item>
+        <item name="android:ellipsize">end</item>
+        <item name="android:background">@drawable/bg_edit_common</item>
+        <item name="android:paddingLeft">@dimen/dp_10</item>
+        <item name="android:paddingRight">@dimen/dp_10</item>
+        <item name="android:textColor">@color/c_333333</item>
+        <item name="android:textColorHint">@color/c_c9c9c9</item>
+        <item name="android:textSize">@dimen/dp_14</item>
+    </style>
+
+    <style name="AppTheme.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar" />
+
+    <style name="AppTheme.PopupOverlay" parent="ThemeOverlay.AppCompat.Light" />
+
+    <style name="MyCustomTabLayout" parent="Widget.Design.TabLayout">
+        <!--<item name="tabMaxWidth">@dimen/dp_120</item>-->
+        <item name="tabIndicatorColor">@color/c_69b06c</item>
+        <item name="tabIndicatorHeight">2dp</item>
+        <item name="tabPaddingStart">12dp</item>
+        <item name="tabPaddingEnd">12dp</item>
+        <item name="tabTextAppearance">@style/MyCustomTabTextAppearance</item>
+        <item name="tabSelectedTextColor">@color/c_74d17a</item>
+    </style>
+
+    <!--<item name="tabBackground">?attr/selectableItemBackground</item>-->
+
+    <style name="MyCustomTabTextAppearance" parent="TextAppearance.Design.Tab">
+        <item name="android:textSize">14sp</item>
+        <item name="android:textColor">@color/c_ffffff</item>
+        <item name="textAllCaps">true</item>
+    </style>
+
+</resources>

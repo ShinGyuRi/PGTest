@@ -1,0 +1,192 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <include
+        layout="@layout/item_timeline_header"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <!--비디오 재생 뷰-->
+        <com.sprylab.android.widget.TextureVideoView
+            android:id="@+id/video_item_content"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentRight="true"
+            android:layout_alignParentTop="true"
+            android:layout_centerInParent="true" />
+
+        <!--타임라인 이미지뷰 or 스크래치 뷰-->
+        <ImageView
+            android:id="@+id/img_item_content"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
+
+        <!-- 스크래치 뷰 위에 덮어씌우는 뷰 -->
+        <ImageView
+            android:id="@+id/img_item_mp4_scene"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
+
+        <ProgressBar
+            android:id="@+id/pb_video_load"
+            style="?android:attr/progressBarStyleSmall"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:layout_gravity="center"
+            android:visibility="invisible" />
+
+        <ImageButton
+            android:id="@+id/btn_item_play"
+            android:layout_width="@dimen/dp_80"
+            android:layout_height="@dimen/dp_80"
+            android:layout_centerInParent="true"
+            android:layout_gravity="center"
+            android:background="@drawable/ripple_dark"
+            android:src="@drawable/icon_c_play"
+            android:visibility="gone" />
+
+    </RelativeLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/dp_52"
+        android:gravity="center_vertical"
+        android:orientation="horizontal"
+        android:paddingLeft="@dimen/dp_10"
+        android:paddingRight="@dimen/dp_10">
+
+        <ImageButton
+            android:id="@+id/btn_item_like"
+            android:layout_width="@dimen/dp_36"
+            android:layout_height="@dimen/dp_36"
+            android:background="@drawable/ripple_dark"
+            android:src="@drawable/btn_like1" />
+
+        <ImageButton
+            android:id="@+id/btn_item_reply"
+            android:layout_width="@dimen/dp_36"
+            android:layout_height="@dimen/dp_36"
+            android:background="@drawable/ripple_dark"
+            android:src="@drawable/btn_reply1" />
+
+        <ImageButton
+            android:id="@+id/btn_item_share"
+            android:layout_width="@dimen/dp_36"
+            android:layout_height="@dimen/dp_36"
+            android:background="@drawable/ripple_dark"
+            android:src="@drawable/btn_share1" />
+
+        <View
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1" />
+
+        <ImageButton
+            android:id="@+id/btn_item_etc"
+            android:layout_width="@dimen/dp_36"
+            android:layout_height="@dimen/dp_36"
+            android:background="@drawable/ripple_dark"
+            android:src="@drawable/btn_etc2" />
+    </LinearLayout>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/dp_0.5"
+        android:layout_marginLeft="@dimen/dp_10"
+        android:layout_marginRight="@dimen/dp_10"
+        android:background="@color/c_d2d2d2" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:paddingBottom="@dimen/dp_18"
+        android:paddingLeft="@dimen/dp_10"
+        android:paddingRight="@dimen/dp_10"
+        android:paddingTop="@dimen/dp_18">
+
+        <kr.innisfree.playgreen.common.view.NanumGothicTextView
+            android:id="@+id/txt_item_like_count"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:drawableLeft="@drawable/icon_like2"
+            android:drawablePadding="@dimen/dp_5"
+            android:text="@string/str_like_count"
+            android:textColor="@color/c_4b9b50"
+            android:textSize="@dimen/dp_12" />
+
+        <!--
+        <kr.innisfree.playgreen.common.view.NanumGothicTextView
+            android:id="@+id/txt_item_content"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/dp_10"
+            android:textColor="@color/c_333333"
+            android:textSize="@dimen/dp_14"/>
+
+        <kr.innisfree.playgreen.common.view.NanumGothicTextView
+            android:id="@+id/txt_item_more"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/dp_5"
+            android:alpha="0.8"
+            android:visibility="gone"
+            android:text="@string/str_more"
+            android:textColor="@color/c_333333"
+            android:textSize="@dimen/dp_12"/>
+            -->
+
+        <kr.innisfree.playgreen.common.view.ExpandableTextView xmlns:android="http://schemas.android.com/apk/res/android"
+            xmlns:expandableTextView="http://schemas.android.com/apk/res-auto"
+            android:id="@+id/txt_item_content"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:paddingTop="@dimen/dp_3"
+            expandableTextView:animDuration="0"
+            expandableTextView:maxCollapsedLines="2">
+
+            <kr.innisfree.playgreen.common.view.NanumGothicTextView
+                android:id="@id/expandable_text"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/dp_10"
+                android:textColor="@color/c_333333"
+                android:textSize="@dimen/dp_14" />
+
+            <kr.innisfree.playgreen.common.view.NanumGothicTextView
+                android:id="@id/expand_collapse"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/dp_5"
+                android:text="@string/str_more"
+                android:textColor="@color/c_999999"
+                android:textSize="@dimen/dp_12"
+                android:visibility="visible" />
+        </kr.innisfree.playgreen.common.view.ExpandableTextView>
+
+        <kr.innisfree.playgreen.common.view.NanumGothicTextView
+            android:id="@+id/txt_item_hashtag"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/dp_10"
+            android:textColor="@color/c_4b9b50"
+            android:textSize="@dimen/dp_12" />
+
+    </LinearLayout>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/dp_8"
+        android:background="@color/c_eeeeee" />
+
+</LinearLayout>

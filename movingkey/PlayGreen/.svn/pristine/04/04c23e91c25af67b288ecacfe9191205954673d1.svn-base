@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/camrea_upload.ll_wrapper_recent_hashtag"
+    android:layout_width="match_parent"
+    android:layout_height="@dimen/dp_188"
+    android:background="@color/c_eeeeee"
+    android:orientation="vertical"
+    android:paddingLeft="@dimen/dp_14"
+    android:paddingRight="@dimen/dp_14">
+
+    <kr.innisfree.playgreen.common.view.NanumGothicTextView
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/dp_36"
+        android:gravity="left|center_vertical"
+        android:text="@string/str_recent_input_tag" />
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/dp_0.33"
+        android:background="@color/c_d2d2d2" />
+
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/camera_upload.rv_recent_tag_that_is_input"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
+
+</LinearLayout>

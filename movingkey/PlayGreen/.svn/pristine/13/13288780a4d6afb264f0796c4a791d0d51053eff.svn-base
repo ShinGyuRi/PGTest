@@ -1,0 +1,201 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/c_eeeeee"
+    android:gravity="center_horizontal"
+    android:orientation="vertical">
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <LinearLayout
+            android:id="@+id/layout_recommend"
+            android:layout_width="@dimen/dp_300"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginTop="@dimen/dp_30"
+            android:background="@drawable/bg_box"
+            android:gravity="center_horizontal"
+            android:minHeight="@dimen/dp_395"
+            android:orientation="vertical">
+
+            <FrameLayout
+                android:layout_width="@dimen/dp_149"
+                android:layout_height="@dimen/dp_149"
+                android:layout_marginLeft="@dimen/dp_9"
+                android:layout_marginTop="@dimen/dp_30">
+
+                <ImageView
+                    android:id="@+id/img_profile"
+                    android:layout_width="@dimen/dp_140"
+                    android:layout_height="@dimen/dp_140"
+                    android:layout_gravity="bottom"
+                    android:background="@drawable/img_user_null2"/>
+
+                <ImageView
+                    android:id="@+id/img_icon_badge"
+                    android:layout_width="@dimen/dp_58"
+                    android:layout_height="@dimen/dp_58"
+                    android:layout_gravity="right"
+                    android:background="@drawable/icon_badge_both"/>
+            </FrameLayout>
+
+            <kr.innisfree.playgreen.common.view.NanumGothicBoldTextView
+                android:id="@+id/txt_nickname"
+                android:layout_width="wrap_content"
+                android:layout_height="@dimen/dp_30"
+                android:layout_marginTop="@dimen/dp_20"
+                android:gravity="center_vertical"
+                android:singleLine="true"
+                android:textColor="@color/c_333333"
+                android:textSize="@dimen/dp_21"/>
+
+            <kr.innisfree.playgreen.common.view.NanumGothicTextView
+                android:id="@+id/txt_introduce"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:ellipsize="end"
+                android:gravity="center_vertical"
+                android:maxLines="2"
+                android:minHeight="@dimen/dp_20"
+                android:textColor="@color/c_666666"
+                android:textSize="@dimen/dp_13"/>
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/dp_0.5"
+                android:layout_marginLeft="@dimen/dp_10"
+                android:layout_marginRight="@dimen/dp_10"
+                android:layout_marginTop="@dimen/dp_20"
+                android:background="@color/c_d2d2d2"/>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/dp_90"
+                android:layout_marginLeft="@dimen/dp_10"
+                android:layout_marginRight="@dimen/dp_10"
+                android:gravity="center_vertical"
+                android:orientation="horizontal">
+
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:gravity="center"
+                    android:orientation="vertical">
+
+                    <kr.innisfree.playgreen.common.view.NanumGothicTextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/str_follower"
+                        android:textColor="@color/c_999999"
+                        android:textSize="@dimen/dp_12"/>
+
+                    <kr.innisfree.playgreen.common.view.NanumGothicBoldTextView
+                        android:id="@+id/txt_follower_count"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="@dimen/dp_7"
+                        android:textColor="@color/c_333333"
+                        android:textSize="@dimen/dp_17"/>
+                </LinearLayout>
+
+                <View
+                    android:layout_width="@dimen/dp_0.5"
+                    android:layout_height="@dimen/dp_12"
+                    android:background="@color/c_d2d2d2"/>
+
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:gravity="center"
+                    android:orientation="vertical">
+
+                    <kr.innisfree.playgreen.common.view.NanumGothicTextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/str_following"
+                        android:textColor="@color/c_999999"
+                        android:textSize="@dimen/dp_12"/>
+
+                    <kr.innisfree.playgreen.common.view.NanumGothicBoldTextView
+                        android:id="@+id/txt_following_count"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="@dimen/dp_7"
+                        android:textColor="@color/c_333333"
+                        android:textSize="@dimen/dp_17"/>
+                </LinearLayout>
+
+                <View
+                    android:layout_width="@dimen/dp_0.5"
+                    android:layout_height="@dimen/dp_12"
+                    android:background="@color/c_d2d2d2"/>
+
+
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:gravity="center"
+                    android:orientation="vertical">
+
+                    <kr.innisfree.playgreen.common.view.NanumGothicTextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/str_pg_point"
+                        android:textColor="@color/c_999999"
+                        android:textSize="@dimen/dp_12"/>
+
+                    <kr.innisfree.playgreen.common.view.NanumGothicBoldTextView
+                        android:id="@+id/txt_pg_point"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="@dimen/dp_7"
+                        android:textColor="@color/c_4b9b50"
+                        android:textSize="@dimen/dp_17"/>
+                </LinearLayout>
+
+
+            </LinearLayout>
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/dp_0.5"
+                android:layout_marginLeft="@dimen/dp_10"
+                android:layout_marginRight="@dimen/dp_10"
+                android:background="@color/c_d2d2d2"/>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/dp_75"
+                android:gravity="center"
+                android:orientation="horizontal">
+
+                <kr.innisfree.playgreen.common.view.NanumGothicBoldTextView
+                    android:id="@+id/txt_show_detail"
+                    android:layout_width="@dimen/dp_110"
+                    android:layout_height="@dimen/dp_36"
+                    android:background="@drawable/btn_round2"
+                    android:gravity="center"
+                    android:text="@string/str_show_detail"
+                    android:textColor="@color/c_999999"
+                    android:textSize="@dimen/dp_14"/>
+
+                <kr.innisfree.playgreen.common.view.NanumGothicBoldTextView
+                    android:id="@+id/txt_follow"
+                    android:layout_width="@dimen/dp_110"
+                    android:layout_height="@dimen/dp_36"
+                    android:layout_marginLeft="@dimen/dp_8"
+                    android:background="@drawable/btn_follow"/>
+
+            </LinearLayout>
+
+        </LinearLayout>
+
+    </ScrollView>
+</LinearLayout>

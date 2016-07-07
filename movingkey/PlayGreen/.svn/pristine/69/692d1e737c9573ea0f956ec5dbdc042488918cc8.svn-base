@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="kakao_app_key">e8ea326cb3b54e2be6ba7618f72f7858</string>
+    <string name="kakao_scheme">kakaoe8ea326cb3b54e2be6ba7618f72f7858</string>
+    <string name="kakaolink_host">kakaolink</string>
+    <!--<string name="kakao_scheme">kakao3dbfa8ba5cc831da547aec16fb490cb3</string>-->
+    <!--<string name="kakaolink_host">kakaolink</string>-->
+    <string name="facebook_app_id">1736750319881592</string>
+    <string name="google_place_api_server_id">AIzaSyAwd-wt8ZYsfygxN0qPApe5xXQY3BQp1cM</string>
+
+</resources>

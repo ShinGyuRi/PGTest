@@ -1,0 +1,471 @@
+<resources>
+    <string name="app_name">PlayGreen</string>
+    <string name="crash_toast_text">crash 발생</string>
+    <string name="crash_dialog_title">Crash</string>
+    <string name="crash_dialog_text">에러로그 전송</string>
+    <string name="crash_dialog_ok_toast">빠른수정하겠습니다.</string>
+    <string name="str_toast_permission_denied">해당 권한을 거부하였습니다</string>
+    <string name="str_permission_message_camera">해당 기능을 사용하기 위해 카메라, 저장공간 권한이 필요합니다. 설정화면에서 권한을 변경해 주세요</string>
+    <string name="str_permission_message_contact">해당 기능을 사용하기 위해 주소록 읽기 권한이 필요합니다. 설정화면에서 권한을 변경해 주세요</string>
+    <string name="str_permission_message_custom_camera">해당 기능을 사용하기 위해 카메라, 저장공간, 오디오녹음 권한이 필요합니다. 설정화면에서 권한을 변경해 주세요</string>
+
+    <string name="str_empty_message_default">해당 리스트가 존재하지 않습니다</string>
+
+    <string name="str_confirm">확인</string>
+    <string name="str_cancel">취소</string>
+    <string name="str_close">닫기</string>
+    <string name="str_next">다음</string>
+    <string name="str_take_picture_from_camera">사진촬영</string>
+    <string name="str_take_picture_from_gallery">사진 앨범에서 선택</string>
+    <string name="str_delete_profile_image">프로필 사진 삭제</string>
+    <string name="str_new_version_message">새로운 버전이 있습니다.\n업데이트 하시겠습니까?</string>
+    <string name="str_complete">완료</string>
+
+    <!-- about intro, join, login -->
+    <string name="str_splash_text">지구를 위한 놀이</string>
+    <string name="str_presented_by">PRESENTED BY</string>
+    <string name="str_intro_subtitle_01">플레이그린은 그린라이프도\n즐거운 놀이가 될 수 있다는 생각!</string>
+    <!--<string name="str_intro_subtitle_02">지구에서 놀 줄 아는 전세계의 PlayGreener들과\n일상을 공유하는거야!</string>-->
+    <string name="str_intro_button_text">PLAYGREEN 시작하기</string>
+    <string name="str_login_text">전세계의 PlayGreener들과 함께\n지구를 위한 놀이를 즐기세요</string>
+    <string name="str_login_to_facebook">페이스북으로 시작하기</string>
+    <string name="str_login_to_instagram">인스타그램으로 시작하기</string>
+    <string name="str_login_to_kakaotalk">카카오톡으로 시작하기</string>
+    <string name="str_login_to_email">이메일로 시작하기</string>
+    <string name="str_title_email_login">이메일 로그인</string>
+    <string name="str_id">아이디</string>
+    <string name="str_password">비밀번호</string>
+    <string name="str_password_min8">비밀번호(8자 이상 입력하세요)</string>
+    <string name="str_input_introduce">소개글을 입력하세요.</string>
+    <string name="str_user_name">사용자 이름</string>
+    <string name="str_login">로그인</string>
+    <string name="str_find_password">비밀번호 찾기</string>
+    <string name="str_join_text">플레이그린이 처음이신가요?</string>
+    <string name="str_join">회원가입</string>
+    <string name="str_email">이메일</string>
+    <string name="str_pin_code">인증코드</string>
+    <string name="str_email_certification_description">이메일을 입력해 주세요. 이메일 인증 후 회원가입 하실 수\n있습니다.</string>
+    <string name="str_email_certification_code_description">%s으로 전송된 인증 코드를\n입력하세요.</string>
+    <string name="str_find_password_description">가입하신 이메일 주소를 입력해주세요. 해당 이메일로 비밀번호 재설정 링크를 보내드립니다.</string>
+    <string name="str_resend_code">코드 재전송</string>
+    <string name="str_title_email_certification">이메일 인증</string>
+    <string name="str_title_find_password">비밀번호 찾기</string>
+    <string name="str_title_input_certification">인증코드 입력</string>
+    <string name="str_title_input_user_info">계정 정보 입력</string>
+    <string name="str_toast_input_email">이메일을 입력해 주세요</string>
+    <string name="str_toast_invalid_email_form">이메일 형식을 알맞게 입력해주세요</string>
+    <string name="str_toast_send_email">%s로 비밀번호 재설정 링크를 전송하였습니다</string>
+    <string name="str_toast_resend_authcode">%s로 인증코드를 전송하였습니다</string>
+    <string name="str_toast_auth_code_not_matched">인증코드가 올바르지 않습니다</string>
+    <string name="str_toast_email_addr_duplicated">이미 존재하는 이메일입니다</string>
+    <string name="str_toast_network_error">네트워크 오류가 발생하였습니다. 잠시후에 다시 시도해주세요</string>
+    <string name="str_toast_login_email_error">이메일 정보가 없습니다.</string>
+    <string name="str_toast_login_pw_error">암호가 일치하지 않습니다.</string>
+    <string name="str_toast_login_already_drop_out_error">탈퇴한 회원입니다.</string>
+    <string name="str_toast_login_not_have_right_error">조회 권한이 없습니다.</string>
+    <string name="str_toast_login_expire_token_error">다시 로그인해주세요. 인증 기간이 만료되었습니다.</string>
+    <string name="str_toast_login_not_exist_member">입력하신 이메일로 등록된 회원정보를 찾을 수 없습니다.</string>
+    <string name="str_toast_send_password_resetting_link">입력하신 이메일로 비밀번호 재설정 링크가 전송되었습니다.</string>
+    <string name="str_toast_change_password_at_mypage">임시 발급된 비밀번호는 마이페이지에서 변경하세요.</string>
+    <string name="str_toast_change_password">안전한 개인정보 보호를 위해 비밀번호를 변경해 주세요.</string>
+    <string name="str_toast_login_not_matched_password_wait_30min">비밀번호 5회 오류로 인해 30분간 로그인이 제한됩니다.</string>
+    <string name="str_toast_today_mission_already_regist">금일 미션에 이미 참여했습니다.</string>
+
+    <string name="str_title_add_friend">친구추가</string>
+    <string name="str_skip">SKIP</string>
+    <string name="str_recommend_friend">추천 친구</string>
+    <string name="str_sns_friend">SNS 친구</string>
+    <string name="str_contact_friend">주소록 친구</string>
+    <string name="str_show_detail">자세히  보기</string>
+    <string name="str_follower">팔로워</string>
+    <string name="str_following">팔로잉</string>
+    <string name="str_pg_point">PG POINT</string>
+    <string name="str_find_facebook_friend">플레이그린 앱을 사용하는\n페이스북 친구를 찾아보세요</string>
+    <string name="str_connect_facebook">페이스북에 연결</string>
+    <string name="str_find_contact_friend">플레이그린 앱을 사용하는\n내 주소록의 친구를 찾아보세요</string>
+    <string name="str_not_exist_contact_friend">주소록 친구가 없습니다.</string>
+    <string name="str_connect_contact">주소록 친구</string>
+    <string name="str_connect_contact_message">주소록 친구</string>
+    <string name="str_friend_count">%d명의 친구</string>
+    <string name="str_follow_all">모두 팔로우</string>
+    <string name="str_more">...더보기</string>
+
+    <string name="str_timeline">TIME LINE</string>
+    <string name="str_mypage">마이페이지</string>
+    <string name="str_timeline_guide_text">전세계 PlayGreener들의\n일상을 공유하는 곳입니다</string>
+    <string name="str_pg21_guide_text">건강한 지구를 만드는 습관! 21일 동안\n플레이그린하고 특별한 선물을 받으세요!</string>
+    <string name="str_best_pick_guide_text">최고의\nPlayGreener들을\n만나보세요</string>
+    <string name="str_pgnow_guide_text">플레이그린의\n다양한 소식을\n놓치지 마세요!</string>
+    <string name="str_never_see">다시 보지 않기</string>
+
+    <string name="str_earth">EARTH</string>
+    <string name="str_friends">FRIENDS</string>
+    <string name="str_like_count">%d명이 좋아합니다</string>
+    <string name="str_empty_friend_message">팔로우 친구가 없습니다.\n새로운 플레이그린 친구를 찾아보세요</string>
+    <string name="str_find_friend">친구 찾기</string>
+
+    <string name="str_comment">댓글</string>
+    <string name="str_comment_empty">댓글이 없습니다.</string>
+    <string name="str_like">좋아요</string>
+    <string name="str_report">신고하기</string>
+    <string name="str_delete">삭제하기</string>
+    <string name="str_copy_url">URL 복사하기</string>
+    <string name="str_facebook">FACEBOOK</string>
+    <string name="str_instagram">INSTAGRAM</string>
+    <string name="str_kakaostory">KAKAOSTORY</string>
+    <string name="str_input">입력</string>
+    <string name="str_hint_comment">댓글을 입력하세요...</string>
+    <string name="str_toast_input_comment">댓글을 입력해주세요</string>
+    <string name="str_toast_regist_comment_complete">댓글을 입력하였습니다</string>
+    <string name="title_activity_detail_user_info">DetailUserInfoAct</string>
+
+    <string name="str_report_first">플레이그린과 상관없는 게시물입니다</string>
+    <string name="str_report_second">음란성/광고성 게시물입니다.</string>
+    <string name="str_report_third">기타</string>
+    <string name="str_toast_input_report">글을 입력해주세요</string>
+    <string name="str_toast_report_complete">해당 게시물을 신고하였습니다</string>
+    <string name="str_title_playgreen_21">#PLAYGREEN21</string>
+    <string name="str_title_playgreen">#PLAYGREEN</string>
+    <string name="str_playgreen_21">#플레이그린21</string>
+    <string name="str_21">21</string>
+    <string name="str_pg21_sub_title">지구를 위한 착한 습관 만들기</string>
+    <string name="str_pg21_progress" formatted="false">%s님은 현재까지%s 플레이그린 중!</string>
+    <string name="str_pg21_day">#%s일.</string>
+    <string name="str_pg21_today_mission">오늘의 미션</string>
+    <string name="str_pg21_today_mission_warning_message">미션은 하루에 한번씩만 참여하실 수 있습니다.</string>
+    <string name="str_pg21_reward_message">21일간의 미션을 완료하면\n지구가 보내는 선물\nEarth Box를 드립니다</string>
+    <string name="str_pg21_mission_complete_message">짝짝짝! 축하합니다</string>
+    <string name="str_pg21_mission_complete_message_02">드디어 21일 미션을 완료하셨군요!</string>
+    <string name="str_pg21_earth_box_request">EARCH BOX 응모하기</string>
+    <string name="str_earth_box_description">EARTH BOX에 당첨된 분에게\n개별 연락을 드립니다</string>
+    <string name="str_earth_box_description_02">당첨 확인을 위해 정확한 연락처를 입력해주세요</string>
+    <string name="str_hint_input_contact">연락처 입력</string>
+    <string name="str_toast_input_name">이름을 입력해주세요</string>
+    <string name="str_toast_input_contact">연락처를 입력해주세요</string>
+    <string name="str_subscription">응모하기</string>
+    <string name="str_subscription_complete">응모완료</string>
+    <string name="str_playgreen_ko">플레이그린</string>
+    <string name="str_my_playgreen">나의 플레이그린</string>
+    <string name="str_21days_mission_complete">21일간의 미션 완료!</string>
+    <string name="str_pg21_share_message">미션 완료 소식을 친구들에게 공유하세요\nSNS 공유 시 PG POINT가 지급됩니다!</string>
+    <string name="str_today_mission_select">오늘의 미션 선택</string>
+    <string name="str_today_mission_description">오늘의 미션을 선택하여 사진을 등록해주세요.</string>
+    <string name="str_mission_array_00">미션\n만들기</string>
+    <string name="str_mission_array_01">걷기\n계단오르기</string>
+    <string name="str_mission_array_02">양치컵\n사용하기</string>
+    <string name="str_mission_array_03">텀블러\n사용하기</string>
+    <string name="str_mission_array_04">자전거\n타기</string>
+    <string name="str_mission_array_05">캔들\n다이닝하기</string>
+    <string name="str_mission_array_06">에코백\n메기</string>
+    <string name="str_mission_array_07">손수건\n사용하기</string>
+    <string name="str_mission_array_08">도시락\n싸기</string>
+    <string name="str_mission_array_09">가드닝\n하기</string>
+    <string name="str_mission_array_10">재활용\n하기</string>
+    <string name="str_mission_array_11">대중교통\n이용하기</string>
+    <string name="str_make_my_mission">나만의 미션 만들기</string>
+    <string name="str_hint_make_my_mission">나만의 미션명을 입력하세요(10자 이하)</string>
+    <string name="str_toast_input_my_mission">나만의 미션명을 입력해주세요</string>
+    <string name="str_toast_input_under_10">10글자 이하로 작성해주세요</string>
+    <string name="str_highlight_area">하이라이트 영역</string>
+    <string name="str_highlight_area_description">하이라이트 영역을 선택해주세요\n메인 화면에 해당 영역이 보여지게 됩니다</string>
+    <string name="str_challenge">도전!</string>
+    <string name="str_super_greener">SUPER GREENER</string>
+    <string name="str_super_greener_description">꾸준히 미션을 수행해\nSUPER GREENER가 되세요</string>
+    <string name="str_super_greener_description2">Super Greener 1위가 되신 분께는\n이니스프리에서 준비한 특별한 선물을 드립니다</string>
+    <string name="str_super_greener_description3">(랭킹은 BEST PICK에서 확인하실 수 있어요!)</string>
+    <string name="str_period">참여기간 </string>
+    <string name="str_challenge_period" formatted="false">%s ~ %s 까지</string>
+    <string name="str_super_greener_end">\&apos;도전! SUPER GREENER\&apos;\n미션 참여 기간이 종료되었습니다</string>
+    <string name="str_super_greener_end_description">짝짝짝! 그 동안 수고하셨습니다\n\n새로운 마음으로 #PLAYGREEN21에 참여해,\n새롭게 준비한 Earth Box의 주인공이 되세요!</string>
+    <string name="str_super_greener_end_description2">(두 번째 Earth Box를 확인해 보세요!)</string>
+    <string name="str_mission_period_end">미션 참여 기간이 종료되었습니다</string>
+    <string name="str_mission_end">참여기간 종료</string>
+    <string name="str_super_greener_grade">SUPER GREENER | %d위</string>
+    <string name="str_super_greener_selection_description">당신은 진정 지구를 위해 놀 줄 아는 사람!\nSuper Greener가 되신 것을 축하 드리며\n앞으로도 열심히 플레이그린해주세요!</string>
+    <string name="str_super_greener_reward_description">Super Greener를 위한 특별한 선물이\n준비되어 있답니다\n아래에 연락 받으실 번호를 기입해 주세요</string>
+    <string name="str_input_name">이름 입력</string>
+
+    <string name="str_best_pick">BEST PICK</string>
+    <string name="str_todays_pick">TODAY\&apos;S PICK</string>
+    <string name="str_open_more">펼쳐보기</string>
+    <string name="str_open_all_ranker">순위권 전체보기</string>
+    <string name="str_rank">%d위</string>
+    <string name="str_supergreener_tooltip_title">SUPER GREENER란?</string>
+    <string name="str_supergreener_tooltip_content">#PLAYGREEN21의 미션을 가장 많이\n수행한 플레이그리너들에게 주어지는\n리워드입니다.</string>
+    <string name="str_playgreen_now">PLAYGREEN NOW</string>
+    <string name="str_pgnow_class">CLASS</string>
+    <string name="str_pgnow_earthbox">EARTH BOX</string>
+    <string name="str_pgnow_news">NEWS</string>
+    <string name="str_pgnow_festival">FESTIVAL</string>
+    <string name="str_pgnow_eco_hankie">ECO HANKIE</string>
+    <string name="str_pgnow_green_culture">GREEN CULTURE</string>
+    <string name="str_pgnow_guide_01">화면을 좌우로 밀어\n플레이그린의 다양한 활용을\n카테고리별로 확인하세요</string>
+    <string name="str_pgnow_guide_02">화면을 위아래로 스크롤해\n해당 카테고리 소식들을 확인하세요</string>
+
+    <string name="str_setting">설정</string>
+    <string name="str_setting_change_pw">비밀번호 변경</string>
+    <string name="str_setting_block_user">차단 유저 목록</string>
+    <string name="str_setting_manage_account">계정 관리</string>
+    <string name="str_setting_find_friend">친구 찾기</string>
+    <string name="str_setting_alarm">알림</string>
+    <string name="str_setting_save_original_photo">원래 사진 저장하기</string>
+    <string name="str_setting_remove_search_list">검색 내역 지우기</string>
+    <string name="str_setting_save_data">데이터 절약</string>
+    <string name="str_setting_notice">공지사항</string>
+    <string name="str_setting_program_info">프로그램 정보</string>
+    <string name="str_setting_help">도움말</string>
+    <string name="str_setting_logout">로그아웃</string>
+    <string name="str_logout_confirm_message">로그아웃 하시겠습니까?</string>
+    <string name="str_delete_search_history_confirm_message">검색내역을 삭제하시겠습니까?</string>
+    <string name="str_last_login_info">마지막 로그인 : %s</string>
+    <string name="str_user_block">유저차단</string>
+    <string name="str_user_block_cancel">차단해제</string>
+    <string name="str_user_block_description">차단된 유저는 회원님의 포스팅을 보거나 팔로우할 수 없습니다.</string>
+    <string name="str_toast_block_cancel">차단이 해제되었습니다.</string>
+    <string name="str_playgreen_point">PLAYGREEN POINT</string>
+    <string name="str_save_use_history">사용/적립내역</string>
+    <string name="str_what_is_pg_point">PG POINT란?</string>
+    <string name="str_my_pg_point">나의 PLAYGREEN POINT</string>
+    <string name="str_pg_point_save_use_history">PG POINT 적립/차감 내역</string>
+    <string name="str_point_use">(차감)</string>
+    <string name="str_point_save">(적립)</string>
+    <string name="str_innisfree_special_membership">이니스프리의 특별한 멤버쉽</string>
+    <string name="str_pg_point_description">적립한 PG POINT로 어스박스 구매,\n클래스 참여, 페스티벌 참여, 행키시네마 참여 등\n다양한 혜택을 받을 수 있습니다.</string>
+    <string name="str_pg_point_save_way">PG POINT 적립방법</string>
+    <string name="str_pg_point_how_to_use">PG POINT 사용방법</string>
+    <string name="str_pg_point_delete_info">PG POINT 소멸안내</string>
+    <string name="str_pg_point_delete_info_description">
+    1. 타인의 ID 도용 등 부정한 방법으로 포인트를 획득한 경우\n관리자에 의해 해당 포인트가 삭제될 수 있습니다.
+    \n\n2. 불량 회원 적발 시 포인트의 일부가 차감 될 수 있습니다.
+    \n\n3. 회원 탈퇴 시 모든 포인트가 소멸합니다.</string>
+    <string name="str_profile_edit">프로필 편집</string>
+    <string name="str_nickname">닉네임</string>
+    <string name="str_introduce">소개</string>
+    <string name="str_birthday">생년월일</string>
+    <string name="str_phone">전화번호</string>
+    <string name="str_gender">성별</string>
+    <string name="str_male">남성</string>
+    <string name="str_female">여성</string>
+    <string name="str_country">국가</string>
+    <string name="str_birthday_format" formatted="false">%d년%d월%d일</string>
+    <string name="str_birthday_format_02">yyyy년 MM월 dd일</string>
+    <string name="str_introduce_warning">소개글은 48자까지 입력할 수 있습니다</string>
+    <string name="str_pw_rule_description">8~16자리의 영문 대 소문자, 숫자, 특주문자 중 최소 2가지\n이상을 사용하세요</string>
+    <string name="str_warning_current_pw_invalid">현재 비밀번호가 올바르지 않습니다.</string>
+    <string name="str_warning_new_pw_min_8">새 비밀번호는 8자 이상으로 등록해주세요.</string>
+    <string name="str_warning_pw_min_8">비밀번호는 8자 이상으로 등록해주세요.</string>
+    <string name="str_warning_new_pw_not_matched">새 비밀번호 확인이 일치하지 않습니다.</string>
+    <string name="str_current_pw">현재 비밀번호</string>
+    <string name="str_new_pw_min8">새 비밀번호 8자 이상</string>
+    <string name="str_new_pw_confirm">새 비밀번호 확인</string>
+    <string name="str_facebook_2">페이스북</string>
+    <string name="str_instagram_2">인스타그램</string>
+    <string name="str_kakaostory_2">카카오스토리</string>
+    <string name="str_connect">연결됨</string>
+    <string name="str_not_connect">연결안됨</string>
+    <string name="str_playgreen_leave_member">플레이그린 탈퇴</string>
+    <string name="str_confirm_before_leave">탈퇴하기 전에 꼭 확인하세요.</string>
+    <string name="str_leave_member_notice">탈퇴 시, 수집한 개인 정보는 지체없이 파기되며 플레이그린\n계정은 삭제되어 해당 계정으로는 서비스 접근이\n불가능합니다. 등록한 컨텐츠에 대한 모든 정보는 삭제되어\n복구 할 수 없으며, 삭제까지는 시간이 소요될 수 있습니다.</string>
+    <string name="str_leave_member_agree">플레이그린 계정을 삭제하고 탈퇴합니다.</string>
+    <string name="str_update">업데이트</string>
+    <string name="str_notice">공지</string>
+    <string name="str_user_recent_version">최신 버전 사용 중</string>
+    <string name="str_current_version_info">현재 버전 %s</string>
+    <string name="str_use_policy">이용약관</string>
+    <string name="str_privacy_policy">개인정보 취급방침</string>
+    <string name="str_location_policy">위치정보 이용약관</string>
+    <string name="str_manage_plicy">운영정책</string>
+    <string name="str_legal_notice">법적공지</string>
+    <string name="str_faq">FAQ</string>
+    <string name="str_introduce_service">서비스 소개</string>
+    <string name="str_how_to_use">이용방법</string>
+    <string name="str_agree_use_policy">이용 약관에 동의합니다.</string>
+    <string name="str_agree_privacy_policy">개인정보 취급방침에 동의합니다.</string>
+
+    <string name="str_my_news">내소식</string>
+    <string name="str_alarm_following_like_message" formatted="false">%s님이 사진  %d장을 좋아합니다. %s</string>
+    <string name="str_alarm_following_bestpick_message" formatted="false">%s님이 사진이 베스트 픽에 선정되었습니다. %s</string>
+    <string name="str_alarm_following_regist_picture_message" formatted="false">%s님이 사진을 등록했습니다. %s</string>
+    <string name="str_alarm_following_regist_comment_message" formatted="false">%s님이 댓글을 등록했습니다. %s</string>
+    <string name="str_alarm_following_follow_message" formatted="false">%s님이 %s님을 팔로우하기 시작했습니다. %s</string>
+    <string name="str_alarm_mine_follow_message" formatted="false">%s님이 회원님을 팔로우하기 시작했습니다. %s</string>
+    <string name="str_alarm_mine_like_message" formatted="false">%s님이 회원님의 사진을 좋아합니다. %s</string>
+    <string name="str_alarm_mine_comment_message" formatted="false">%s님이 회원님의 사진에 댓글을 등록했습니다. %s</string>
+    <string name="str_alarm_mine_bestpick_message" formatted="false">%s님의 사진이 베스트 픽에 선정되었습니다. %s</string>
+    <string name="str_unit_year">%d년</string>
+    <string name="str_unit_month">%d년</string>
+    <string name="str_unit_week">%d주</string>
+    <string name="str_unit_day">%d일</string>
+    <string name="str_unit_hour">%d시간</string>
+    <string name="str_unit_minute">%d분</string>
+    <string name="str_unit_second">%d초</string>
+
+    <string name="str_tag">#태그</string>
+    <string name="str_user">유저</string>
+    <string name="str_tag_search">태그검색</string>
+    <string name="str_user_search">유저검색</string>
+    <string name="str_tag_search_message">관심있는 태그를 검색하세요</string>
+    <string name="str_user_search_message">닉네임으로 유저를 찾아보세요.\n\&apos;마이페이지 > 설정 > 친구찾기\&apos;에서\n나와 연결되어 있는 친구를 찾을 수 있습니다.</string>
+    <string name="str_remove_all_report">전체 기록 삭제</string>
+    <string name="str_recommend_tag">추천태그</string>
+    <string name="str_member_block">%s님 차단하기</string>
+    <string name="str_member_unblock">%s님 차단해제</string>
+    <string name="str_member_report">%s님 신고하기</string>
+
+    <string name="title_activity_camera">CameraActivity</string>
+    <string name="str_camera_tab_library">라이브러리</string>
+    <string name="str_camera_tab_camera">사진</string>
+    <string name="str_camera_tab_cinemagraph">시네마그래프</string>
+    <string name="str_camera_cinemagraph_info_title_1">시네마그래프 만들기</string>
+    <string name="str_camera_cinemagraph_info_title_2">4STEP</string>
+    <string name="str_camera_cinemagraph_info_title_01">STEP 1</string>
+    <string name="str_camera_cinemagraph_info_title_02">STEP 2</string>
+    <string name="str_camera_cinemagraph_info_title_03">STEP 3</string>
+    <string name="str_camera_cinemagraph_info_title_04">STEP 4</string>
+    <string name="str_camera_cinemagraph_info_01">카메라가 흔들리지 않도록\n최대한 고정시킨 후,\n동영상을 쵤영해 주세요.</string>
+    <string name="str_camera_cinemagraph_info_02">움직임이 보여질 부분을\n브러쉬 도구로 선택해주세요.</string>
+    <string name="str_camera_cinemagraph_info_03">잘못 선택한 부분은 지우개로\n지울 수 있습니다.</string>
+    <string name="str_camera_cinemagraph_info_04">전체 영상의 길이를 조정해\n시네마그래프 만들기 완료!</string>
+    <string name="title_activity_camera_filter">CameraFilterActivity</string>
+    <string name="str_camera_filter_title">필터</string>
+    <string name="str_camera_upload_title">업로드하기</string>
+    <string name="str_camera_cg_tool_brush">브러쉬</string>
+    <string name="str_camera_cg_tool_erase">지우개</string>
+    <string name="str_camera_cg_tool_edit">자르기</string>
+    <string name="str_camera_cg_tool_title">도구</string>
+    <string name="title_activity_camera_cg_tool">CameraCgToolAct</string>
+
+    <string name="str_all_photos">전체</string>
+
+    <string name="str_image_filter_00_original">ORIGIN</string>
+    <string name="str_image_filter_01_inni">INNI_1</string>
+    <string name="str_image_filter_04_tangerine">TANGERINE</string>
+    <string name="str_image_filter_05_green_persimmon">GREEN PERSIMMON</string>
+    <string name="str_image_filter_06_bija_tree">BIJA TREE</string>
+
+    <string name="str_image_filter_01_tangerine">Tangerine</string>
+    <string name="str_image_filter_02_cold_orchid">Cold orchid</string>
+    <string name="str_image_filter_03_camellia_hill">Camellia hill</string>
+    <string name="str_image_filter_04_green_persimmon">Green persimmon</string>
+    <string name="str_image_filter_05_bija_tree">Bija tree</string>
+    <string name="str_image_filter_06_beach_sand">Beach sand</string>
+    <string name="str_image_filter_07_coastal_road">Coastal road</string>
+    <string name="str_image_filter_08_jeju_sea">Jeju sea</string>
+    <string name="str_image_filter_09_basalt">Basalt</string>
+    <string name="str_image_filter_10_insta_charms">Insta Charms</string>
+
+    <string name="str_country_01">한국</string>
+    <string name="str_country_02">중국</string>
+    <string name="str_country_03">일본</string>
+    <string name="str_country_04">미국</string>
+    <string name="str_country_05">대만</string>
+    <string name="str_country_06">홍콩</string>
+    <string name="str_country_07">태국</string>
+    <string name="str_country_08">싱가포르</string>
+    <string name="str_country_09">말레이시아</string>
+    <string name="str_country_10">베트남</string>
+    <string name="str_country_11">필리핀</string>
+    <string name="str_country_12">인도</string>
+    <string name="str_country_13">인도네시아</string>
+    <string name="str_country_14">OTHER</string>
+
+    <string name="str_search_location_title">위치찾기</string>
+    <string name="str_search_location_edit_hint">장소검색 및 추가</string>
+    <string name="str_search_location_txt_guide">현재 위치 찾는 중...</string>
+    <string name="str_recent_input_tag">최근 입력 태그</string>
+    <string name="str_upload_success">타임라인 업로드되었습니다.</string>
+    <string name="str_upload_fail">타임라인이 업로드되지 않았습니다.</string>
+    <string name="str_upload_limit_content_length">1000자 이하로 등록해주세요.</string>
+
+    <string name="str_install">설치</string>
+    <string name="str_install_instagram">인스타그램 설치</string>
+    <string name="str_install_instagram_message">인스타그램을 설치하시겠습니까?</string>
+    <string name="str_install_kakaostory">카카오스토리 설치</string>
+    <string name="str_install_kakaostory_message">카카오스토리를 설치하시겠습니까?</string>
+    <string name="str_download_share_file">공유 파일 다운로드</string>
+    <string name="str_share_to_facebook_title">이니스프리 플레이그린에서 공유한 게시글</string>
+    <string name="str_share_to_clipboard_message">클립보드에 복사되었습니다</string>
+
+    <!--<string name="str_how_to_point_add_01">사진 업로드 시</string>-->
+    <!--<string name="str_how_to_point_add_02">다른 사람 사진 LIKE 시</string>-->
+    <!--<string name="str_how_to_point_add_03">내 사진 LIKE 시</string>-->
+    <!--<string name="str_how_to_point_add_04">#플레이그린21 미션 완료 시</string>-->
+    <!--<string name="str_how_to_point_add_05">슈퍼그리너 선정 시</string>-->
+    <!--<string name="str_how_to_point_use_01">어스박스 구매</string>-->
+    <!--<string name="str_how_to_point_use_02">클래스 참여</string>-->
+    <!--<string name="str_how_to_point_use_03">페스티벌 참여</string>-->
+    <!--<string name="str_how_to_point_use_04">행키시네마 참여</string>-->
+    <!--<string name="str_point_add_limit_3_for_day">1일 3회 한정</string>-->
+    <string name="str_point_minus">%dp 차감</string>
+    <string name="str_point_plus">%dp 적립</string>
+
+    <string name="str_follow_cancel_confirm_message">%s님의 팔로우를 취소하시겠어요?</string>
+    <string name="str_follow_cancel">팔로우 취소</string>
+
+
+    <!-- 2016.05.02 이후 추가 !! -->
+    <string name="str_camera_cg_tool_guide_brush">브러쉬로 문질러 움직임이 보여질 부분을 지정해주세요.</string>
+    <string name="str_camera_cg_tool_guide_erase">브러쉬로 문질러 움직임이 보여질 부분을 지정해주세요.</string>
+    <string name="str_camera_cg_tool_guide_trim">원하는 만큼 영상을 잘라주세요.</string>
+    <string name="str_login_to_wechat">위챗으로 시작하기</string>
+    <string name="str_login_to_line">라인으로 시작하기</string>
+    <string name="str_best_enter_pick">BEST\nPICK</string>
+    <string name="str_playgreen_enter_now">PLAYGREEN\nNOW</string>
+    <string name="str_not_exist_facebook_friend">페이스북 친구가 없습니다.</string>
+    <string name="str_warning_pw_rule_01">공백은 사용할 수 없습니다</string>
+    <string name="str_warning_pw_rule_02">영문 대문자, 소문자, 숫자, 특수문자 중 최소 2가지 이상의 문자조합으로 구성해주세요</string>
+
+    <string name="str_image_filter_02_inni">INNI_2</string>
+    <string name="str_image_filter_03_inni">INNI_3</string>
+    <string name="str_image_filter_04_play">PLAY_1</string>
+    <string name="str_image_filter_05_play">PLAY_2</string>
+    <string name="str_image_filter_06_play">PLAY_3</string>
+    <string name="str_image_filter_07_earth">EARTH_1</string>
+    <string name="str_image_filter_08_earth">EARTH_2</string>
+    <string name="str_image_filter_09_earth">EARTH_3</string>
+
+    <string name="str_password_pattern" formatted="false"><![CDATA[" ((?=.[A-Za-z0-9])(?=.*[!\"#$%&'()*+,-./:;<=>?@[\\\\\\]^_`{|}~])|(?=.[A-Za-z!\"#$%&'()*+,-./:;<=>?@[\\\\\\]^_`{|}~])(?=.*[0-9])|(?=.[0-9A-Z!\"#$%&'()*+,-./:;<=>?@[\\\\\\]^_`{|}~])(?=.*[a-z])|(?=.[a-z0-9!\"#$%&'()*+,-./:;<=>?@[\\\\\\]^_`{|}~])(?=.*[A-Z])).{6,16}<"]]>
+</string>
+
+    <string name="str_guide_share_to_facebook">페이스북 로그인되어야 공유가 가능합니다.</string>
+
+    <string name="str_warning_new_pw_min_6">새 비밀번호는 6자 이상으로 등록해주세요.</string>
+    <string name="str_warning_new_pw_max_16">새 비밀번호는 16자 이하로 등록해주세요.</string>
+    <string name="str_intro_subtitle_02">전세계의 PlayGreener들과\n일상을 공유하는거야!</string>
+
+    <string name="str_how_to_point_add_01">서로 친구 맺을 시</string>
+    <string name="str_how_to_point_add_02">게시물 업로드 시</string>
+    <string name="str_how_to_point_add_03">업로드한 게시물에 \'좋아요\'받을 시</string>
+    <string name="str_how_to_point_add_04">타인의 게시물에 \'좋아요\'누를 시</string>
+    <string name="str_how_to_point_add_05">게시물을 외부 SNS로 공유 시</string>
+    <string name="str_how_to_point_add_06">#PLAYGREEN21 1회 수행 시마다</string>
+    <string name="str_how_to_point_add_07">#PLAYGREEN21 21회차 완료시</string>
+    <string name="str_how_to_point_add_08">#PLAYGREEN21 연속 도전 시</string>
+    <string name="str_how_to_point_add_09">#PLAYGREEN21 완료 메시지\n외부 SNS 공유 시</string>
+    <string name="str_how_to_point_add_10">TODAY\'S PICK 선정 시</string>
+    <string name="str_how_to_point_add_11">BEST PICK 선정 시</string>
+    <string name="str_how_to_point_add_12">SUPERGREENER 순위 진입 시</string>
+    <string name="str_how_to_point_add_13">플레이그린 관련 이벤트 당첨 시</string>
+    <string name="str_how_to_point_add_14">시민 블로그/기자단 응모</string>
+
+    <string name="str_how_to_point_use_01">1개 게시물에 신고 3회시</string>
+    <string name="str_how_to_point_use_02">1개 게시물에 신고 5회시</string>
+    <string name="str_how_to_point_use_03">특별 미션 구매 시</string>
+    <string name="str_how_to_point_use_04">EARTH BOX 구매 시</string>
+    <string name="str_how_to_point_use_05">플레이그린 클래스 참여 신청 시</string>
+    <string name="str_how_to_point_use_06">플레이그린 페스티벌 참여 신청 시</string>
+    <string name="str_how_to_point_use_07">에코손수건, 행키시네마 참여 신청 시</string>
+    <string name="str_how_to_point_use_08">플레이그린 관련 이벤트 응모 시</string>
+
+    <string name="str_point_add_limit_5_for_day">1일 5회 한정</string>
+    <string name="str_point_add_limit_20_for_day">1일 20회 한정</string>
+    <string name="str_point_add_sp">5p+연속 도전 일 수</string>
+
+    <string name="str_point_plus01">반복횟수에 따름</string>
+    <string name="str_point_plus_minus">이벤트별 상이</string>
+
+    <string name="str_server_error_occured">서비스 장애가 발생하였습니다. 잠시 후 다시 시도해주세요</string>
+    <string name="str_day">일</string>
+
+</resources>
+

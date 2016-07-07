@@ -1,0 +1,100 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              android:layout_width="match_parent"
+              android:layout_height="match_parent"
+              android:background="@color/c_000000_75"
+              android:gravity="center"
+              android:orientation="vertical">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_marginBottom="@dimen/dp_7"
+        android:layout_marginLeft="@dimen/dp_7"
+        android:layout_marginRight="@dimen/dp_7"
+        android:layout_marginTop="@dimen/dp_55"
+        android:layout_weight="1"
+        android:background="@drawable/img_dotline3"
+        android:gravity="center_horizontal"
+        android:orientation="vertical">
+
+        <ImageView
+            android:layout_width="@dimen/dp_212"
+            android:layout_height="@dimen/dp_18"
+            android:layout_marginTop="@dimen/dp_109"
+            android:background="@drawable/img_h_swipe"/>
+
+        <kr.innisfree.playgreen.common.view.InnisfreeGothicTextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/dp_18"
+            android:gravity="center"
+            android:minHeight="@dimen/dp_56"
+            android:text="@string/str_pgnow_guide_01"
+            android:textColor="@color/c_ffffff"
+            android:textSize="@dimen/dp_13"/>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/dp_80"
+            android:gravity="center_horizontal"
+            android:orientation="horizontal">
+
+            <ImageView
+                android:layout_width="@dimen/dp_18"
+                android:layout_height="@dimen/dp_152"
+                android:background="@drawable/img_v_swipe"/>
+
+            <kr.innisfree.playgreen.common.view.InnisfreeGothicTextView
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:gravity="center"
+                android:layout_marginLeft="@dimen/dp_20"
+                android:text="@string/str_pgnow_guide_02"
+                android:textColor="@color/c_ffffff"
+                android:textSize="@dimen/dp_13"/>
+
+        </LinearLayout>
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/dp_50"
+        android:background="@color/c_999999"
+        android:gravity="center_vertical"
+        android:orientation="horizontal">
+
+        <CheckBox
+            android:id="@+id/cb_never_see"
+            android:layout_width="@dimen/dp_44"
+            android:layout_height="match_parent"
+            android:background="@drawable/checkbox"
+            android:button="@null"/>
+
+        <kr.innisfree.playgreen.common.view.NanumGothicTextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/str_never_see"
+            android:textColor="@color/c_ffffff"
+            android:textSize="@dimen/dp_14"/>
+
+        <View
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"/>
+
+        <kr.innisfree.playgreen.common.view.NanumGothicTextView
+            android:id="@+id/txt_close"
+            android:layout_width="@dimen/dp_50"
+            android:layout_height="match_parent"
+            android:background="@drawable/ripple_dark"
+            android:gravity="center"
+            android:text="@string/str_close"
+            android:textColor="@color/c_ffffff"
+            android:textSize="@dimen/dp_14"/>
+
+
+    </LinearLayout>
+</LinearLayout>

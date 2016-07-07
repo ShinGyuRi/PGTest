@@ -1,0 +1,178 @@
+package kr.innisfree.playgreen.fragment.home;
+
+import android.os.Bundle;
+import android.support.annotation.Nullable;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentTransaction;
+import android.support.v7.widget.Toolbar;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
+
+import com.ParentFrag;
+import com.android.volley.VolleyError;
+import com.android.volley.toolbox.StringRequest;
+import com.moyusoft.util.JYLog;
+import com.volley.network.NetworkConstantUtil;
+import com.volley.network.NetworkConstantUtil.APIKEY;
+import com.volley.network.NetworkController;
+import com.volley.network.dto.NetworkData;
+import com.volley.network.dto.NetworkJson;
+
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Locale;
+import java.util.Stack;
+
+import kr.innisfree.playgreen.R;
+import kr.innisfree.playgreen.common.PlaygreenManager;
+import kr.innisfree.playgreen.fragment.main.HomeMainFrag;
+import kr.innisfree.playgreen.fragment.main.TimeLinePagerFrag;
+
+/**
+ * Home button wrapper fragment.
+ * This page inlcudes hommainfrag, timeline, playgreen21, bestpick and playnow
+ * <p/>
+ * Created by jooyoung on 2016-02-22.
+ */
+public class HomeFrag extends ParentFrag implements View.OnClickListener {
+
+    private final static String TAG = "HomeFrag::";
+
+    private View view;
+    private Toolbar mToolbar;
+    private Fragment homeMainFrag, timeLinePagerFrag, playGreen21Frag, bestPickFrag, playgreenNowFrag, detailPlayGreen21Frag;
+
+    public Stack<Fragment> homeFragmentStack;
+
+    private ArrayList<NetworkData> netResultDataArray;
+
+    public HomeFrag() {
+    }
+
+    public static HomeFrag newInstance() {
+        HomeFrag frag = new HomeFrag();
+        return frag;
+    }
+
+    @Nullable
+    @Override
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        view = inflater.inflate(R.layout.frag_home, null);
+        setCutOffBackgroundTouch(view);
+
+        if (homeFragmentStack == null) {
+            homeFragmentStack = new Stack<Fragment>();
+        }
+
+        if (homeFragmentStack.size() == 0) {
+            homeMainFrag = new HomeMainFrag();
+            ((HomeMainFrag) homeMainFrag).setHomeFrag(HomeFrag.this);
+            switchNaviContent(homeMainFrag);
+        } else {
+            switchNaviContent(homeFragmentStack.lastElement());
+        }
+
+        return view;
+    }
+
+    public void switchNaviContent(Fragment fragment) {
+        FragmentManager fm = getChildFragmentManager();
+        FragmentTransaction ft = fm.beginTransaction();
+        if (homeFragmentStack.contains(fragment)) {
+            homeFragmentStack.remove(fragment);
+        }
+        //JYLog.D(TAG + "switch::homeFragmentStack::size::" + homeFragmentStack.size(), null);
+        homeFragmentStack.push(fragment);
+        ft.replace(R.id.frag_container, fragment).commit();
+    }
+
+    public void clearHomeStack() {
+        if (homeFragmentStack.size() > 1) {
+            homeFragmentStack.removeAllElements();
+        }
+    }
+
+    public void gotoTimeline() {
+        if (timeLinePagerFrag == null)
+            timeLinePagerFrag = TimeLinePagerFrag.newInstance(true);
+        switchNaviContent(timeLinePagerFrag);
+    }
+
+    public void gotoPlayGreen21() {
+        if (playGreen21Frag == null)
+            playGreen21Frag = PG21Frag.newInstance(null);
+        switchNaviContent(playGreen21Frag);
+    }
+
+    public void gotoBestPickFrag() {
+        if (bestPickFrag == null)
+            bestPickFrag = BestPickFrag.newInstance();
+        switchNaviContent(bestPickFrag);
+    }
+
+    public void gotoPlaygreenNowFrag() {
+        if (playgreenNowFrag == null)
+            playgreenNowFrag = PGNowFrag.newInstance(-1);
+        switchNaviContent(playgreenNowFrag);
+    }
+
+    @Override
+    public void onUIRefresh() {
+        super.onUIRefresh();
+//        if (netResultDataArray == null) return;
+//        for (NetworkData data : netResultDataArray) {
+//            if (!TextUtil.isNull(data.POSITION)) {
+//                switch (data.POSITION) {
+//                    case "TOP":
+//                        txtTop.setText("TIME LINE");
+//                        Picasso.with(getContext()).load(data.MAIN_IMG).into(imgTop);
+//                        break;
+//                    case "MIDDLE":
+//                        txtMiddle.setText("#PLAYGREEN21");
+//                        Picasso.with(getContext()).load(data.MAIN_IMG).into(imgMiddle);
+//                        break;
+//                    case "BOTTOMLEFT":
+//                        txtBottomLeft.setText("BEST\nPICK");
+//                        Picasso.with(getContext()).load(data.MAIN_IMG).into(imgBottomLeft);
+//                        break;
+//                    case "BOTTOMRIGHT":
+//                        txtBottomRight.setText("PLAYGREEN\nNOW");
+//                        Picasso.with(getContext()).load(data.MAIN_IMG).into(imgBottomRight);
+//                        break;
+//                }
+//            }
+//        }
+    }
+
+    public void requestHome() {
+        HashMap<String, String> params = new HashMap<String, String>();
+        params.put("AUTH_TOKEN", PlaygreenManager.getAuthToken() + "");
+        params.put("LOCATION", PlaygreenManager.getLocation());
+        params.put("LANGUAGE", Locale.getDefault().getLanguage());
+        StringRequest myReq = netUtil.requestPost(APIKEY.MAIN_PAGE, NetworkConstantUtil.URLS.MAIN_PAGE, params);
+        NetworkController.addToRequestQueue(myReq);
+    }
+
+    @Override
+    public void onNetworkResult(int idx, NetworkJson json) {
+        super.onNetworkResult(idx, json);
+        switch (idx) {
+            case APIKEY.MAIN_PAGE:
+                netResultDataArray = json.LIST;
+                onUIRefresh();
+                break;
+        }
+    }
+
+    @Override
+    public void onNetworkError(int idx, VolleyError error, NetworkJson json) {
+        super.onNetworkError(idx, error, json);
+    }
+
+    @Override
+    public void onClick(View v) {
+
+    }
+}

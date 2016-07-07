@@ -1,0 +1,160 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string-array name="alert_etc">
+        <item>@string/str_report</item>
+    </string-array>
+
+    <string-array name="alert_etc_mine">
+        <item>@string/str_delete</item>
+    </string-array>
+
+
+    <string-array name="array_mission">
+        <item>@string/str_mission_array_00</item>
+        <item>@string/str_mission_array_01</item>
+        <item>@string/str_mission_array_02</item>
+        <item>@string/str_mission_array_03</item>
+        <item>@string/str_mission_array_04</item>
+        <item>@string/str_mission_array_05</item>
+        <item>@string/str_mission_array_06</item>
+        <item>@string/str_mission_array_07</item>
+        <item>@string/str_mission_array_08</item>
+        <item>@string/str_mission_array_09</item>
+        <item>@string/str_mission_array_10</item>
+        <item>@string/str_mission_array_11</item>
+    </string-array>
+
+    <string-array name="array_pgnow">
+        <item>@string/str_pgnow_earthbox</item>
+        <item>@string/str_pgnow_class</item>
+        <item>@string/str_pgnow_festival</item>
+        <item>@string/str_pgnow_eco_hankie</item>
+        <item>@string/str_pgnow_green_culture</item>
+        <item>@string/str_pgnow_news</item>
+    </string-array>
+
+    <array name="array_pg_point_pager">
+        <item>@string/str_save_use_history</item>
+        <item>@string/str_what_is_pg_point</item>
+    </array>
+
+    <array name="array_help_pager">
+        <item>@string/str_faq</item>
+        <item>@string/str_introduce_service</item>
+        <item>@string/str_how_to_use</item>
+    </array>
+
+    <array name="array_alarm_pager">
+        <item>@string/str_my_news</item>
+        <item>@string/str_following</item>
+    </array>
+
+    <array name="array_search_pager">
+        <item>@string/str_tag</item>
+        <item>@string/str_user</item>
+    </array>
+
+    <array name="array_filter">
+        <item>@array/filter00</item>
+        <item>@array/filter01</item>
+        <item>@array/filter02</item>
+        <item>@array/filter03</item>
+        <item>@array/filter04</item>
+        <item>@array/filter05</item>
+        <item>@array/filter06</item>
+        <item>@array/filter07</item>
+        <item>@array/filter08</item>
+        <item>@array/filter09</item>
+        <!--<item>@array/filter10</item>-->
+    </array>
+
+    <array name="filter00">
+        <item>0</item>
+        <item>@string/str_image_filter_00_original</item>
+    </array>
+
+    <array name="filter01">
+        <item>1</item>
+        <item>@string/str_image_filter_01_inni</item>
+    </array>
+
+    <array name="filter02">
+        <item>2</item>
+        <item>@string/str_image_filter_02_inni</item>
+    </array>
+
+    <array name="filter03">
+        <item>3</item>
+        <item>@string/str_image_filter_03_inni</item>
+    </array>
+
+    <array name="filter04">
+        <item>4</item>
+        <item>@string/str_image_filter_04_play</item>
+    </array>
+
+    <array name="filter05">
+        <item>5</item>
+        <item>@string/str_image_filter_05_play</item>
+    </array>
+
+    <array name="filter06">
+        <item>6</item>
+        <item>@string/str_image_filter_06_play</item>
+    </array>
+
+    <array name="filter07">
+        <item>7</item>
+        <item>@string/str_image_filter_07_earth</item>
+    </array>
+
+    <array name="filter08">
+        <item>8</item>
+        <item>@string/str_image_filter_08_earth</item>
+    </array>
+
+    <array name="filter09">
+        <item>9</item>
+        <item>@string/str_image_filter_09_earth</item>
+    </array>
+
+    <array name="filter10">
+        <item>10</item>
+        <item>@string/str_image_filter_10_insta_charms</item>
+    </array>
+
+
+    <array name="array_country">
+        <item>@string/str_country_01</item>
+        <item>@string/str_country_02</item>
+        <item>@string/str_country_03</item>
+        <item>@string/str_country_04</item>
+        <item>@string/str_country_05</item>
+        <item>@string/str_country_06</item>
+        <item>@string/str_country_07</item>
+        <item>@string/str_country_08</item>
+        <item>@string/str_country_09</item>
+        <item>@string/str_country_10</item>
+        <item>@string/str_country_11</item>
+        <item>@string/str_country_12</item>
+        <item>@string/str_country_13</item>
+        <item>@string/str_country_14</item>
+    </array>
+
+    <array name="array_country_code">
+        <item>KR</item>
+        <item>CN</item>
+        <item>JP</item>
+        <item>US</item>
+        <item>TW</item>
+        <item>HK</item>
+        <item>TH</item>
+        <item>SG</item>
+        <item>MY</item>
+        <item>VN</item>
+        <item>PH</item>
+        <item>IN</item>
+        <item>ID</item>
+        <item>OHTER</item>
+    </array>
+</resources>

@@ -1,0 +1,178 @@
+package com.volley.network;
+
+/**
+ * Created by jooyoung on 2016-02-18
+ */
+public class NetworkConstantUtil {
+
+    public interface APIKEY {
+        int VERSION_INFO = 1;
+        int LOGIN_CHECK = 2;
+        int LOGIN_EMAIL = 3;
+        int FIND_PW = 4;
+        int EMAIL_AUTH = 5;
+        int EMAIL_AUTH_CHECK = 6;
+        int UPDATE_MEMBER = 7;
+        int REGIST_MEMBER = 8;
+        int CHANGE_PW = 9;
+
+        int COVER_PAGE = 10;
+        int MAIN_PAGE = 11;
+
+        int TIMELINE_LIST = 20;
+        int TIMELINE_REGIST = 21;
+        int TIMELINE_EDIT = 22;
+        int TIMELINE_DELETE = 23;
+
+        int LIKE_LIST = 30;
+        int LIKE_ACTION = 31;
+        int LIKE_PHOTO_LIST = 32;
+
+        int COMMENT_LIST = 40;
+        int COMMENT_REGIST = 41;
+        int COMMENT_EDIT = 42;
+        int COMMENT_DELETE = 43;
+
+        int NOTIFY_REGIST = 50;
+
+        int FRIEND_RECOMMEND = 60;
+        int FRIEND_FOLLOW = 61;
+        int FRIEND_UNFOLLOW = 62;
+        int FRIEND_FOLLOW_ALL = 63;
+        int MEMB_INFO = 64;
+        int FRIEND_LIST = 65;
+        int BLOCK_LIST = 66;
+        int USER_BLOCK = 67;
+        int USER_BLOCK_CANCEL = 68;
+
+        int PG21_ENTER_LIST = 70;
+        int PG21_MISSION_LIST = 71;
+        int PG21_MISSION_REGIST = 72;
+        int PG21_SUBSCRIBE = 73;
+
+        int BEST_PICK = 80;
+        int PGNOW = 81;
+
+        int SEARCH_USER = 90;
+        int SEARCH_HISTORY = 92;
+        int SEARCH_DELETE = 93;
+        int SEARCH_HASHTAG = 94;
+        int SEARCH_HASHTAG_IMG = 95;
+        int REGIST_HASHTAG = 96;
+
+        int POINT_LIST = 100;
+        int LEAVE_MEMBER = 101;
+        int NOTICE_LIST = 102;
+        int ALARM_MINE = 103;
+        int ALARM_FOLLOWING = 104;
+        int INFO_COUNT = 105;
+
+        int GOOGLE_SEARCH_PLACES = 500;
+
+        int LOGOUT = 200;
+
+        int SHARE_REGIST = 300;
+    }
+
+    public interface URLS {
+        String HOSTS_URL = "http://124.111.244.46:8080";
+//        String HOSTS_URL = "http://10.155.8.76:8112/front";
+//        String HOSTS_URL = "http://58.236.189.76:8112/front";
+
+        String VERSION_INFO = HOSTS_URL + "/mobile/getVersion.do";
+        String LOGIN_CHECK = HOSTS_URL + "/mobile/loginCheck.do";
+        String LOGIN_EMAIL = HOSTS_URL + "/mobile/emailLogin.do";
+        String FIND_PW = HOSTS_URL + "/mobile/findPwd.do";
+        String EMAIL_AUTH = HOSTS_URL + "/mobile/emailAuth.do";
+        String EMAIL_AUTH_CHECK = HOSTS_URL + "/mobile/emailAuthCheck.do";
+        String UPDATE_MEMBER = HOSTS_URL + "/mobile/membModify.do";
+        String REGIST_MEMBER = HOSTS_URL + "/mobile/membRegist.do";
+        String CHANGE_PW = HOSTS_URL + "/mobile/pwdModify.do";
+        String COVER_PAGE = HOSTS_URL + "/mobile/coverPage.do";
+        String MAIN_PAGE = HOSTS_URL + "/mobile/mainPage.do";
+        String TIMELINE_LIST = HOSTS_URL + "/mobile/timeline.do";
+        String TIMELINE_REGIST = HOSTS_URL + "/mobile/timelineRegist.do";
+        String TIMELINE_EDIT = HOSTS_URL + "/mobile/timelineModify.do";
+        String TIMELINE_DELETE = HOSTS_URL + "/mobile/timelineDelete.do";
+        String LIKE_LIST = HOSTS_URL + "/mobile/likeList.do";
+        String LIKE_ACTION = HOSTS_URL + "/mobile/likeRegist.do";
+        String LIKE_PHOTO_LIST = HOSTS_URL + "/mobile/myLikePhotoList.do";
+        String COMMENT_LIST = HOSTS_URL + "/mobile/commentList.do";
+        String COMMENT_REGIST = HOSTS_URL + "/mobile/commentRegist.do";
+        String COMMENT_EDIT = HOSTS_URL + "/mobile/commentModify.do";
+        String COMMENT_DELETE = HOSTS_URL + "/mobile/commentDelete.do";
+        String NOTIFY_REGIST = HOSTS_URL + "/mobile/notifyRegist.do";
+        String FRIEND_RECOMMEND = HOSTS_URL + "/mobile/friendRecommend.do";
+        String FRIEND_FOLLOW = HOSTS_URL + "/mobile/friendRequest.do";
+        String FRIEND_UNFOLLOW = HOSTS_URL + "/mobile/followCancel.do";
+        String FRIEND_FOLLOW_ALL = HOSTS_URL + "/mobile/followAll.do";
+        String FRIEND_LIST = HOSTS_URL + "/mobile/friendList.do";
+        String BLOCK_LIST = HOSTS_URL + "/mobile/blockList.do";
+        String USER_BLOCK = HOSTS_URL + "/mobile/blockRegist.do";
+        String USER_BLOCK_CANCEL = HOSTS_URL + "/mobile/blockDelete.do";
+        String PG21_ENTER_LIST = HOSTS_URL + "/mobile/pg21MsEnterList.do";
+        String PG21_MISSION_LIST = HOSTS_URL + "/mobile/pg21MsList.do";
+        String PG21_MISSION_REGIST = HOSTS_URL + "/mobile/pg21MsEnterRegist.do";
+        String PG21_SUBSCRIBE = HOSTS_URL + "/mobile/pg21EnterUpdate.do";
+        String BEST_PICK = HOSTS_URL + "/mobile/bestpickMain.do";
+        String PGNOW = HOSTS_URL + "/mobile/pgnowList.do";
+        String MEMB_INFO = HOSTS_URL + "/mobile/membInfo.do";
+        String SEARCH_USER = HOSTS_URL + "/mobile/membSearch.do";
+        String SEARCH_HASHTAG = HOSTS_URL + "/mobile/hashtagList.do";
+        String SEARCH_HASHTAG_IMG = HOSTS_URL + "/mobile/hashtagImgList.do";
+        String SEARCH_DELETE = HOSTS_URL + "/mobile/searchDelete.do";
+        String SEARCH_HISTORY = HOSTS_URL + "/mobile/searchList.do";
+        String POINT_LIST = HOSTS_URL + "/mobile/pointList.do";
+        String LEAVE_MEMBER = HOSTS_URL + "/mobile/membLeave.do";
+        String NOTICE_LIST = HOSTS_URL + "/mobile/noticeList.do";
+        String GOOGLE_SEARCH_PLACES = "https://maps.googleapis.com/maps/api/place/nearbysearch/json";
+        String ALARM_MINE = HOSTS_URL + "/mobile/infoListMy.do";
+        String ALARM_FOLLOWING = HOSTS_URL + "/mobile/infoListFollowing.do";
+        String REGIST_HASHTAG = HOSTS_URL + "/mobile/hashtagRegist.do";
+        String INFO_COUNT = HOSTS_URL + "/mobile/infoCount.do";
+        String LOGOUT = HOSTS_URL + "/mobile/logout.do";
+        String SHARE_REGIST = HOSTS_URL + "/mobile/shareRegist.do";
+    }
+
+    public interface NETWORK {
+        int START = 100;
+        int RESULT = 101;
+        int ERROR = 102;
+    }
+
+    public interface NETWORK_RESULT_CODE {
+        int RESULT_OK = 100;
+
+        //오류
+        int FAIL_NO_PARAMETER = 201;                    //필수파라미터누락
+        int FAIL_DB = 202;                                        //디비조회실패
+        int FAIL_EMAIL_SEND = 203;                        //메일발송실패
+        int NOT_EXIST_DATA = 204;                          //해당 컨텐츠 존재하지 않음
+        int ALREADY_PROCESSED = 205;                        //이미 처리된 내용입니다
+        int SERVER_ERROR = 206;                             //서버오류
+        int FAIL = 299;                                                //기타오류
+
+        int NOT_EXIST_EMAIL = 301;                        //이메일정보없음
+        int NOT_MATCHED_PASSWORD = 302;            //암호틀림
+        int LEAVE_USER = 303;                                // 탈퇴한 회원
+        int NOT_AUTHORIZED = 304;                        //조회권한없음
+        int EXPIRE_ACCESS_TOKEN = 305;                //만료된 토큰
+        int NOT_EXIST_MEMBER = 306;                     //회원정보없음
+        int AUTH_CODE_EXPIRED = 307;                    //만료된 인증코드
+        int AUTH_CODE_NOT_MATCHED = 308;        //인증코드 불일치
+        int EMPTY_RECOMMEND_FRIEND = 309;       //추천친구가 없습니다
+        int EMAIL_ADDR_DUPLICATED = 310;           //이메일 중복
+        int NOT_MATCHED_PASSWORD_WAIT_30MIN = 311;  //비밀번호 5회 오류 후 30분 경과되지않음
+
+//		int ALREADY_JOINED_USER = 301;
+//		int RESULT_NOT_MATCHING_AUTH = 303;
+
+        int NOT_EXIST = 401;                                    //해당컨텐츠 없음, 조회하는 사용자가 탈퇴했거나 존재하지 않은 회원
+        int NOT_AUTHORIZED_CONTENTS = 402;        //해당컨텐츠 조회권한없음
+
+        int TODAY_MISSION_ALREADY_REGIST = 601;    //금일 미션에 이미 참여했습니다
+
+        String ERROR_RESULT_FORM = "ERROR_RESULT_FORM";
+    }
+
+}

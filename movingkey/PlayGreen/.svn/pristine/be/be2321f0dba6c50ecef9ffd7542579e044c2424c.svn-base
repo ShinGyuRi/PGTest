@@ -1,0 +1,145 @@
+package kr.innisfree.playgreen.fragment.main;
+
+import android.annotation.SuppressLint;
+import android.content.Intent;
+import android.os.Bundle;
+import android.support.annotation.Nullable;
+import android.support.design.widget.TabLayout;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentPagerAdapter;
+import android.support.v4.view.ViewPager;
+import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.Toolbar;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.TextView;
+
+import com.ParentFrag;
+import com.moyusoft.util.Definitions;
+import com.moyusoft.util.JYLog;
+import com.moyusoft.util.Util;
+
+import java.util.ArrayList;
+import java.util.List;
+
+import kr.innisfree.playgreen.R;
+import kr.innisfree.playgreen.activity.search.SearchAct;
+import kr.innisfree.playgreen.common.view.InnisfreeTabLayout;
+
+/**
+ * Created by jooyoung on 2016-02-22.
+ */
+public class TimeLinePagerFrag extends ParentFrag implements View.OnClickListener {
+
+	private View view;
+	private TextView txtTitle;
+	private Toolbar mToolbar;
+	private ViewPager pager;
+	private MyPagerAdapter pagerAdapter;
+	private boolean isBack;
+
+	private Fragment earthFrag = TimeLineFrag.newInstance("E");
+	private Fragment friendFrag = TimeLineFrag.newInstance("F");
+
+	public TimeLinePagerFrag() {
+	}
+
+	@SuppressLint("ValidFragment")
+	public TimeLinePagerFrag(boolean isBack) {
+		this.isBack = isBack;
+	}
+
+	public static TimeLinePagerFrag newInstance(boolean isBack) {
+		TimeLinePagerFrag frag = new TimeLinePagerFrag(isBack);
+		return frag;
+	}
+
+	@Override
+	public void onCreate(Bundle savedInstanceState) {
+		super.onCreate(savedInstanceState);
+		JYLog.D(new Throwable());
+	}
+
+	@Nullable
+	@Override
+	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+		view = inflater.inflate(R.layout.frag_timeline_pager, null);
+		setCutOffBackgroundTouch(view);
+
+		pager = (ViewPager) view.findViewById(R.id.viewPager);
+		pagerAdapter = new MyPagerAdapter(getChildFragmentManager());
+		pagerAdapter.addFragment(earthFrag, getString(R.string.str_earth));
+		pagerAdapter.addFragment(friendFrag, getString(R.string.str_friends));
+		pager.setAdapter(pagerAdapter);
+
+		initToolbar();
+
+		return view;
+	}
+
+	private void initToolbar() {
+		mToolbar = (Toolbar) view.findViewById(R.id.toolbar);
+		if (isBack) {
+			view.findViewById(R.id.layout_back).setVisibility(View.VISIBLE);
+			view.findViewById(R.id.layout_back).setOnClickListener(this);
+		}
+		view.findViewById(R.id.btn_option).setOnClickListener(this);
+		txtTitle = (TextView)view.findViewById(R.id.txt_title);
+		txtTitle.setText(R.string.str_timeline);
+		if(Definitions.Gotham !=null)		txtTitle.setTypeface(Definitions.Gotham);
+
+		((AppCompatActivity) getActivity()).setSupportActionBar(mToolbar);
+		((AppCompatActivity) getActivity()).getSupportActionBar().setDisplayShowTitleEnabled(false);
+		TabLayout tabLayout = (TabLayout) view.findViewById(R.id.tabLayout);
+		((InnisfreeTabLayout)tabLayout).setGothamFont(true);
+		tabLayout.setupWithViewPager(pager);
+	}
+
+	@Override
+	public void onClick(View v) {
+		switch (v.getId()) {
+			case R.id.btn_option:
+				Intent intent = new Intent(getActivity(), SearchAct.class);
+				Util.moveActivity(getActivity(), intent, 0, 0, false, false);
+				break;
+			case R.id.layout_back:
+				getActivity().onBackPressed();
+				break;
+		}
+	}
+
+	public class MyPagerAdapter extends FragmentPagerAdapter {
+
+		List<Fragment> fragmentList = new ArrayList<>();
+		List<String> fragmentTitles = new ArrayList<>();
+
+		public MyPagerAdapter(FragmentManager fm) {
+			super(fm);
+		}
+
+		@Override
+		public int getCount() {
+			int count = 0;
+			if (fragmentList != null)
+				count = fragmentList.size();
+			return count;
+		}
+
+		@Override
+		public Fragment getItem(int position) {
+			return fragmentList.get(position);
+		}
+
+		@Override
+		public CharSequence getPageTitle(int position) {
+			return fragmentTitles.get(position);
+		}
+
+		public void addFragment(Fragment fragment, String name) {
+			fragmentList.add(fragment);
+			fragmentTitles.add(name);
+		}
+	}
+}

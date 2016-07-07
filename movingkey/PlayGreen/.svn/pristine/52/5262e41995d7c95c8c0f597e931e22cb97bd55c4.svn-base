@@ -1,0 +1,362 @@
+package kr.innisfree.playgreen.fragment;
+
+import android.annotation.SuppressLint;
+import android.app.Activity;
+import android.app.AlertDialog;
+import android.app.DatePickerDialog;
+import android.content.DialogInterface;
+import android.content.Intent;
+import android.graphics.Bitmap;
+import android.os.Build;
+import android.os.Bundle;
+import android.support.annotation.Nullable;
+import android.text.Editable;
+import android.text.TextUtils;
+import android.text.TextWatcher;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.CheckBox;
+import android.widget.CompoundButton;
+import android.widget.DatePicker;
+import android.widget.EditText;
+import android.widget.FrameLayout;
+import android.widget.ImageView;
+import android.widget.RelativeLayout;
+import android.widget.TextView;
+import android.widget.Toast;
+
+import com.ParentAct;
+import com.ParentFrag;
+import com.android.volley.RequestQueue;
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
+import com.google.gson.Gson;
+import com.moyusoft.util.BitmapCircleResize;
+import com.moyusoft.util.Definitions.AUTH_CHANNEL;
+import com.moyusoft.util.Definitions.GOTO;
+import com.moyusoft.util.Definitions.INTENT_KEY;
+import com.moyusoft.util.Definitions.POLICY_TYPE;
+import com.moyusoft.util.FileUtil;
+import com.moyusoft.util.JYLog;
+import com.moyusoft.util.TextUtil;
+import com.moyusoft.util.Util;
+import com.navercorp.volleyextensions.volleyer.Volleyer;
+import com.navercorp.volleyextensions.volleyer.builder.PostBuilder;
+import com.navercorp.volleyextensions.volleyer.factory.DefaultRequestQueueFactory;
+import com.squareup.picasso.Picasso;
+import com.volley.network.NetworkConstantUtil.URLS;
+import com.volley.network.NetworkErrorUtill;
+import com.volley.network.dto.NetworkData;
+import com.volley.network.dto.NetworkJson;
+
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.Locale;
+
+import kr.innisfree.playgreen.R;
+import kr.innisfree.playgreen.activity.BridgeAct;
+import kr.innisfree.playgreen.activity.user.EmailLoginAct;
+import kr.innisfree.playgreen.common.PlaygreenManager;
+import kr.innisfree.playgreen.fragment.setting.CountrySelectFrag;
+import kr.innisfree.playgreen.listener.TakePictureListener;
+
+/**
+ * Created by jooyoung on 2016-02-18.
+ */
+public class JoinFrag extends ParentFrag implements View.OnClickListener, TextWatcher, CompoundButton.OnCheckedChangeListener {
+
+    private FrameLayout layoutProfileImage;
+    private ImageView imgProfile;
+    private EditText editName, editPassword, editIntroduce, editPhone;
+    private TextView btnConfirm, txtBirthday, txtCountry, txtIntroduceWarning;
+    private RelativeLayout layoutUsePolicy, layoutPrivacyPolicy;
+    private CheckBox cbUsePolicy, cbPrivacyPolicy;
+
+    private String emailAddr;
+    private String inputName, inputPW, inputIntroduce, inputPhone, inputBirthday, inputCountry;
+
+    public JoinFrag() {
+    }
+
+    @SuppressLint("ValidFragment")
+    public JoinFrag(String emailAddr) {
+        this.emailAddr = emailAddr;
+    }
+
+    public static JoinFrag newInstance(String emailAddr) {
+        JoinFrag frag = new JoinFrag(emailAddr);
+        return frag;
+    }
+
+    @Nullable
+    @Override
+    public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+        View view = inflater.inflate(R.layout.frag_join, null);
+        setCutOffBackgroundTouch(view);
+        ((EmailLoginAct) getActivity()).setTitle(R.string.str_title_input_user_info);
+        ((ParentAct) getActivity()).setTakePictureListener(takePictureListener);
+
+        layoutProfileImage = (FrameLayout) view.findViewById(R.id.layout_profile);
+        imgProfile = (ImageView) view.findViewById(R.id.img_profile);
+        editName = (EditText) view.findViewById(R.id.edit_name);
+        editPassword = (EditText) view.findViewById(R.id.edit_password);
+        editIntroduce = (EditText) view.findViewById(R.id.edit_introduce);
+        editPhone = (EditText) view.findViewById(R.id.edit_phone);
+        layoutUsePolicy = (RelativeLayout) view.findViewById(R.id.layout_use_policy);
+        layoutPrivacyPolicy = (RelativeLayout) view.findViewById(R.id.layout_privacy_policy);
+        cbUsePolicy = (CheckBox) view.findViewById(R.id.check_use_policy);
+        cbPrivacyPolicy = (CheckBox) view.findViewById(R.id.check_privacy_policy);
+        txtBirthday = (TextView) view.findViewById(R.id.txt_birthday);
+        txtCountry = (TextView) view.findViewById(R.id.txt_country);
+        txtIntroduceWarning = (TextView) view.findViewById(R.id.txt_introduce_warning);
+        btnConfirm = (TextView) view.findViewById(R.id.txt_confirm);
+        btnConfirm.setEnabled(false);
+
+        if (!TextUtil.isNull(inputBirthday))
+            txtBirthday.setText(inputBirthday);
+        if (!TextUtil.isNull(inputCountry))
+            txtCountry.setText(inputCountry);
+
+        cbUsePolicy.setOnCheckedChangeListener(this);
+        cbPrivacyPolicy.setOnCheckedChangeListener(this);
+
+        layoutUsePolicy.setOnClickListener(this);
+        layoutPrivacyPolicy.setOnClickListener(this);
+        layoutProfileImage.setOnClickListener(this);
+        btnConfirm.setOnClickListener(this);
+        txtBirthday.setOnClickListener(this);
+        txtCountry.setOnClickListener(this);
+        editName.addTextChangedListener(this);
+        editPassword.addTextChangedListener(this);
+        editIntroduce.addTextChangedListener(this);
+        editPhone.addTextChangedListener(this);
+        return view;
+    }
+
+    @Override
+    public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+        btnConfirm.setEnabled(checkValidation());
+    }
+
+    @Override
+    public void onClick(View v) {
+        switch (v.getId()) {
+            case R.id.layout_profile:
+                showImageAlert();
+                break;
+            case R.id.txt_confirm:
+                if (checkPasswordValidation()) {
+                    requestJoin();
+                }
+                break;
+            case R.id.txt_birthday:
+                showPickerDialog();
+                break;
+            case R.id.txt_country:
+                CountrySelectFrag frag = CountrySelectFrag.newInstance();
+                frag.setCountrySelectListener(new CountrySelectFrag.OnCountrySelectListener() {
+                    @Override
+                    public void OnCountrySelect(NetworkData data) {
+                        txtCountry.setText(data.country);
+                        inputCountry = data.country;
+                        JYLog.D(data.country, new Throwable());
+                    }
+                });
+                ((ParentAct) getActivity()).switchContent(frag, R.id.container, true, false);
+                break;
+            case R.id.layout_use_policy:
+            case R.id.layout_privacy_policy:
+                Intent intent = new Intent(getActivity(), BridgeAct.class);
+                if (v.getId() == R.id.layout_use_policy)
+                    intent.putExtra(INTENT_KEY.CATEGORY, POLICY_TYPE.USE_POLICY + "");
+                else
+                    intent.putExtra(INTENT_KEY.CATEGORY, POLICY_TYPE.PRIVACY_POLICY + "");
+                intent.putExtra(INTENT_KEY.DATA, GOTO.POLICY);
+                Util.moveActivity(getActivity(), intent, -1, -1, false, false);
+                break;
+        }
+    }
+
+    private TakePictureListener takePictureListener = new TakePictureListener() {
+        @Override
+        public void takePicture(Bitmap bm) {
+            Picasso.with(getContext()).load(FileUtil.getTempImageFile(getContext()))
+                    .skipMemoryCache()
+                    .transform(new BitmapCircleResize(getContext(), getResources().getDimensionPixelOffset(R.dimen.dp_100)))
+                    .into(imgProfile);
+        }
+    };
+
+    public void showImageAlert() {
+        String[] imageChoice = new String[2];
+        imageChoice[0] = getString(R.string.str_take_picture_from_camera);
+        imageChoice[1] = getString(R.string.str_take_picture_from_gallery);
+        AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+        builder.setItems(imageChoice, new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                dialog.dismiss();
+                if (which == 0) {
+                    ((ParentAct) getActivity()).goCamera(0);
+                } else if (which == 1) {
+                    ((ParentAct) getActivity()).goGallery(0);
+                }
+            }
+        });
+        builder.show();
+    }
+
+    public void showPickerDialog() {
+        DatePickerDialog.OnDateSetListener mDateSetListener = new DatePickerDialog.OnDateSetListener() {
+            public void onDateSet(DatePicker view, int year, int monthOfYear, int dayOfMonth) {
+                String date = getString(R.string.str_birthday_format, year, (monthOfYear + 1), dayOfMonth);
+                txtBirthday.setText(date);
+
+                Calendar calendar = Calendar.getInstance();
+                calendar.set(year, monthOfYear, dayOfMonth);
+                SimpleDateFormat format = new SimpleDateFormat("yyyyMMdd");
+                inputBirthday = format.format(calendar.getTime());
+
+            }
+        };
+
+        Calendar cal = Calendar.getInstance();
+        cal.set(Calendar.YEAR, Calendar.getInstance().get(Calendar.YEAR) - 14);
+        cal.set(Calendar.MONTH, Calendar.JANUARY);
+        cal.set(Calendar.DAY_OF_MONTH, 1);
+        DatePickerDialog alert = new DatePickerDialog(getActivity(), mDateSetListener, 1980, 0, 1);
+        alert.getDatePicker().setMaxDate(cal.getTime().getTime());
+        alert.show();
+    }
+
+    public void requestJoin() {
+        showLoading();
+        final RequestQueue q = DefaultRequestQueueFactory.create(getActivity());
+        q.start();
+        PostBuilder pb = Volleyer.volleyer(q).post(URLS.REGIST_MEMBER)
+                .addStringPart("EMAIL", emailAddr)
+                .addStringPart("MEMB_NAME", inputName)
+                .addStringPart("MEMB_PWD", inputPW)
+                .addStringPart("LANGUAGE", Locale.getDefault().getLanguage())
+                .addStringPart("OS", "Android OS " + Build.VERSION.SDK_INT)
+                        //.addStringPart("PUSH_KEY", "UNKNOWN")
+                .addStringPart("MOBILE", Build.MODEL)
+                .addStringPart("AUTH_CHANNEL", AUTH_CHANNEL.EMAIL);
+
+        if (!TextUtil.isNull(inputCountry))
+            pb.addStringPart("LOCATION", inputCountry);
+        if (!TextUtil.isNull(inputIntroduce))
+            pb.addStringPart("STATE_TEXT", inputIntroduce);
+        if (!TextUtil.isNull(inputPhone))
+            pb.addStringPart("PHONE", inputPhone);
+        if (!TextUtil.isNull(inputBirthday))
+            pb.addStringPart("BIRTH_DAY", inputBirthday);
+
+        if (FileUtil.getTempImageFile(getContext()).exists())
+            pb.addFilePart("MEMB_IMG", FileUtil.getTempImageFile(getActivity()));
+        pb.withListener(new Response.Listener<String>() {
+            @Override
+            public void onResponse(String response) {
+                JYLog.D("NETWORK", response.trim(), new Throwable());
+                if (response.contains("DOCTYPE") || response.contains("doctype")) {
+                    hideLoading();
+                    Toast.makeText(getActivity(), "html 형식 응답됩니다.", Toast.LENGTH_SHORT).show();
+                    return;
+                }
+                hideLoading();
+                Gson gson = new Gson();
+                NetworkJson networkJson = gson.fromJson(response, NetworkJson.class);
+                if (NetworkErrorUtill.isJsonResultCheck(networkJson)) {
+                    PlaygreenManager.saveUserInfo(networkJson.DATA);
+                    getActivity().setResult(Activity.RESULT_OK);    // ==> LoginAct.onActivityResult()호출
+                    getActivity().finish();
+                } else {
+                }
+                q.stop();
+            }
+        }).withErrorListener(new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError arg0) {
+                JYLog.D("NETWORK", arg0.getMessage(), new Throwable());
+                hideLoading();
+                q.stop();
+            }
+        }).execute();
+    }
+
+    @Override
+    public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+    }
+
+    @Override
+    public void onTextChanged(CharSequence s, int start, int before, int count) {
+    }
+
+    @Override
+    public void afterTextChanged(Editable s) {
+        btnConfirm.setEnabled(checkValidation());
+    }
+
+    public boolean checkValidation() {
+        inputName = editName.getText().toString();
+        inputPW = editPassword.getText().toString();
+        inputIntroduce = editIntroduce.getText().toString();
+        inputPhone = editPhone.getText().toString();
+
+        if (!TextUtil.isNull(inputIntroduce)) {
+            if (inputIntroduce.length() > 48) {
+                txtIntroduceWarning.setVisibility(View.VISIBLE);
+                editIntroduce.removeTextChangedListener(this);
+                editIntroduce.setText(inputIntroduce.substring(0, inputIntroduce.length() - 1));
+                editIntroduce.setSelection(editIntroduce.getText().toString().length());
+                editIntroduce.addTextChangedListener(this);
+            } else {
+                txtIntroduceWarning.setVisibility(View.GONE);
+            }
+        } else {
+            txtIntroduceWarning.setVisibility(View.GONE);
+        }
+
+        if (!TextUtil.isNull(inputName)
+                && !TextUtil.isNull(inputPW)
+                && !TextUtil.isNull(emailAddr)
+                && !TextUtil.isNull(inputIntroduce)
+                && !TextUtil.isNull(inputPhone)
+                && !TextUtil.isNull(inputCountry)
+                && !TextUtil.isNull(inputBirthday)
+                && cbUsePolicy.isChecked() == true
+                && cbPrivacyPolicy.isChecked() == true
+                ) {
+            return true;
+        }
+
+        return false;
+    }
+
+    public boolean checkPasswordValidation() {
+        if (TextUtils.isEmpty(inputPW)) {
+            Toast.makeText(getContext(), R.string.str_warning_pw_min_8, Toast.LENGTH_SHORT).show();
+            return false;
+        }
+        if (inputPW.length() < 8) {    //|| inputPW.length()>16{
+            Toast.makeText(getContext(), R.string.str_warning_pw_min_8, Toast.LENGTH_SHORT).show();
+            return false;
+        }
+        if (inputPW.contains(" ")) {
+            Toast.makeText(getContext(), R.string.str_warning_pw_rule_01, Toast.LENGTH_SHORT).show();
+            return false;
+        }
+        if (TextUtil.isPassworkdCheck(inputPW) == false) {
+            Toast.makeText(getContext(), R.string.str_warning_pw_rule_02, Toast.LENGTH_SHORT).show();
+            return false;
+        }
+        return true;
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        hiddenKeyboard();
+    }
+}

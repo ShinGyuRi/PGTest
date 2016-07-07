@@ -1,0 +1,258 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              android:layout_width="match_parent"
+              android:layout_height="match_parent"
+              android:background="@color/c_f5f5f5"
+              android:orientation="vertical">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/dp_122"
+        android:orientation="horizontal">
+
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_marginLeft="@dimen/dp_20"
+            android:layout_marginRight="@dimen/dp_20"
+            android:layout_weight="1"
+            android:gravity="center_vertical"
+            android:orientation="vertical">
+
+            <kr.innisfree.playgreen.common.view.NanumGothicBoldTextView
+                android:id="@+id/txt_name"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:minHeight="@dimen/dp_30"
+                android:singleLine="true"
+                android:textColor="@color/c_333333"
+                android:textSize="@dimen/dp_20"/>
+
+            <kr.innisfree.playgreen.common.view.NanumGothicBoldTextView
+                android:id="@+id/txt_introduce"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:ellipsize="end"
+                android:maxLines="3"
+                android:textColor="@color/c_666666"
+                android:textSize="@dimen/dp_13"/>
+        </LinearLayout>
+
+        <FrameLayout
+            android:layout_width="@dimen/dp_125"
+            android:layout_height="match_parent">
+
+            <ImageView
+                android:layout_width="@dimen/dp_82"
+                android:layout_height="@dimen/dp_82"
+                android:layout_gravity="center_vertical|right"
+                android:layout_marginRight="@dimen/dp_15"
+                android:background="@drawable/bg_round_ffffff"/>
+
+            <ImageView
+                android:id="@+id/img_profile"
+                android:layout_width="@dimen/dp_80"
+                android:layout_height="@dimen/dp_80"
+                android:layout_gravity="center_vertical|right"
+                android:layout_marginRight="@dimen/dp_16"
+                android:background="@drawable/img_user_null"/>
+
+            <ImageView
+                android:id="@+id/img_profile_badge"
+                android:layout_width="@dimen/dp_33"
+                android:layout_height="@dimen/dp_33"
+                android:layout_gravity="right"
+                android:layout_marginRight="@dimen/dp_10"
+                android:layout_marginTop="@dimen/dp_14"/>
+
+            <Button
+                android:id="@+id/btn_profile_img_edit"
+                android:layout_width="@dimen/dp_36"
+                android:layout_height="@dimen/dp_36"
+                android:layout_gravity="bottom|right"
+                android:layout_marginBottom="@dimen/dp_20"
+                android:layout_marginRight="@dimen/dp_74"
+                android:background="@drawable/btn_modify"/>
+
+        </FrameLayout>
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/dp_129"
+        android:layout_marginBottom="@dimen/dp_20"
+        android:layout_marginLeft="@dimen/dp_10"
+        android:layout_marginRight="@dimen/dp_10"
+        android:background="@color/c_ffffff"
+        android:orientation="vertical">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1"
+            android:gravity="center_vertical"
+            android:orientation="horizontal">
+
+            <LinearLayout
+                android:id="@+id/layout_follower"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:gravity="center"
+                android:orientation="vertical">
+
+                <kr.innisfree.playgreen.common.view.NanumGothicTextView
+                    android:id="@+id/txt_follower"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/str_follower"
+                    android:textColor="@color/c_666666"
+                    android:textSize="@dimen/dp_12"/>
+
+                <kr.innisfree.playgreen.common.view.NanumGothicBoldTextView
+                    android:id="@+id/txt_follower_count"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/dp_3"
+                    android:textColor="@color/c_333333"
+                    android:textSize="@dimen/dp_17"/>
+
+
+            </LinearLayout>
+
+            <View
+                android:layout_width="@dimen/dp_1"
+                android:layout_height="@dimen/dp_15"
+                android:background="@color/c_f5f5f5"/>
+
+            <LinearLayout
+                android:id="@+id/layout_following"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:gravity="center"
+                android:orientation="vertical">
+
+                <kr.innisfree.playgreen.common.view.NanumGothicTextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/str_following"
+                    android:textColor="@color/c_666666"
+                    android:textSize="@dimen/dp_12"/>
+
+                <kr.innisfree.playgreen.common.view.NanumGothicBoldTextView
+                    android:id="@+id/txt_following_count"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/dp_3"
+                    android:textColor="@color/c_333333"
+                    android:textSize="@dimen/dp_17"/>
+
+            </LinearLayout>
+
+            <View
+                android:layout_width="@dimen/dp_1"
+                android:layout_height="@dimen/dp_15"
+                android:background="@color/c_f5f5f5"/>
+
+            <LinearLayout
+                android:id="@+id/layout_like"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:gravity="center"
+                android:orientation="vertical">
+
+                <kr.innisfree.playgreen.common.view.NanumGothicTextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/str_like"
+                    android:textColor="@color/c_666666"
+                    android:textSize="@dimen/dp_12"/>
+
+                <kr.innisfree.playgreen.common.view.NanumGothicBoldTextView
+                    android:id="@+id/txt_like_count"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/dp_3"
+                    android:textColor="@color/c_333333"
+                    android:textSize="@dimen/dp_17"/>
+
+            </LinearLayout>
+
+
+        </LinearLayout>
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/dp_1"
+            android:background="@color/c_f5f5f5"/>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1"
+            android:gravity="center_vertical"
+            android:orientation="horizontal">
+
+            <LinearLayout
+                android:id="@+id/layout_pg21"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:gravity="center"
+                android:orientation="vertical">
+
+                <kr.innisfree.playgreen.common.view.NanumGothicTextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/str_playgreen_21"
+                    android:textColor="@color/c_999999"
+                    android:textSize="@dimen/dp_12"/>
+
+                <kr.innisfree.playgreen.common.view.NanumGothicBoldTextView
+                    android:id="@+id/txt_pg21_day"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/dp_3"
+                    android:textColor="@color/c_4b9b50"
+                    android:textSize="@dimen/dp_17"/>
+
+            </LinearLayout>
+
+            <View
+                android:layout_width="@dimen/dp_1"
+                android:layout_height="@dimen/dp_15"
+                android:background="@color/c_f5f5f5"/>
+
+            <LinearLayout
+                android:id="@+id/layout_pg_point"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:gravity="center"
+                android:orientation="vertical">
+
+                <kr.innisfree.playgreen.common.view.NanumGothicTextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/str_pg_point"
+                    android:textColor="@color/c_999999"
+                    android:textSize="@dimen/dp_12"/>
+
+                <kr.innisfree.playgreen.common.view.NanumGothicBoldTextView
+                    android:id="@+id/txt_pg_point"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/dp_3"
+                    android:textColor="@color/c_4b9b50"
+                    android:textSize="@dimen/dp_17"/>
+
+            </LinearLayout>
+        </LinearLayout>
+
+    </LinearLayout>
+
+
+</LinearLayout>

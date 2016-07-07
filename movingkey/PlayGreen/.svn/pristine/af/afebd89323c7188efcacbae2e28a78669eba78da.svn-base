@@ -1,0 +1,183 @@
+package kr.innisfree.playgreen.fragment;
+
+import android.annotation.SuppressLint;
+import android.os.Bundle;
+import android.support.annotation.Nullable;
+import android.support.v4.app.Fragment;
+import android.text.TextUtils;
+import android.view.KeyCharacterMap;
+import android.view.KeyEvent;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewConfiguration;
+import android.view.ViewGroup;
+import android.widget.ImageView;
+import android.widget.LinearLayout;
+import android.widget.ScrollView;
+import android.widget.TextView;
+
+import com.ParentAct;
+import com.ParentFrag;
+import com.android.volley.toolbox.StringRequest;
+import com.moyusoft.util.BitmapCircleResize;
+import com.moyusoft.util.Definitions.YN;
+import com.moyusoft.util.TextUtil;
+import com.squareup.picasso.Picasso;
+import com.volley.network.NetworkConstantUtil;
+import com.volley.network.NetworkController;
+import com.volley.network.dto.NetworkData;
+import com.volley.network.dto.NetworkJson;
+
+import java.util.HashMap;
+
+import kr.innisfree.playgreen.R;
+import kr.innisfree.playgreen.common.PlaygreenManager;
+import kr.innisfree.playgreen.dialog.ProfileDetailDialog;
+
+/**
+ * Created by jooyoung on 2016-02-19.
+ */
+public class FriendRecommendFrag extends ParentFrag implements View.OnClickListener {
+
+	private NetworkData friendData;
+
+	private LinearLayout layoutRecommend;
+	private ImageView imgProfile, imgBadge;
+	private TextView txtNickname, txtIntroduce, txtFollowerCnt, txtFollowingCnt, txtPGPoint;
+	private TextView txtShowDetail, txtFollow;
+
+	public FriendRecommendFrag() {
+	}
+
+	@SuppressLint("ValidFragment")
+	public FriendRecommendFrag(NetworkData friendData) {
+		this.friendData = friendData;
+	}
+
+	public static FriendRecommendFrag newInstance(NetworkData friendData) {
+		FriendRecommendFrag frag = new FriendRecommendFrag(friendData);
+		return frag;
+	}
+
+	@Nullable
+	@Override
+	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+		View view = inflater.inflate(R.layout.frag_friend_recommend, null);
+		setCutOffBackgroundTouch(view);
+
+		layoutRecommend = (LinearLayout) view.findViewById(R.id.layout_recommend);
+		imgProfile = (ImageView) view.findViewById(R.id.img_profile);
+		imgBadge = (ImageView) view.findViewById(R.id.img_icon_badge);
+		txtNickname = (TextView) view.findViewById(R.id.txt_nickname);
+		txtIntroduce = (TextView) view.findViewById(R.id.txt_introduce);
+		txtFollowerCnt = (TextView) view.findViewById(R.id.txt_follower_count);
+		txtFollowingCnt = (TextView) view.findViewById(R.id.txt_following_count);
+		txtPGPoint = (TextView) view.findViewById(R.id.txt_pg_point);
+		txtShowDetail = (TextView) view.findViewById(R.id.txt_show_detail);
+		txtFollow = (TextView) view.findViewById(R.id.txt_follow);
+
+		txtShowDetail.setOnClickListener(this);
+		txtFollow.setOnClickListener(this);
+
+
+		boolean hasMenuKey = ViewConfiguration.get(getContext()).hasPermanentMenuKey();
+		boolean hasBackKey = KeyCharacterMap.deviceHasKey(KeyEvent.KEYCODE_BACK);
+		if (!hasMenuKey && !hasBackKey) {
+			ScrollView.LayoutParams params = (ScrollView.LayoutParams) layoutRecommend.getLayoutParams();
+			params.topMargin = getContext().getResources().getDimensionPixelOffset(R.dimen.dp_15);
+			layoutRecommend.setLayoutParams(params);
+		}
+
+		return view;
+	}
+
+	@Override
+	public void onResume() {
+		super.onResume();
+		onUIRefresh();
+	}
+
+	@Override
+	public void onClick(View v) {
+		switch (v.getId()) {
+			case R.id.txt_show_detail:
+				Fragment profileDetailDialog = ProfileDetailDialog.newInstance(friendData);
+				((ParentAct) getActivity()).dialogShow(profileDetailDialog, "profileDlg");
+				break;
+			case R.id.txt_follow:
+				if (friendData != null && !TextUtil.isNull(friendData.FRIEND_YN)) {
+					requestFollow(friendData.MEMB_ID, friendData.FRIEND_YN);
+				}
+				break;
+		}
+	}
+
+	@Override
+	public void onUIRefresh() {
+		super.onUIRefresh();
+		if (friendData == null) return;
+
+		if (!TextUtil.isNull(friendData.MEMB_IMG))
+			Picasso.with(getContext()).load(friendData.MEMB_IMG).error(R.drawable.img_user_null)
+					.transform(new BitmapCircleResize(getContext(), getResources().getDimensionPixelOffset(R.dimen.dp_140))).into(imgProfile);
+		if (!TextUtil.isNull(friendData.MEMB_NAME))
+			txtNickname.setText(friendData.MEMB_NAME);
+		if (!TextUtil.isNull(friendData.STATE_TEXT))
+			txtIntroduce.setText(friendData.STATE_TEXT);
+		if (!TextUtil.isNull(friendData.FRIEND_YN) && friendData.FRIEND_YN.equals(YN.YES))
+			txtFollow.setSelected(true);
+		else
+			txtFollow.setSelected(false);
+
+		/** 프로필 뱃지 */
+		boolean isSuperGreener = false, isBestGreener = false;
+		if(!TextUtils.isEmpty(friendData.SUPERGREENER_YN) && friendData.SUPERGREENER_YN.equals(YN.YES))
+			isSuperGreener = true;
+		if(!TextUtils.isEmpty(friendData.BESTGREENER_YN) && friendData.BESTGREENER_YN.equals(YN.YES))
+			isBestGreener = true;
+		if(isSuperGreener || isBestGreener){
+			imgBadge.setVisibility(View.VISIBLE);
+			if(isSuperGreener && isBestGreener)
+				imgBadge.setBackgroundResource(R.drawable.icon_badge_both);
+			else if(isSuperGreener)
+				imgBadge.setBackgroundResource(R.drawable.icon_badge_sg);
+			else if(isBestGreener)
+				imgBadge.setBackgroundResource(R.drawable.icon_badge_bestpg);
+		}else{
+			imgBadge.setVisibility(View.GONE);
+		}
+
+		txtFollowerCnt.setText(TextUtil.makeStringWithComma(friendData.FOLLOWER_COUNT + "", false));
+		txtFollowingCnt.setText(TextUtil.makeStringWithComma(friendData.FOLLOWING_COUNT + "", false));
+		txtPGPoint.setText(TextUtil.makeStringWithComma(friendData.POINT + "", false) + "p");
+	}
+
+	public void requestFollow(String membId, String followYN) {
+		HashMap<String, String> params = new HashMap<String, String>();
+		params.put("AUTH_TOKEN", PlaygreenManager.getAuthToken() + "");
+		params.put("MEMB_ID", membId);
+
+		StringRequest myReq;
+		if (!TextUtil.isNull(followYN) && followYN.equals(YN.YES))
+			myReq = netUtil.requestPost(NetworkConstantUtil.APIKEY.FRIEND_UNFOLLOW, NetworkConstantUtil.URLS.FRIEND_UNFOLLOW, params);
+		else
+			myReq = netUtil.requestPost(NetworkConstantUtil.APIKEY.FRIEND_FOLLOW, NetworkConstantUtil.URLS.FRIEND_FOLLOW, params);
+		NetworkController.addToRequestQueue(myReq);
+	}
+
+
+	@Override
+	public void onNetworkResult(int idx, NetworkJson json) {
+		super.onNetworkResult(idx, json);
+		switch (idx) {
+			case NetworkConstantUtil.APIKEY.FRIEND_FOLLOW:
+				friendData.FRIEND_YN = YN.YES;
+				txtFollow.setSelected(true);
+				break;
+			case NetworkConstantUtil.APIKEY.FRIEND_UNFOLLOW:
+				friendData.FRIEND_YN = YN.NO;
+				txtFollow.setSelected(false);
+				break;
+		}
+	}
+}

@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/c_ffffff"
+        android:orientation="vertical">
+
+        <LinearLayout
+            android:id="@+id/layout_item"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/dp_58"
+            android:background="@drawable/ripple_dark"
+            android:gravity="center_vertical"
+            android:orientation="horizontal">
+
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_marginLeft="@dimen/dp_10"
+                android:layout_marginRight="@dimen/dp_10"
+                android:layout_weight="1"
+                android:gravity="center_vertical"
+                android:orientation="vertical">
+
+                <kr.innisfree.playgreen.common.view.InnisfreeGothicBoldTextView
+                    android:id="@+id/txt_subject"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:maxLines="1"
+                    android:minHeight="@dimen/dp_23"
+                    android:textColor="@color/c_666666"
+                    android:textSize="@dimen/dp_14"/>
+
+                <kr.innisfree.playgreen.common.view.InnisfreeGothicTextView
+                    android:id="@+id/txt_date"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/dp_6"
+                    android:maxLines="1"
+                    android:minHeight="@dimen/dp_15"
+                    android:textColor="@color/c_999999"
+                    android:textSize="@dimen/dp_10"/>
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:gravity="center_vertical"
+                android:minWidth="@dimen/dp_90"
+                android:orientation="horizontal"
+                android:paddingLeft="@dimen/dp_10"
+                android:paddingRight="@dimen/dp_10">
+
+                <kr.innisfree.playgreen.common.view.NanumGothicBoldTextView
+                    android:id="@+id/txt_point"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginRight="@dimen/dp_6"
+                    android:gravity="right"
+                    android:minWidth="@dimen/dp_50"
+                    android:textColor="@color/c_4b9b50"
+                    android:textSize="@dimen/dp_15"/>
+
+                <kr.innisfree.playgreen.common.view.NanumGothicTextView
+                    android:id="@+id/txt_point_state"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textColor="@color/c_999999"
+                    android:textSize="@dimen/dp_12"/>
+            </LinearLayout>
+
+
+        </LinearLayout>
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/dp_0.5"
+            android:layout_gravity="bottom"
+            android:background="@color/c_e1e1e1"/>
+    </LinearLayout>
+
+</FrameLayout>

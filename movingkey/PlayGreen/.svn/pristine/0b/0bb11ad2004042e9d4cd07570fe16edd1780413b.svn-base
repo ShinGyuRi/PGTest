@@ -1,0 +1,100 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@color/c_000000">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/dp_160"
+        android:layout_gravity="center_vertical"
+        android:background="@color/c_000000"
+        android:gravity="center_vertical"
+        android:orientation="horizontal"
+        android:paddingLeft="@dimen/dp_42"
+        android:paddingRight="@dimen/dp_42">
+
+        <LinearLayout
+            android:id="@+id/camera_cg_tool.layout_brush"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:orientation="vertical">
+
+            <ImageButton
+                android:layout_width="@dimen/dp_80"
+                android:layout_height="@dimen/dp_80"
+                android:background="@drawable/btn_camera_cg_tool_brush"
+                android:clickable="false"
+                android:duplicateParentState="true" />
+
+            <kr.innisfree.playgreen.common.view.InnisfreeGothicTextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/dp_18"
+                android:clickable="false"
+                android:duplicateParentState="true"
+                android:text="@string/str_camera_cg_tool_brush"
+                android:textColor="@color/txt_camera_cg_tool"
+                android:textSize="@dimen/dp_13" />
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/camera_cg_tool.layout_erase"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:orientation="vertical">
+
+            <ImageButton
+                android:layout_width="@dimen/dp_80"
+                android:layout_height="@dimen/dp_80"
+                android:background="@drawable/btn_camera_cg_tool_erase"
+                android:clickable="false"
+                android:duplicateParentState="true" />
+
+            <kr.innisfree.playgreen.common.view.InnisfreeGothicTextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/dp_18"
+                android:clickable="false"
+                android:duplicateParentState="true"
+                android:text="@string/str_camera_cg_tool_erase"
+                android:textColor="@color/txt_camera_cg_tool"
+                android:textSize="@dimen/dp_13" />
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/camera_cg_tool.layout_edit"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:orientation="vertical">
+
+            <ImageButton
+                android:layout_width="@dimen/dp_80"
+                android:layout_height="@dimen/dp_80"
+                android:background="@drawable/btn_camera_cg_tool_edit"
+                android:clickable="false"
+                android:duplicateParentState="true" />
+
+            <kr.innisfree.playgreen.common.view.InnisfreeGothicTextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/dp_18"
+                android:clickable="false"
+                android:duplicateParentState="true"
+                android:text="@string/str_camera_cg_tool_edit"
+                android:textColor="@color/txt_camera_cg_tool"
+                android:textSize="@dimen/dp_13" />
+
+        </LinearLayout>
+
+    </LinearLayout>
+
+</FrameLayout>

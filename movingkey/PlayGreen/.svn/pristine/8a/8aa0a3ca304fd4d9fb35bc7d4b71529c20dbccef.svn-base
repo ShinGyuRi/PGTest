@@ -1,0 +1,537 @@
+package kr.innisfree.playgreen.fragment.main;
+
+import android.annotation.SuppressLint;
+import android.app.AlertDialog;
+import android.content.ClipData;
+import android.content.ClipboardManager;
+import android.content.Context;
+import android.content.DialogInterface;
+import android.content.Intent;
+import android.graphics.Color;
+import android.net.Uri;
+import android.os.Bundle;
+import android.os.Handler;
+import android.support.annotation.Nullable;
+import android.support.v4.widget.SwipeRefreshLayout;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.LinearLayout;
+
+import com.ParentAct;
+import com.ParentFrag;
+import com.android.volley.VolleyError;
+import com.android.volley.toolbox.StringRequest;
+import com.facebook.CallbackManager;
+import com.facebook.FacebookCallback;
+import com.facebook.FacebookException;
+import com.facebook.FacebookSdk;
+import com.facebook.share.Sharer;
+import com.facebook.share.model.ShareLinkContent;
+import com.moyusoft.util.Debug;
+import com.moyusoft.util.Definitions;
+import com.moyusoft.util.Definitions.YN;
+import com.moyusoft.util.JYLog;
+import com.moyusoft.util.TextUtil;
+import com.moyusoft.util.Util;
+import com.volley.network.NetworkConstantUtil.APIKEY;
+import com.volley.network.NetworkConstantUtil.NETWORK_RESULT_CODE;
+import com.volley.network.NetworkConstantUtil.URLS;
+import com.volley.network.NetworkController;
+import com.volley.network.NetworkRequestFunction;
+import com.volley.network.dto.NetworkData;
+import com.volley.network.dto.NetworkJson;
+
+import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
+
+import java.net.URLDecoder;
+import java.util.ArrayList;
+import java.util.HashMap;
+
+import kr.innisfree.playgreen.R;
+import kr.innisfree.playgreen.Util.ShareToSNSManager;
+import kr.innisfree.playgreen.activity.MainAct;
+import kr.innisfree.playgreen.activity.search.HashtagDetailAct;
+import kr.innisfree.playgreen.activity.search.ProfileDetailAct;
+import kr.innisfree.playgreen.activity.user.FriendAddAct;
+import kr.innisfree.playgreen.adapter.TimelineAdapter;
+import kr.innisfree.playgreen.common.PlaygreenManager;
+import kr.innisfree.playgreen.data.DialogData;
+import kr.innisfree.playgreen.data.PlayGreenEvent;
+import kr.innisfree.playgreen.data.PlayGreenEvent.EVENT_TYPE;
+import kr.innisfree.playgreen.dialog.FollowCancelDialog;
+import kr.innisfree.playgreen.dialog.ShareDialog;
+import kr.innisfree.playgreen.fragment.ReportFrag;
+import kr.innisfree.playgreen.listener.AdapterItemClickListener;
+import kr.innisfree.playgreen.listener.DialogListener;
+import kr.innisfree.playgreen.listener.RecyclerOnScrollListener;
+
+/**
+ * Created by jooyoung on 2016-02-24.
+ */
+public class TimeLineFrag extends ParentFrag implements SwipeRefreshLayout.OnRefreshListener, AdapterItemClickListener {
+
+	private SwipeRefreshLayout swipeRefreshLayout;
+	private RecyclerView recyclerView;
+	private TimelineAdapter timelineAdapter;
+	private LinearLayout layoutEmpty;
+	private RecyclerOnScrollListener recyclerOnScrollListener;
+
+	private String listType;
+	private int page;
+	private NetworkData paging;
+	private NetworkData selectItem;
+
+	public TimeLineFrag() {
+	}
+
+	@SuppressLint("ValidFragment")
+	public TimeLineFrag(String listType) {
+		this.listType = listType;
+	}
+
+	public static TimeLineFrag newInstance(String listType) {
+		TimeLineFrag frag = new TimeLineFrag(listType);
+		return frag;
+	}
+
+	@Nullable
+	@Override
+	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+		View view = inflater.inflate(R.layout.frag_timeline, null);
+
+		setCutOffBackgroundTouch(view);
+		if (EventBus.getDefault().isRegistered(this) == false) EventBus.getDefault().register(this);
+
+		layoutEmpty = (LinearLayout) view.findViewById(R.id.empty_view);
+		view.findViewById(R.id.txt_connect).setOnClickListener(new View.OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				Intent i = new Intent(getActivity(), FriendAddAct.class);
+				Util.moveActivity(getActivity(), i, -1, -1, false, false);
+			}
+		});
+
+		swipeRefreshLayout = (SwipeRefreshLayout) view.findViewById(R.id.layout_swipe);
+		swipeRefreshLayout.setColorSchemeColors(Color.parseColor("#69b06c"));
+		swipeRefreshLayout.setOnRefreshListener(this);
+		recyclerView = (RecyclerView) view.findViewById(R.id.recyclerview);
+		recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
+		recyclerView.setHasFixedSize(true);
+
+
+		if (paging == null || page == 0) {
+			page = 1;
+		}
+		recyclerOnScrollListener = new RecyclerOnScrollListener() {
+			@Override
+			public void onLoadMore() {
+				if (paging != null && paging.TOTAL_PAGE > page) {
+					page += 1;
+					new Handler().postDelayed(new Runnable() {
+						@Override
+						public void run() {
+							netFunc.requestTimeline(listType, null, page + "", null);
+						}
+					}, 300);
+				}
+			}
+		};
+		recyclerOnScrollListener.setLinearLayoutManager((LinearLayoutManager) recyclerView.getLayoutManager());
+		recyclerView.addOnScrollListener(recyclerOnScrollListener);
+
+		if (timelineAdapter == null) {
+			timelineAdapter = new TimelineAdapter(getActivity());
+			timelineAdapter.setAdapterItemClickListener(this);
+		}
+
+		if (recyclerView.getAdapter() == null)
+			recyclerView.setAdapter(timelineAdapter);
+		else
+			recyclerView.swapAdapter(timelineAdapter, false);
+
+		if (timelineAdapter.getItemCount() == 0)
+			onRefresh();
+
+
+		return view;
+	}
+
+	@Override
+	public void onResume() {
+		super.onResume();
+		if (isSharing) {
+//			JYLog.D("onResume::" + shareCategory, new Throwable());
+//			JYLog.D("onResume::" + targetId, new Throwable());
+//			JYLog.D("onResume::" + sns, new Throwable());
+			if (!TextUtil.isNull(shareCategory) && !TextUtil.isNull(targetId) && !TextUtil.isNull(sns)) {
+//				JYLog.D("onResume::yes::", new Throwable());
+				NetworkRequestFunction networkRequestFunction = new NetworkRequestFunction(this.netUtil);
+				networkRequestFunction.requestRegistPGpoint(shareCategory, targetId, sns, null, null);
+			} else {
+//				JYLog.D("onResume::no::", new Throwable());
+			}
+			initializeShareInfo();
+		}
+	}
+
+	@Override
+	public void onRefresh() {
+		page = 1;
+		netFunc.requestTimeline(listType, null, page + "", null);
+	}
+
+	@Subscribe
+	public void onEvent(PlayGreenEvent event) {
+		if (event.getEvent() == EVENT_TYPE.TIMELINE_REFRESH) {
+			netFunc.requestTimeline(listType, null, page + "", null);
+		}
+	}
+
+	@Override
+	public void onAdapterItemClick(View view, int position) {
+		if (swipeRefreshLayout.isRefreshing()) return;
+		selectItem = timelineAdapter.getItem(position);
+		if (selectItem == null) return;
+		switch (view.getId()) {
+			case R.id.img_item_profile:
+				Intent intent = new Intent(getActivity(), ProfileDetailAct.class);
+				intent.putExtra(Definitions.INTENT_KEY.MEMB_ID, selectItem.MEMB_ID);
+				Util.moveActivity(getActivity(), intent, -1, -1, false, false);
+				break;
+			case R.id.txt_item_like_count:
+				((MainAct) getActivity()).gotoLikeList("T", selectItem.TIMELINE_ID);
+				break;
+			case R.id.btn_item_follow:
+				if (!TextUtil.isNull(selectItem.FRIEND_YN) && selectItem.FRIEND_YN.equals(Definitions.YN.YES)) {
+					FollowCancelDialog dialog = new FollowCancelDialog();
+					dialog.setupDialog(selectItem, new DialogListener() {
+						@Override
+						public void onSendDlgData(DialogData dialogData) {
+							if (dialogData != null && dialogData.dialogButtonType == Definitions.DIALOG_SELECT.CONFIRM) {
+								netFunc.requestFollow(selectItem.MEMB_ID, selectItem.FRIEND_YN);
+							}
+						}
+					});
+					((ParentAct) getActivity()).dialogShow(dialog, "cancel dialog");
+				} else {
+					netFunc.requestFollow(selectItem.MEMB_ID, selectItem.FRIEND_YN);
+				}
+				break;
+			case R.id.btn_item_like:
+				if (!TextUtil.isNull(selectItem.LIKE_YN) && selectItem.LIKE_YN.equals(YN.YES))
+					requestLike(selectItem.TIMELINE_ID, YN.NO, selectItem.LIKE_ID);
+				else
+					requestLike(selectItem.TIMELINE_ID, YN.YES, null);
+				break;
+			case R.id.btn_item_reply:
+				((MainAct) getActivity()).gotoCommentList("T", selectItem.TIMELINE_ID);
+				break;
+			case R.id.btn_item_share:
+				/** set targetId **/
+				setShareInfo("T", selectItem.TIMELINE_ID, null);
+				ShareDialog dialog = new ShareDialog();
+				dialog.setDialogListener(dialogListener);
+				((ParentAct) getActivity()).dialogShow(dialog, "share");
+				break;
+			case R.id.btn_item_etc:
+				AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+				if (!TextUtil.isNull(selectItem.OWN_YN) && selectItem.OWN_YN.equals(YN.YES)) {
+					builder.setItems(R.array.alert_etc_mine, new DialogInterface.OnClickListener() {
+						@Override
+						public void onClick(DialogInterface dialog, int which) {
+							netFunc.requestTimelineDelete(selectItem.TIMELINE_ID);
+						}
+					});
+				} else {
+					builder.setItems(R.array.alert_etc, new DialogInterface.OnClickListener() {
+						@Override
+						public void onClick(DialogInterface dialog, int which) {
+							((MainAct) getActivity()).gotoReport(ReportFrag.NOTIFY_CATEGORY_T, selectItem.TIMELINE_ID);
+						}
+					});
+				}
+				builder.show();
+				break;
+			case R.id.txt_item_hashtag:
+				NetworkData tagItem = (NetworkData) view.getTag();
+				intent = new Intent(getActivity(), HashtagDetailAct.class);
+				intent.putExtra(Definitions.INTENT_KEY.DATA, tagItem.HASHTAG);
+				Util.moveActivity(getActivity(), intent, -1, -1, false, false);
+
+				JYLog.D(tagItem.HASHTAG + ", " + tagItem.HASHTAG_ID, new Throwable());
+				break;
+		}
+	}
+
+	public void requestLike(String targetId, String likeYN, String likeId) {
+		HashMap<String, String> params = new HashMap<String, String>();
+		params.put("AUTH_TOKEN", PlaygreenManager.getAuthToken() + "");
+		params.put("LIKE_CATEGORY", "T");
+		params.put("TARGET_ID", targetId);
+		params.put("LIKE_YN", likeYN);
+		if (!TextUtil.isNull(likeId))
+			params.put("LIKE_ID", likeId);
+		StringRequest myReq = netUtil.requestPost(APIKEY.LIKE_ACTION, URLS.LIKE_ACTION, params);
+		NetworkController.addToRequestQueue(myReq);
+	}
+
+	public void requestFollow(String membId, String followYN) {
+		HashMap<String, String> params = new HashMap<String, String>();
+		params.put("AUTH_TOKEN", PlaygreenManager.getAuthToken() + "");
+		params.put("MEMB_ID", membId);
+
+		StringRequest myReq;
+		if (!TextUtil.isNull(followYN) && followYN.equals(YN.YES))
+			myReq = netUtil.requestPost(APIKEY.FRIEND_UNFOLLOW, URLS.FRIEND_UNFOLLOW, params);
+		else
+			myReq = netUtil.requestPost(APIKEY.FRIEND_FOLLOW, URLS.FRIEND_FOLLOW, params);
+		NetworkController.addToRequestQueue(myReq);
+	}
+
+	@Override
+	public void onNetworkResult(int idx, NetworkJson json) {
+		super.onNetworkResult(idx, json);
+		switch (idx) {
+			case APIKEY.TIMELINE_LIST:
+				paging = json.PAGING;
+				layoutEmpty.setVisibility(View.GONE);
+				swipeRefreshLayout.setRefreshing(false);
+
+				if (json.LIST == null || json.LIST.size() == 0) {
+					layoutEmpty.setVisibility(View.VISIBLE);
+				} else {
+					if (page == 1) timelineAdapter.clearItemArray();    //새로고침일 경우
+					timelineAdapter.setItemArray(json.LIST);
+				}
+
+				if (paging.CURRENT_PAGE == 1) {
+					//TODO 비율 작은이미지가 포지션== 0일때만 이런현상나타남 ㅜ 한번더 확인!
+					recyclerView.postDelayed(new Runnable() {
+						@Override
+						public void run() {
+							recyclerView.scrollToPosition(0);
+						}
+					}, 300);
+				}
+
+				if (recyclerOnScrollListener != null)
+					recyclerOnScrollListener.setLoading(true);
+				break;
+			case APIKEY.LIKE_ACTION:
+				if (selectItem != null && !TextUtil.isNull(selectItem.LIKE_YN) && selectItem.LIKE_YN.equals(YN.NO)) {
+					selectItem.LIKE_YN = YN.YES;
+					selectItem.LIKE_ID = json.LIKE_ID;
+					selectItem.LIKE_COUNT += 1;
+				} else {
+					selectItem.LIKE_YN = YN.NO;
+					selectItem.LIKE_ID = "";
+					selectItem.LIKE_COUNT -= 1;
+				}
+				timelineAdapter.notifyDataSetChanged();
+				break;
+			case APIKEY.FRIEND_FOLLOW:
+			case APIKEY.FRIEND_UNFOLLOW:
+				String followState;
+				if (selectItem != null && !TextUtil.isNull(selectItem.FRIEND_YN) && selectItem.FRIEND_YN.equals(YN.NO))
+					followState = YN.YES;
+				else
+					followState = YN.NO;
+
+
+				ArrayList<NetworkData> removeArray = new ArrayList<NetworkData>();
+				for (NetworkData data : timelineAdapter.getItemArray()) {
+					if (!TextUtil.isNull(data.MEMB_ID) && selectItem != null && data.MEMB_ID.equals(selectItem.MEMB_ID)) {
+						data.FRIEND_YN = followState;
+						if (followState.equals(YN.NO)) {
+							removeArray.add(data);
+						}
+					}
+				}
+
+				for (NetworkData data : removeArray) {
+					if (timelineAdapter.getItemArray().contains(data))
+						timelineAdapter.getItemArray().remove(data);
+				}
+
+				timelineAdapter.notifyDataSetChanged();
+				break;
+			case APIKEY.TIMELINE_DELETE:
+				timelineAdapter.removeItem(selectItem);
+				break;
+			case APIKEY.SHARE_REGIST:
+				JYLog.D("Regist sharing", new Throwable());
+				break;
+		}
+	}
+
+	@Override
+	public void onNetworkError(int idx, VolleyError error, NetworkJson json) {
+		swipeRefreshLayout.setRefreshing(false);
+		super.onNetworkError(idx, error, json);
+		if (json == null) return;
+		switch (json.RESULT_CODE) {
+			case NETWORK_RESULT_CODE.NOT_EXIST_DATA:
+				layoutEmpty.setVisibility(View.VISIBLE);
+				break;
+		}
+	}
+
+	@Override
+	public void onNetworkStart(int idx) {
+		if (swipeRefreshLayout.isRefreshing())
+			return;
+		if (paging != null && paging.CURRENT_PAGE > 1)
+			return;
+		super.onNetworkStart(idx);
+	}
+
+	@Override
+	public void onDestroy() {
+		EventBus.getDefault().unregister(this);
+		super.onDestroy();
+	}
+
+
+	/**
+	 * 공유
+	 */
+	public DialogListener dialogListener = new DialogListener() {
+		@Override
+		public void onSendDlgData(DialogData dialogData) {
+			if (selectItem == null) return;
+			ShareToSNSManager shareToSNSManager = null;
+
+			String shareImageUrl;
+			if (!TextUtil.isNull(selectItem.TIMELINE_MP4_SCENE)) {
+				shareImageUrl = selectItem.TIMELINE_MP4_SCENE;
+			} else {
+				shareImageUrl = selectItem.TIMELINE_IMG;
+			}
+//			String shareImageUrl = selectItem.TIMELINE_IMG;
+//			String shareVideoUrl = selectItem.TIMELINE_MP4;
+//			if (!TextUtil.isNull(shareVideoUrl) && !TextUtil.isNull(selectItem.TIMELINE_MP4_SCENE)) {
+//				shareVideoUrl = selectItem.TIMELINE_MP4_SCENE;
+//			}
+
+			if (TextUtil.isNull(shareImageUrl)) return;
+
+			switch (dialogData.dialogButtonType) {
+				case Definitions.DIALOG_SELECT.SHARE_COPY_URL:
+					ClipboardManager clipboard = (ClipboardManager) getActivity().getSystemService(Context.CLIPBOARD_SERVICE);
+					ClipData clip = null;
+					clip = ClipData.newPlainText("simple text", shareImageUrl);
+					clipboard.setPrimaryClip(clip);
+					Debug.showToast(getContext(), R.string.str_share_to_clipboard_message);
+					break;
+				case Definitions.DIALOG_SELECT.SHARE_FACEBOOK:
+					shareToFacebook(shareImageUrl);
+					break;
+				case Definitions.DIALOG_SELECT.SHARE_INSTAGRAM:
+					setShareInfo("T", null, Definitions.AUTH_CHANNEL.INSTAGRAM);
+					shareToSNSManager = new ShareToSNSManager(getActivity(), shareImageUrl);
+					shareToSNSManager.shareToInstagram();
+					break;
+				case Definitions.DIALOG_SELECT.SHARE_KAKAOSTORY:
+					setShareInfo("T", null, Definitions.AUTH_CHANNEL.KAKAOTALK);
+					shareToSNSManager = new ShareToSNSManager(getActivity(), shareImageUrl);
+					shareToSNSManager.shareToKakaoStory();
+					break;
+			}
+
+//            if (shareToSNSManager != null) {
+//                shareToSNSManager.setDialogListener(new DialogListener() {
+//                    @Override
+//                    public void onSendDlgData(DialogData dialogData) {
+//                        if (dialogData == null)
+//                            return;
+//                        if (dialogData.isCancle) {
+//                            initializeShareInfo();
+//                        }
+//                    }
+//                });
+//            }
+
+		}
+	};
+
+	@Override
+	public void onActivityResult(int requestCode, int resultCode, Intent data) {
+		if (requestCode == Definitions.ACTIVITY_REQUEST_CODE.FACEBOOK_SHARE) {
+			callbackManager.onActivityResult(requestCode, resultCode, data);
+		} else {
+			super.onActivityResult(requestCode, resultCode, data);
+		}
+	}
+
+	CallbackManager callbackManager;
+	public com.facebook.share.widget.ShareDialog facebookShareDialog;
+
+	public void shareToFacebook(String imageUrl) {
+		/** set **/
+		setShareInfo("T", null, Definitions.AUTH_CHANNEL.FACEBOOK);
+		FacebookSdk.sdkInitialize(getContext());
+		callbackManager = CallbackManager.Factory.create();
+		facebookShareDialog = new com.facebook.share.widget.ShareDialog(this);
+		facebookShareDialog.registerCallback(callbackManager, new FacebookCallback<Sharer.Result>() {
+			@Override
+			public void onSuccess(Sharer.Result result) {
+				JYLog.D("Timeline::onSuccess::fb", new Throwable());
+			}
+
+			@Override
+			public void onCancel() {
+				JYLog.D("Timeline::onCancel::fb", new Throwable());
+				initializeShareInfo();
+			}
+
+			@Override
+			public void onError(FacebookException error) {
+				JYLog.D("Timeline::onError::fb", new Throwable());
+				initializeShareInfo();
+			}
+		});
+
+		String timelineContent = "";
+		try {
+			timelineContent = URLDecoder.decode(selectItem.TIMELINE_TEXT, "UTF-8");
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+
+		Uri contentUri = Uri.parse(imageUrl);
+		ShareLinkContent content = new ShareLinkContent.Builder()
+				.setContentUrl(Uri.parse("https://play.google.com/store/apps/details?id=kr.innisfree.playgreen"))            //페북에서 클릭하면 들어가는 링크, (사이트이면 사이트로 이동, 동영상 링크이면 링크를 통해 동영상 재생됨)
+				.setContentTitle(getString(R.string.str_share_to_facebook_title))
+				.setImageUrl(Uri.parse(imageUrl))
+				.setContentDescription(timelineContent)
+				.build();
+		facebookShareDialog.show(content, com.facebook.share.widget.ShareDialog.Mode.AUTOMATIC);
+	}
+
+	private boolean isSharing = false; // onResume
+	private String shareCategory, targetId, sns;
+
+	private void initializeShareInfo() {
+		this.isSharing = false;
+		this.shareCategory = null;
+		this.targetId = null;
+		this.sns = null;
+	}
+
+	private void setShareInfo(String shareCategory, String targetId, String sns) {
+		this.isSharing = true;
+		if (!TextUtil.isNull(shareCategory))
+			this.shareCategory = shareCategory;
+
+		if (!TextUtil.isNull(targetId))
+			this.targetId = targetId;
+
+		if (!TextUtil.isNull(sns))
+			this.sns = sns;
+	}
+
+}

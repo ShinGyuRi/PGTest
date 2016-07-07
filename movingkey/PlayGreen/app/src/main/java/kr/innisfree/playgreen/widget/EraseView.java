@@ -1,0 +1,183 @@
+package kr.innisfree.playgreen.widget;
+
+import android.content.Context;
+import android.graphics.Bitmap;
+import android.graphics.Bitmap.Config;
+import android.graphics.Canvas;
+import android.graphics.Color;
+import android.graphics.Matrix;
+import android.graphics.Paint;
+import android.graphics.Path;
+import android.graphics.PorterDuff.Mode;
+import android.graphics.PorterDuffXfermode;
+import android.util.AttributeSet;
+import android.view.MotionEvent;
+import android.view.View;
+
+import kr.innisfree.playgreen.activity.CameraActivity;
+import kr.innisfree.playgreen.fragment.camera.CameraFrag;
+
+/**
+ * Created by wonderland on 16. 5. 3..
+ */
+public class EraseView extends View {
+
+    private boolean isMove = false;
+    private boolean isSetFrontBitmap = false;
+    private Bitmap bitmap = null;
+    private Bitmap frontBitmap = null;
+    private Path path;
+    private Canvas mCanvas;
+    private Paint paint;
+    private Paint blurPaint;
+
+    private int width;
+    private int height;
+    private Matrix mMatrix;
+
+    private String firstFrameAbsoultePath;
+
+    private boolean isScratchable = true;
+
+    public EraseView(Context context) {
+        super(context);
+    }
+
+    public EraseView(Context context, AttributeSet attrs) {
+        super(context, attrs);
+    }
+
+    public void setFrontBitmap(Bitmap frontBitmap) {
+        this.frontBitmap = frontBitmap;
+        invalidate();
+    }
+
+    public void setWidth(int width) {
+        this.width = width;
+    }
+
+    public void setHeight(int height) {
+        this.height = height;
+    }
+
+    public Bitmap getBitmap() {
+        return bitmap;
+    }
+
+    public String getFirstFrameAbsoultePath() {
+        return firstFrameAbsoultePath;
+    }
+
+    public void setIsScratchable(boolean isScratchable) {
+        this.isScratchable = isScratchable;
+    }
+
+    @Override
+    protected void onDraw(Canvas canvas) {
+
+        if (mCanvas == null) {
+            EraseBitmp();
+        }
+
+        canvas.drawBitmap(bitmap, 0, 0, null);
+
+        if(isScratchable){
+            mCanvas.drawPath(path, paint);//Draw a path
+
+        }
+
+        super.onDraw(canvas);
+    }
+
+    public void EraseBitmp() {
+
+//        bitmap = Bitmap.createBitmap(getWidth(), getHeight(), Config.ARGB_4444);
+//        if (frontBitmap == null)
+//            frontBitmap = CreateBitmap(Color.GRAY, getWidth(), getHeight());//The production of grey.
+
+        bitmap = Bitmap.createBitmap(width, height, Config.ARGB_4444);
+//        canvas.drawBitmap(mScratchBitmap, mMatrix, mBitmapPaint);
+        if (frontBitmap == null)
+            frontBitmap = CreateBitmap(Color.GRAY, width, height);//The production of grey.
+
+        //Set the brush style
+        paint = new Paint();
+        paint.setStyle(Paint.Style.STROKE);//Set the brush style: Hollow
+        paint.setXfermode(new PorterDuffXfermode(Mode.CLEAR));//Display mode settings when photo cross
+        paint.setAntiAlias(true);//Anti according to tooth
+        paint.setDither(true);//Anti jitter
+        paint.setStrokeJoin(Paint.Join.ROUND);//Set the joint appearance, ROUND arc
+        paint.setStrokeCap(Paint.Cap.ROUND);
+        paint.setStrokeWidth(50);//Set the stroke width
+//        paint.setMaskFilter(new BlurMaskFilter(new BlurMaskFilter(8.0f, BlurMaskFilter.Blur.NORMAL)));
+
+//        blurPaint = new Paint();
+////        paint.setXfermode(new PorterDuffXfermode(Mode.CLEAR));//Display mode settings when photo cross
+//        paint.setAntiAlias(true);//Anti according to tooth
+//        paint.setDither(true);//Anti jitter
+//        paint.setStrokeJoin(Paint.Join.ROUND);//Set the joint appearance, ROUND arc
+//        paint.setStrokeCap(Paint.Cap.ROUND);
+//        paint.setStrokeWidth(50);//Set the stroke width
+//        paint.setMaskFilter(new BlurMaskFilter(new BlurMaskFilter(8.0f, BlurMaskFilter.Blur.NORMAL)));
+
+        path = new Path();
+        paint.setStyle(Paint.Style.STROKE);//Set the brush style: Hollow
+
+        mCanvas = new Canvas(bitmap);//Set up a band picture of canvas
+
+        if (mMatrix == null) {
+            float scaleWidth = (float) width / frontBitmap.getWidth();
+            float scaleHeight = (float) height / frontBitmap.getHeight();
+            mMatrix = new Matrix();
+            mMatrix.postScale(scaleWidth, scaleHeight);
+        }
+
+        mCanvas.drawBitmap(frontBitmap, mMatrix, null);
+        firstFrameAbsoultePath =
+                CameraActivity.saveImageToSdcard(
+                        CameraFrag.TYPE_CINEMAGRAPH_FIRST_FRAME,
+                        CameraActivity.getOutputMediaFile(CameraFrag.TYPE_CINEMAGRAPH_FIRST_FRAME),
+                        bitmap,
+                        getContext());
+
+    }
+
+    public void reset() {
+//        if(path != null){
+//            p
+//        }
+        mCanvas.drawBitmap(frontBitmap, mMatrix, null);
+    }
+
+    @Override
+    public boolean onTouchEvent(MotionEvent event) {
+        // TODO Auto-generated method stub
+
+        float ax = event.getX();
+        float ay = event.getY();
+
+        if (event.getAction() == MotionEvent.ACTION_DOWN) {
+            isMove = false;
+            path.reset();
+            path.moveTo(ax, ay);
+            invalidate();
+            return true;
+        } else if (event.getAction() == MotionEvent.ACTION_MOVE) {
+            isMove = true;
+            path.lineTo(ax, ay);
+            invalidate();
+            return true;
+        }
+        return super.onTouchEvent(event);
+    }
+
+    public Bitmap CreateBitmap(int color, int width, int height) {
+        int[] rgb = new int[width * height];
+
+        for (int i = 0; i < rgb.length; i++) {
+            rgb[i] = color;
+        }
+        return Bitmap.createBitmap(rgb, width, height, Config.ARGB_8888);
+    }
+
+}

@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              android:layout_width="match_parent"
+              android:layout_height="match_parent"
+              android:orientation="vertical">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/dp_58"
+        android:gravity="center_vertical"
+        android:orientation="horizontal"
+        android:paddingLeft="@dimen/dp_10"
+        android:paddingRight="@dimen/dp_10">
+
+        <FrameLayout
+            android:layout_width="@dimen/dp_32"
+            android:layout_height="@dimen/dp_32">
+
+            <ImageView
+                android:id="@+id/img_profile_item"
+                android:layout_width="@dimen/dp_30"
+                android:layout_height="@dimen/dp_30"
+                android:layout_gravity="left|bottom"
+                android:background="@drawable/img_user_null"/>
+
+            <ImageView
+                android:id="@+id/img_icon_badge"
+                android:layout_width="@dimen/dp_13"
+                android:layout_height="@dimen/dp_13"
+                android:visibility="gone"
+                android:layout_gravity="right"/>
+        </FrameLayout>
+
+
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="@dimen/dp_10"
+            android:layout_weight="1"
+            android:gravity="center_vertical"
+            android:orientation="vertical">
+
+            <kr.innisfree.playgreen.common.view.NanumGothicBoldTextView
+                android:id="@+id/txt_nickname_item"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="@color/c_333333"
+                android:textSize="@dimen/dp_14"/>
+
+            <kr.innisfree.playgreen.common.view.NanumGothicTextView
+                android:id="@+id/txt_info_item"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/dp_6"
+                android:textColor="@color/c_999999"
+                android:textSize="@dimen/dp_10"/>
+
+        </LinearLayout>
+
+        <TextView
+            android:id="@+id/txt_follow_item"
+            android:layout_width="@dimen/dp_54"
+            android:layout_height="@dimen/dp_28"
+            android:background="@drawable/btn_follow_small"/>
+
+
+    </LinearLayout>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/dp_0.5"
+        android:background="@color/c_e1e1e1"/>
+</LinearLayout>

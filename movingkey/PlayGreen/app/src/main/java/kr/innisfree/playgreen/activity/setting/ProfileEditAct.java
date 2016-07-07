@@ -1,0 +1,392 @@
+package kr.innisfree.playgreen.activity.setting;
+
+import android.app.AlertDialog;
+import android.app.DatePickerDialog;
+import android.content.DialogInterface;
+import android.content.Intent;
+import android.graphics.Bitmap;
+import android.os.Bundle;
+import android.support.v7.widget.Toolbar;
+import android.text.Editable;
+import android.text.TextWatcher;
+import android.view.View;
+import android.widget.CompoundButton;
+import android.widget.DatePicker;
+import android.widget.EditText;
+import android.widget.ImageView;
+import android.widget.RadioButton;
+import android.widget.TextView;
+import android.widget.Toast;
+
+import com.ParentAct;
+import com.android.volley.DefaultRetryPolicy;
+import com.android.volley.RequestQueue;
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
+import com.google.gson.Gson;
+import com.moyusoft.util.BitmapCircleResize;
+import com.moyusoft.util.Definitions;
+import com.moyusoft.util.Definitions.GENDER;
+import com.moyusoft.util.FileUtil;
+import com.moyusoft.util.JYLog;
+import com.moyusoft.util.TextUtil;
+import com.navercorp.volleyextensions.volleyer.Volleyer;
+import com.navercorp.volleyextensions.volleyer.builder.PostBuilder;
+import com.navercorp.volleyextensions.volleyer.factory.DefaultRequestQueueFactory;
+import com.squareup.picasso.Picasso;
+import com.volley.network.NetworkConstantUtil;
+import com.volley.network.NetworkErrorUtill;
+import com.volley.network.dto.NetworkData;
+import com.volley.network.dto.NetworkJson;
+
+import java.io.File;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+
+import kr.innisfree.playgreen.R;
+import kr.innisfree.playgreen.activity.CameraActivity;
+import kr.innisfree.playgreen.common.PlaygreenManager;
+import kr.innisfree.playgreen.fragment.setting.CountrySelectFrag;
+
+/**
+ * Created by jooyoung on 2016-04-14.
+ */
+public class ProfileEditAct extends ParentAct implements View.OnClickListener, CompoundButton.OnCheckedChangeListener, TextWatcher {
+
+    private EditText editNickname, editIntroduce, editEmail, editPhone;
+    private RadioButton radioMale, radioFemale;
+    private ImageView imgProfile;
+    private TextView txtIntroduceWarning, txtCountry, txtBirthday;
+
+    private NetworkData userData;
+    private boolean isRemoveProfileImage;
+    private String profileImagePath = null;
+    private String inputBirthday;
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.act_profile_edit);
+        setLoading(this);
+
+        isRemoveProfileImage = false;
+
+        imgProfile = (ImageView) findViewById(R.id.img_profile);
+        editNickname = (EditText) findViewById(R.id.edit_nickname);
+        editIntroduce = (EditText) findViewById(R.id.edit_introduce);
+        editEmail = (EditText) findViewById(R.id.edit_email);
+        editPhone = (EditText) findViewById(R.id.edit_phone);
+        txtIntroduceWarning = (TextView) findViewById(R.id.txt_introduce_warning);
+        txtCountry = (TextView) findViewById(R.id.txt_country);
+        radioMale = (RadioButton) findViewById(R.id.radio_male);
+        radioFemale = (RadioButton) findViewById(R.id.radio_female);
+        txtBirthday = (TextView) findViewById(R.id.txt_birthday);
+
+        txtBirthday.setOnClickListener(this);
+        editIntroduce.addTextChangedListener(this);
+        radioMale.setOnCheckedChangeListener(this);
+        radioFemale.setOnCheckedChangeListener(this);
+        findViewById(R.id.btn_nickname_del).setOnClickListener(this);
+        findViewById(R.id.btn_introduce_del).setOnClickListener(this);
+        findViewById(R.id.btn_email_del).setOnClickListener(this);
+        findViewById(R.id.btn_phone_del).setOnClickListener(this);
+        findViewById(R.id.txt_country).setOnClickListener(this);
+        findViewById(R.id.layout_profile_edit).setOnClickListener(this);
+
+        initToolbar();
+        initialize();
+    }
+
+    private void initToolbar() {
+        Toolbar mToolbar = (Toolbar) findViewById(R.id.toolbar);
+        findViewById(R.id.layout_back).setOnClickListener(this);
+        findViewById(R.id.txt_confirm).setOnClickListener(this);
+        ((TextView) findViewById(R.id.txt_title)).setText(R.string.str_profile_edit);
+        setSupportActionBar(mToolbar);
+        getSupportActionBar().setDisplayShowTitleEnabled(false);
+    }
+
+    public void initialize() {
+        FileUtil.deleteTempImageFile(this);
+        userData = PlaygreenManager.getUserInfo();
+        if (userData == null) return;
+
+        if (!TextUtil.isNull(userData.MEMB_IMG))
+            Picasso.with(this).load(userData.MEMB_IMG).transform(new BitmapCircleResize(this, getResources().getDimensionPixelOffset(R.dimen.dp_100))).into(imgProfile);
+
+        if (!TextUtil.isNull(userData.MEMB_NAME)) {
+            editNickname.setText(userData.MEMB_NAME);
+            editNickname.setSelection(editNickname.getText().length());
+        }
+        if (!TextUtil.isNull(userData.STATE_TEXT))
+            editIntroduce.setText(userData.STATE_TEXT);
+        if (!TextUtil.isNull(userData.EMAIL))
+            editEmail.setText(userData.EMAIL);
+        if (!TextUtil.isNull(userData.PHONE))
+            editPhone.setText(userData.PHONE);
+        if (!TextUtil.isNull(userData.SEX) && userData.SEX.equals(GENDER.MALE))
+            radioMale.setChecked(true);
+        else
+            radioFemale.setChecked(true);
+        if (!TextUtil.isNull(userData.LOCATION))
+            txtCountry.setText(PlaygreenManager.getCountryName(userData.LOCATION));
+        if (!TextUtil.isNull(userData.BIRTH_DAY)) {
+            String birthday = TextUtil.convertStringtoDate(userData.BIRTH_DAY, getString(R.string.str_birthday_format_02));
+            txtBirthday.setText(birthday);
+        }
+
+    }
+
+    @Override
+    public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+    }
+
+    @Override
+    public void onTextChanged(CharSequence s, int start, int before, int count) {
+    }
+
+    @Override
+    public void afterTextChanged(Editable s) {
+        String str = editIntroduce.getText().toString();
+        if (!TextUtil.isNull(str)) {
+            if (str.length() > 48) {
+                txtIntroduceWarning.setVisibility(View.VISIBLE);
+                editIntroduce.removeTextChangedListener(this);
+                editIntroduce.setText(str.substring(0, str.length() - 1));
+                editIntroduce.setSelection(editIntroduce.getText().toString().length());
+                editIntroduce.addTextChangedListener(this);
+                return;
+            }
+        }
+        txtIntroduceWarning.setVisibility(View.GONE);
+    }
+
+    @Override
+    public void onClick(View v) {
+        switch (v.getId()) {
+            case R.id.layout_back:
+                hiddenKeyboard();
+                onBackPressed();
+                break;
+            case R.id.txt_confirm:
+                hiddenKeyboard();
+                if (checkValidation()) {
+                    requestUpdateUser();
+                }
+                break;
+            case R.id.btn_nickname_del:
+                editNickname.setText("");
+                editNickname.requestFocus();
+                break;
+            case R.id.btn_introduce_del:
+                editIntroduce.setText("");
+                editIntroduce.requestFocus();
+                break;
+            case R.id.btn_email_del:
+                editEmail.setText("");
+                editEmail.requestFocus();
+                break;
+            case R.id.btn_phone_del:
+                editPhone.setText("");
+                editPhone.requestFocus();
+                break;
+            case R.id.layout_profile_edit:
+                showImageAlert();
+                break;
+            case R.id.txt_country:
+                CountrySelectFrag frag = CountrySelectFrag.newInstance();
+                frag.setCountrySelectListener(new CountrySelectFrag.OnCountrySelectListener() {
+                    @Override
+                    public void OnCountrySelect(NetworkData data) {
+                        if (!TextUtil.isNull(data.country))
+                            txtCountry.setText(data.country);
+                        userData.LOCATION = data.LOCATION;
+                    }
+                });
+                switchContent(frag, R.id.container, true, false);
+                break;
+            case R.id.txt_birthday:
+                showPickerDialog();
+                break;
+        }
+    }
+
+    public void showPickerDialog() {
+        DatePickerDialog.OnDateSetListener mDateSetListener = new DatePickerDialog.OnDateSetListener() {
+            public void onDateSet(DatePicker view, int year, int monthOfYear, int dayOfMonth) {
+                String date = getString(R.string.str_birthday_format, year, (monthOfYear + 1), dayOfMonth);
+                txtBirthday.setText(date);
+
+                Calendar calendar = Calendar.getInstance();
+                calendar.set(year, monthOfYear, dayOfMonth);
+                SimpleDateFormat format = new SimpleDateFormat("yyyyMMdd");
+                inputBirthday = format.format(calendar.getTime());
+            }
+        };
+
+        Calendar cal = Calendar.getInstance();
+        cal.set(Calendar.YEAR, Calendar.getInstance().get(Calendar.YEAR) - 14);
+        cal.set(Calendar.MONTH, Calendar.JANUARY);
+        cal.set(Calendar.DAY_OF_MONTH, 1);
+        DatePickerDialog alert = new DatePickerDialog(this, mDateSetListener, 1980, 0, 1);
+        alert.getDatePicker().setMaxDate(cal.getTime().getTime());
+        alert.show();
+    }
+
+    @Override
+    public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+        if (isChecked) {
+            switch (buttonView.getId()) {
+                case R.id.radio_male:
+                case R.id.radio_female:
+                    radioMale.setChecked(false);
+                    radioFemale.setChecked(false);
+                    break;
+            }
+            buttonView.setChecked(isChecked);
+        }
+    }
+
+    @Override
+    public void takePicture(Bitmap bm) {
+        super.takePicture(bm);
+        isRemoveProfileImage = false;
+        profileImagePath = null;
+        Picasso.with(this).load(FileUtil.getTempImageFile(this))
+                .skipMemoryCache()
+                .transform(new BitmapCircleResize(this, getResources().getDimensionPixelOffset(R.dimen.dp_100)))
+                .into(imgProfile);
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if (requestCode == Definitions.ACTIVITY_REQUEST_CODE.CAMERA_ACT) {
+            if (resultCode == RESULT_OK) {
+                if (data == null) return;
+                profileImagePath = data.getStringExtra(Definitions.INTENT_KEY.IMAGE_PATH);
+                Picasso.with(this).load(new File(profileImagePath))
+                        .skipMemoryCache()
+                        .transform(new BitmapCircleResize(this, getResources().getDimensionPixelOffset(R.dimen.dp_100)))
+                        .into(imgProfile);
+            } else {
+                finish();
+            }
+        } else {
+            super.onActivityResult(requestCode, resultCode, data);
+        }
+
+    }
+
+    public void showImageAlert() {
+        String[] imageChoice = new String[3];
+        imageChoice[0] = getString(R.string.str_take_picture_from_camera);
+        imageChoice[1] = getString(R.string.str_take_picture_from_gallery);
+        imageChoice[2] = getString(R.string.str_delete_profile_image);
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setItems(imageChoice, new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                dialog.dismiss();
+                if (which == 0) {
+                    gotoCameraActivity(CameraActivity.TYPE_FROM_PROFILE_EDIT_CAMERA);
+                } else if (which == 1) {
+                    gotoCameraActivity(CameraActivity.TYPE_FROM_PROFILE_EDIT_GALLERY);
+//					goGallery(0);
+                } else if (which == 2) {
+                    isRemoveProfileImage = true;
+                    imgProfile.setImageResource(R.drawable.img_user_null2);
+                }
+            }
+        });
+        builder.show();
+    }
+
+    public void requestUpdateUser() {
+        showLoading();
+        final RequestQueue q = DefaultRequestQueueFactory.create(this);
+        q.start();
+        PostBuilder pb = Volleyer.volleyer(q).post(NetworkConstantUtil.URLS.UPDATE_MEMBER)
+                .addStringPart("AUTH_TOKEN", PlaygreenManager.getAuthToken())
+                .addStringPart("MEMB_NAME", userData.MEMB_NAME);
+
+        if (!TextUtil.isNull(userData.SEX))
+            pb.addStringPart("SEX", userData.SEX);
+        if (!TextUtil.isNull(userData.EMAIL))
+            pb.addStringPart("EMAIL", userData.EMAIL);
+        if (!TextUtil.isNull(inputBirthday))
+            pb.addStringPart("BIRTH_DAY", inputBirthday);
+        if (!TextUtil.isNull(userData.LOCATION))
+            pb.addStringPart("LOCATION", userData.LOCATION);
+        if (!TextUtil.isNull(userData.STATE_TEXT))
+            pb.addStringPart("STATE_TEXT", userData.STATE_TEXT);
+        if (!TextUtil.isNull(userData.PHONE))
+            pb.addStringPart("PHONE", userData.PHONE);
+
+        if (isRemoveProfileImage) {
+            pb.addStringPart("MEMB_IMG_DEL_YN", "Y");
+        } else if (!TextUtil.isNull(profileImagePath)) {
+            pb.addFilePart("MEMB_IMG", new File(profileImagePath));
+        } else if (FileUtil.getTempImageFile(this).exists()) {
+            pb.addFilePart("MEMB_IMG", FileUtil.getTempImageFile(this));
+        }
+        pb.withListener(new Response.Listener<String>() {
+            @Override
+            public void onResponse(String response) {
+                JYLog.D("NETWORK", response.trim(), new Throwable());
+                if (response.contains("DOCTYPE") || response.contains("doctype")) {
+                    hideLoading();
+                    Toast.makeText(ProfileEditAct.this, R.string.str_server_error_occured, Toast.LENGTH_SHORT).show();
+                    return;
+                }
+                hideLoading();
+                Gson gson = new Gson();
+                NetworkJson networkJson = gson.fromJson(response, NetworkJson.class);
+                if (NetworkErrorUtill.isJsonResultCheck(networkJson)) {
+                    PlaygreenManager.saveUserInfo(networkJson.DATA);
+                    //EventBus.getDefault().post(new PlayGreenEvent(EVENT_TYPE.MYPAGE_REFRESH));
+                    finish();
+                } else {
+                }
+                q.stop();
+            }
+        }).withErrorListener(new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError arg0) {
+                JYLog.D("NETWORK", arg0.getMessage(), new Throwable());
+                hideLoading();
+                q.stop();
+            }
+        }).execute().setRetryPolicy(new DefaultRetryPolicy(15000,
+                DefaultRetryPolicy.DEFAULT_MAX_RETRIES,
+                DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
+    }
+
+    @Override
+    public void onNetworkResult(int idx, NetworkJson json) {
+        super.onNetworkResult(idx, json);
+    }
+
+    @Override
+    public void onNetworkError(int idx, VolleyError error, NetworkJson json) {
+        super.onNetworkError(idx, error, json);
+    }
+
+    public boolean checkValidation() {
+        userData.MEMB_NAME = editNickname.getText().toString();
+        userData.STATE_TEXT = editIntroduce.getText().toString();
+        userData.EMAIL = editEmail.getText().toString();
+        userData.PHONE = editPhone.getText().toString();
+        userData.SEX = radioFemale.isSelected() ? GENDER.FEMALE : GENDER.MALE;
+        userData.LOCATION = txtCountry.getText().toString();
+
+        if (TextUtil.isNull(userData.MEMB_NAME)) {
+
+            return false;
+        }
+        if (TextUtil.isNull(userData.EMAIL)) {
+
+            return false;
+        }
+        return true;
+    }
+}

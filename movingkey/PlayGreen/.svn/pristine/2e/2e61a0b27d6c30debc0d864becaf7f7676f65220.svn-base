@@ -1,0 +1,195 @@
+package com.volley.network.dto;
+
+import java.io.Serializable;
+import java.util.ArrayList;
+
+
+/**
+ * Created by jooyoung on 2016-02-16.
+ */
+public class NetworkData implements Serializable {
+
+	public boolean isTodayMission;
+	public boolean isBlockCancel;
+	public boolean isMyProfile;
+	public boolean isMine;
+	public boolean isExpanded;
+	public String country;
+	public boolean isFacebookConnected;
+	public boolean isInstagramConnected;
+	public boolean isKakaoConnected;
+	public boolean isLineConnected;
+	public boolean isWechatConnected;
+	public boolean isHeaderView;
+
+	public int VERSION_CODE;
+	public String VERSION_NAME;
+	public int MINIMUM_VERSION_CODE;
+
+	public String EMAIL;
+	public String AUTH_CODE;
+	public String PHONE_NUMBER;
+	public String MEMB_NAME;
+	//	public String NICK_NAME;
+	public String MEMB_IMG;
+	public String BIRTH_DAY;
+	public String SEX;
+	public String AGE_GROUP;
+	public String INFO_OPEN_MODE;
+	public String AUTH_CHANNEL;
+	public long REG_DT;
+	public String AUTH_TOKEN;
+	public String AUTH_TOKEN_DUE_DT;
+	public String PUSH_KEY;
+	public String BESTGREENER_YN;
+	public String SUPERGREENER_YN;
+	public String OWN_YN;
+	public String BLOCK_YN;
+	public String DEFAULT_IMG_YN;
+
+	public String SEX_OPEN_YN;
+	public String PHONE_OPEN_YN;
+	public String EMAIL_OPEN_YN;
+	public String LOCATION_OPEN_YN;
+	public String INTRO_TEXT;
+	public String ORIGIN_SAVE_YN;
+	public String PUSH_YN;
+	public String PWD_UPDATE_YN;
+	public String DATA_SAVING_YN;
+	public String TEMP_PWD_YN;
+	public int LOGIN_FAIL_COUNT;
+	public long LAST_LOGIN_DT;
+	public String PG21_DAY;
+	public String SNS_ID;
+
+	public String COVER_IMG;
+	public String COVER_TITLE;
+	public String COVER_TEXT;
+	public String COVER_HASHTAG;
+	public String COVER_MEMB_NAME;
+	public String COVER_DT;
+
+	public String CATEGORY;
+	public int FOLLOWER_COUNT;
+	public int FOLLOWING_COUNT;
+	public int POINT;
+	public String MEMB_ID;
+
+	public String MENU;
+	public String POSITION;
+	public String MAIN_IMG;
+	public String MAIN_LINK;
+
+	public int NUM;
+	public int PAGE;
+	public String TIMELINE_ID;
+	public String MOD_DT;
+	public String LOCATION;
+	public String TIMELINE_TEXT;
+	public int LIKE_COUNT;
+	public int COMMENT_COUNT;
+	public int SHARE_COUNT;
+	public String TODAY_PICK_YN;
+	public String BEST_PICK_YN;
+	public int NOTIFY_COUNT;
+	public String TIMELINE_IMG;
+	public String TIMELINE_MP4;
+	public String STATE_TEXT;
+	public ArrayList<NetworkData> HASHTAG_LIST;
+	public String HASHTAG_ID;
+	public String HASHTAG;
+	public String TARGET_ID;
+
+	public String LIKE_ID;
+	public String FRIEND_YN;
+
+	public String COMMENT_ID;
+	public String COMMENT_TEXT;
+	public String LIKE_YN;
+	public String SELF_YN;
+
+	public int MEMB_POINT;
+	public String POINT_TEXT;
+	public String POINT_DEPT;
+
+	public String MEMB_INFO_REGIST_YN;
+	public String PG21_TITLE;
+	public String EARTHBOX_IMG;
+	public int ENTER_COUNT;
+	public int SUPERGREENER_RANK;
+	public String PG21_MS_ENTER_NO;
+	public String PG21_MS_ID;
+	public String PG21_MS_IMG;
+	public String PG21_MS_ENTER_IMG;
+//	public int PG21_MS_ENTER_IMG_WIDTH;
+//	public int PG21_MS_ENTER_IMG_HEIGHT;
+	public String HIGHLIGHT_IMG;
+//	public int HIGHLIGHT_WIDTH;
+//	public int HIGHLIGHT_HEIGHT;
+	public String PG21_MS_TITLE;
+	public String TODAY_YN;
+	public String ENTER_YN;
+	public String SUPERGREENER_ENTER_ID;
+	public String SUPERGREENER_ENTER_YN;
+	public String POPUP_DEPT;
+
+	public String NAME;
+	public String PHONE;
+	public long START_DT;
+	public long END_DT;
+
+	public int TIMELINE_IMG_WIDTH;
+	public int TIMELINE_IMG_HEIGHT;
+
+	public String TIMELINE_MP4_SCENE;
+	public int TIMELINE_MP4_SCENE_WIDTH;
+	public int TIMELINE_MP4_SCENE_HEIGHT;
+
+	public String NOTICE_TITLE;
+	public String NOTICE_TEXT;
+	public String NOTICE_ID;
+
+	public String TERM_UNIT;
+	public int TERM;
+	public String INFO_CATEGORY;
+	public String INFO_TEXT;
+	public String FOLLOWING_YN;
+	public ArrayList<NetworkData> LIST_LIKE_TIMELINE;
+	public String LIST_LIKE_TIMELINE_ID;
+	public String LIST_LIKE_TIMELINE_IMG;
+	public String LIST_LIKE_TIMELINE_MP4_SCENE;
+
+	public String SEARCH_KEYWORD;
+	public String HASHTAG_IMG;
+
+	public int TOTAL_PAGE;
+	public int CURRENT_PAGE;
+	public int TOTAL_COUNT;
+
+
+	/** google place api **/
+	public NetworkData geometry;
+	public NetworkData location;
+	public Double lat;
+	public Double lng;
+	public String icon;
+	public String name;
+	public NetworkData opening_hours;
+	public Boolean open_now;
+	public ArrayList<NetworkData> weekday_text;
+	public ArrayList<NetworkData> photos;
+	public int height;
+	public ArrayList<String> html_attributions;
+	public String photo_reference;
+	public int width;
+	public String place_id;
+	public Double rating;
+	public String reference;
+	public String scope;
+	public ArrayList<String> types;
+	public String vicinity;
+
+
+}
+
+

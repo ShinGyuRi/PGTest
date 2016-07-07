@@ -1,0 +1,223 @@
+package kr.innisfree.playgreen.fragment.main;
+
+import android.content.Intent;
+import android.os.Bundle;
+import android.support.annotation.Nullable;
+import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.Toolbar;
+import android.text.TextUtils;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.FrameLayout;
+import android.widget.ImageView;
+import android.widget.TextView;
+
+import com.ParentFrag;
+import com.android.volley.VolleyError;
+import com.android.volley.toolbox.StringRequest;
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.engine.DiskCacheStrategy;
+import com.moyusoft.util.BitmapWidthResize;
+import com.moyusoft.util.Definitions;
+import com.moyusoft.util.Definitions.YN;
+import com.moyusoft.util.JYLog;
+import com.moyusoft.util.PrefUtil;
+import com.moyusoft.util.TextUtil;
+import com.moyusoft.util.ToforUtil;
+import com.moyusoft.util.Util;
+import com.squareup.picasso.Picasso;
+import com.volley.network.NetworkConstantUtil;
+import com.volley.network.NetworkConstantUtil.APIKEY;
+import com.volley.network.NetworkController;
+import com.volley.network.dto.NetworkData;
+import com.volley.network.dto.NetworkJson;
+
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Locale;
+
+import kr.innisfree.playgreen.R;
+import kr.innisfree.playgreen.activity.search.SearchAct;
+import kr.innisfree.playgreen.common.PlaygreenManager;
+import kr.innisfree.playgreen.fragment.home.HomeFrag;
+
+/**
+ * Created by jooyoung on 2016-02-22.
+ */
+public class HomeMainFrag extends ParentFrag implements View.OnClickListener {
+
+    private View view;
+    private Toolbar mToolbar;
+    private FrameLayout layoutTop, layoutMiddle, layoutBottomLeft, layoutBottomRight;
+    private ImageView imgTop, imgMiddle, imgBottomLeft, imgBottomRight;
+    private TextView txtTop, txtMiddle, txtBottomLeft, txtBottomRight;
+
+    private ArrayList<NetworkData> netResultDataArray;
+
+    private HomeFrag homeFrag;
+
+    public HomeMainFrag() {
+    }
+
+    public void setHomeFrag(HomeFrag homeFrag) {
+        this.homeFrag = homeFrag;
+    }
+
+    public static HomeMainFrag newInstance() {
+        HomeMainFrag frag = new HomeMainFrag();
+        return frag;
+    }
+
+    @Nullable
+    @Override
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        view = inflater.inflate(R.layout.frag_home_main, null);
+        setCutOffBackgroundTouch(view);
+
+        initView();
+        initToolbar();
+        requestHome();
+        return view;
+    }
+
+    private void initView() {
+        layoutTop = (FrameLayout) view.findViewById(R.id.layout_top);
+        layoutMiddle = (FrameLayout) view.findViewById(R.id.layout_middle);
+        layoutBottomLeft = (FrameLayout) view.findViewById(R.id.layout_bottom_left);
+        layoutBottomRight = (FrameLayout) view.findViewById(R.id.layout_bottom_right);
+        txtTop = (TextView) view.findViewById(R.id.txt_top);
+        txtMiddle = (TextView) view.findViewById(R.id.txt_middle);
+        txtBottomLeft = (TextView) view.findViewById(R.id.txt_bottom_left);
+        txtBottomRight = (TextView) view.findViewById(R.id.txt_bottom_right);
+        imgTop = (ImageView) view.findViewById(R.id.img_top);
+        imgMiddle = (ImageView) view.findViewById(R.id.img_middle);
+        imgBottomLeft = (ImageView) view.findViewById(R.id.img_bottom_left);
+        imgBottomRight = (ImageView) view.findViewById(R.id.img_bottom_right);
+        layoutTop.setOnClickListener(this);
+        layoutMiddle.setOnClickListener(this);
+        layoutBottomLeft.setOnClickListener(this);
+        layoutBottomRight.setOnClickListener(this);
+    }
+
+
+    private void initToolbar() {
+        mToolbar = (Toolbar) view.findViewById(R.id.toolbar);
+        view.findViewById(R.id.btn_option).setOnClickListener(this);
+        ((AppCompatActivity) getActivity()).setSupportActionBar(mToolbar);
+        ((AppCompatActivity) getActivity()).getSupportActionBar().setDisplayShowTitleEnabled(false);
+    }
+
+    @Override
+    public void onClick(View v) {
+        switch (v.getId()) {
+            case R.id.btn_option:
+                Intent intent = new Intent(getActivity(), SearchAct.class);
+                Util.moveActivity(getActivity(), intent, 0, 0, false, false);
+                break;
+            case R.id.layout_top:
+                if (homeFrag != null)
+                    homeFrag.gotoTimeline();
+                break;
+            case R.id.layout_middle:
+                if (homeFrag != null)
+                    homeFrag.gotoPlayGreen21();
+                break;
+            case R.id.layout_bottom_left:
+                if (homeFrag != null)
+                    homeFrag.gotoBestPickFrag();
+                break;
+            case R.id.layout_bottom_right:
+                if (homeFrag != null)
+                    homeFrag.gotoPlaygreenNowFrag();
+                break;
+        }
+    }
+
+    public void gotoTimeline() {
+//		if(timeLinePagerFrag == null)
+//			timeLinePagerFrag = TimeLinePagerFrag.newInstance(true);
+//		getChildFragmentManager().beginTransaction().replace(R.id.frag_container, timeLinePagerFrag).commit();
+//		//((ParentAct)getActivity()).switchContent(fragment,R.id.frag_container,true,false);
+    }
+
+    @Override
+    public void onUIRefresh() {
+        super.onUIRefresh();
+        if (netResultDataArray == null) return;
+        for (NetworkData data : netResultDataArray) {
+            if (!TextUtil.isNull(data.POSITION)) {
+                switch (data.POSITION) {
+                    case "TOP":
+                        setHomeMenu(txtTop, data);
+                        Glide.with(this).load(data.MAIN_IMG).diskCacheStrategy(DiskCacheStrategy.SOURCE).override(imgTop.getWidth(), imgTop.getHeight()).into(imgTop);
+                        //Picasso.with(getContext()).load(data.MAIN_IMG).centerCrop().resize(imgTop.getWidth(), imgTop.getHeight()).into(imgTop);
+                        break;
+                    case "MIDDLE":
+                        setHomeMenu(txtMiddle, data);
+                        Picasso.with(getContext()).load(data.MAIN_IMG).transform(new BitmapWidthResize(ToforUtil.PHONE_W)).into(imgMiddle);
+                        break;
+                    case "BOTTOMLEFT":
+                        setHomeMenu(txtBottomLeft, data);
+                        Picasso.with(getContext()).load(data.MAIN_IMG).transform(new BitmapWidthResize(ToforUtil.PHONE_W / 2)).into(imgBottomLeft);
+                        break;
+                    case "BOTTOMRIGHT":
+                        setHomeMenu(txtBottomRight, data);
+                        PrefUtil.getInstance().putPreference(Definitions.PREFKEY.PG_NOW_MAIN_LINK, data.MAIN_LINK);
+                        Picasso.with(getContext()).load(data.MAIN_IMG).transform(new BitmapWidthResize(ToforUtil.PHONE_W / 2)).into(imgBottomRight);
+                        break;
+                }
+            }
+        }
+    }
+
+    public void setHomeMenu(TextView txtMenu, NetworkData menuData) {
+        int strRes = -1;
+        switch (menuData.MENU) {
+            case "TIMELINE":
+                strRes = R.string.str_timeline;
+                break;
+            case "PG21":
+                strRes = R.string.str_title_playgreen_21;
+                if (!TextUtils.isEmpty(menuData.DEFAULT_IMG_YN) && menuData.DEFAULT_IMG_YN.equalsIgnoreCase(YN.YES)) {
+                    txtMenu.setVisibility(View.GONE);
+                    return;
+                }
+                break;
+            case "BEST":
+                strRes = R.string.str_best_enter_pick;
+                break;
+            case "PGNOW":
+                strRes = R.string.str_playgreen_enter_now;
+                break;
+        }
+        txtMenu.setVisibility(View.VISIBLE);
+        if (strRes > -1) txtMenu.setText(strRes);
+    }
+
+    public void requestHome() {
+        HashMap<String, String> params = new HashMap<String, String>();
+        params.put("AUTH_TOKEN", PlaygreenManager.getAuthToken() + "");
+        params.put("LOCATION", PlaygreenManager.getLocation());
+        params.put("LANGUAGE", Locale.getDefault().getLanguage());
+        StringRequest myReq = netUtil.requestPost(APIKEY.MAIN_PAGE, NetworkConstantUtil.URLS.MAIN_PAGE, params);
+        NetworkController.addToRequestQueue(myReq);
+    }
+
+    @Override
+    public void onNetworkResult(int idx, NetworkJson json) {
+        super.onNetworkResult(idx, json);
+        switch (idx) {
+            case APIKEY.MAIN_PAGE:
+                netResultDataArray = json.LIST;
+                onUIRefresh();
+                break;
+        }
+    }
+
+    @Override
+    public void onNetworkError(int idx, VolleyError error, NetworkJson json) {
+        super.onNetworkError(idx, error, json);
+    }
+
+}

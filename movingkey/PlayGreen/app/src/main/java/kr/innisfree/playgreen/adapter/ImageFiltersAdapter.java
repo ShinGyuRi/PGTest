@@ -1,0 +1,473 @@
+package kr.innisfree.playgreen.adapter;
+
+import android.content.Context;
+import android.graphics.Bitmap;
+import android.support.v7.widget.RecyclerView;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.ImageView;
+import android.widget.LinearLayout;
+import android.widget.TextView;
+
+import java.util.List;
+
+import kr.innisfree.playgreen.R;
+import kr.innisfree.playgreen.data.PlayGreenImageFilter;
+import kr.innisfree.playgreen.listener.AdapterItemClickListener;
+
+
+/**
+ * Created by preparkha on 2015. 11. 12..
+ */
+public class ImageFiltersAdapter extends RecyclerView.Adapter {
+
+    private Bitmap bitmap;
+    private String absolutePath;
+    private PlayGreenImageFilter item;
+    private List<PlayGreenImageFilter> adapterArrayList;
+    private static Context context;
+    private AdapterItemClickListener adapterItemClickListener;
+
+    public static class FilterViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
+
+        private LinearLayout filterWrapperLl;
+        private ImageView filterImg;
+        private TextView filterNameTxt;
+
+        private AdapterItemClickListener itemClickListener;
+
+        public FilterViewHolder(View v) {
+            super(v);
+
+            filterWrapperLl = (LinearLayout) v.findViewById(R.id.image_filter_ll_wrapper);
+            filterImg = (ImageView) v.findViewById(R.id.image_filter_iv_preview);
+            filterNameTxt = (TextView) v.findViewById(R.id.image_filter_tv_name);
+
+            filterWrapperLl.setOnClickListener(this);
+
+        }
+
+        public void setClickListener(AdapterItemClickListener itemClickListener) {
+            this.itemClickListener = itemClickListener;
+        }
+
+        @Override
+        public void onClick(View v) {
+            if (itemClickListener != null)
+                itemClickListener.onAdapterItemClick(v, getLayoutPosition());
+        }
+
+    }
+
+    // Provide a suitable constructor (depends on the kind of dataset)
+    public ImageFiltersAdapter(Context context) {
+        this.context = context;
+    }
+
+    public void setBitmap(Bitmap bitmap) {
+        this.bitmap = bitmap;
+    }
+
+    public void setAbsolutePath(String absolutePath) {
+        this.absolutePath = absolutePath;
+    }
+
+    public void setAdapterItemClickListener(AdapterItemClickListener adapterItemClickListener) {
+        this.adapterItemClickListener = adapterItemClickListener;
+    }
+
+    public void setAdapterArrayList(List<PlayGreenImageFilter> adapterArrayList) {
+        this.adapterArrayList = adapterArrayList;
+    }
+
+    @Override
+    public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+
+        RecyclerView.ViewHolder vh;
+        View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_image_filter, parent, false);
+        vh = new FilterViewHolder(v);
+        ((FilterViewHolder) vh).setClickListener(adapterItemClickListener);
+
+        return vh;
+    }
+
+    @Override
+    public void onBindViewHolder(final RecyclerView.ViewHolder holder, final int position) {
+
+//        ((FilterViewHolder) holder).filterImg.setImageBitmap(null);
+        ((FilterViewHolder) holder).filterNameTxt.setText(null);
+
+        if (adapterArrayList == null || adapterArrayList.size() <= position)
+            return;
+
+        item = adapterArrayList.get(position);
+
+        ((FilterViewHolder) holder).filterWrapperLl.setSelected(item.isCheck);
+        ((FilterViewHolder) holder).filterNameTxt.setText(item.name);
+
+//        if (bitmap != null) {
+//            ((FilterViewHolder) holder).filterImg.setImageBitmap(bitmap);
+//        }
+
+//        if (!TextUtil.isNull(absolutePath)) {
+//            switch (position) {
+//                case 1:
+//                    // Tangenrine --> Inni
+//                    new Handler().post(new Runnable() {
+//                        @Override
+//                        public void run() {
+//                            JYLog.D("TAG::" + position + "::" + absolutePath, new Throwable());
+//                            Glide.with(context)
+//                                    .load(absolutePath)
+//                                    .diskCacheStrategy(DiskCacheStrategy.NONE)
+//                                    .skipMemoryCache(true)
+//                                    .bitmapTransform(new InniTransformation(context))
+//                                    .thumbnail(0.3f)
+//                                    .centerCrop()
+//                                    .into(new GlideDrawableImageViewTarget(((FilterViewHolder) holder).filterImg) {
+//                                        @Override
+//                                        public void onResourceReady(GlideDrawable resource, GlideAnimation<? super GlideDrawable> animation) {
+//                                            super.onResourceReady(resource, animation);
+//                                            //never called
+//                                            JYLog.D("TAG::onResourceReady()", new Throwable());
+//                                        }
+//
+//                                        @Override
+//                                        public void onLoadFailed(Exception e, Drawable errorDrawable) {
+//                                            super.onLoadFailed(e, errorDrawable);
+//                                            //never called
+//                                            JYLog.D("TAG::onLoadFailed()" + e.getMessage(), new Throwable());
+//                                        }
+//                                    });
+//                        }
+//
+//                    });
+//                    break;
+//                case 2:
+//                    // Cold orchid --> play
+//                    new Handler().post(new Runnable() {
+//                        @Override
+//                        public void run() {
+//                            JYLog.D("TAG::" + position + "::" + absolutePath, new Throwable());
+//                            Glide.with(context)
+//                                    .load(absolutePath)
+//                                    .diskCacheStrategy(DiskCacheStrategy.NONE)
+//                                    .skipMemoryCache(true)
+//                                    .bitmapTransform(new PlayTransformation(context))
+//                                    .thumbnail(0.3f)
+//                                    .centerCrop()
+//                                    .into(new GlideDrawableImageViewTarget(((FilterViewHolder) holder).filterImg) {
+//                                        @Override
+//                                        public void onResourceReady(GlideDrawable resource, GlideAnimation<? super GlideDrawable> animation) {
+//                                            super.onResourceReady(resource, animation);
+//                                            //never called
+//                                            JYLog.D("TAG::onResourceReady()", new Throwable());
+//                                        }
+//
+//                                        @Override
+//                                        public void onLoadFailed(Exception e, Drawable errorDrawable) {
+//                                            super.onLoadFailed(e, errorDrawable);
+//                                            //never called
+//                                            JYLog.D("TAG::onLoadFailed()" + e.getMessage(), new Throwable());
+//                                        }
+//                                    });
+//
+//                        }
+//                    });
+//                    break;
+//                case 3:
+//                    // Camellia Hill --> earth
+//                    new Handler().post(new Runnable() {
+//                        @Override
+//                        public void run() {
+//                            JYLog.D("TAG::" + position + "::" + absolutePath, new Throwable());
+//                            Glide.with(context)
+//                                    .load(absolutePath)
+//                                    .diskCacheStrategy(DiskCacheStrategy.NONE)
+//                                    .skipMemoryCache(true)
+//                                    .bitmapTransform(new EarthTransformation(context))
+//                                    .thumbnail(0.3f)
+//                                    .centerCrop()
+//                                    .into(new GlideDrawableImageViewTarget(((FilterViewHolder) holder).filterImg) {
+//                                        @Override
+//                                        public void onResourceReady(GlideDrawable resource, GlideAnimation<? super GlideDrawable> animation) {
+//                                            super.onResourceReady(resource, animation);
+//                                            //never called
+//                                            JYLog.D("TAG::onResourceReady()", new Throwable());
+//                                        }
+//
+//                                        @Override
+//                                        public void onLoadFailed(Exception e, Drawable errorDrawable) {
+//                                            super.onLoadFailed(e, errorDrawable);
+//                                            //never called
+//                                            JYLog.D("TAG::onLoadFailed()" + e.getMessage(), new Throwable());
+//                                        }
+//                                    });
+//                        }
+//
+//                    });
+//                    break;
+//                case 4: // Green persimmon
+//                    new Handler().post(new Runnable() {
+//                        @Override
+//                        public void run() {
+//                            Glide.with(context)
+//                                    .load(absolutePath)
+//                                    .diskCacheStrategy(DiskCacheStrategy.NONE)
+//                                    .skipMemoryCache(true)
+//                                    .bitmapTransform(new TangerineTransformation(context))
+//                                    .centerCrop()
+//                                    .into(new GlideDrawableImageViewTarget(((FilterViewHolder) holder).filterImg) {
+//                                        @Override
+//                                        public void onResourceReady(GlideDrawable resource, GlideAnimation<? super GlideDrawable> animation) {
+//                                            super.onResourceReady(resource, animation);
+//                                            //never called
+//                                            JYLog.D("TAG::onResourceReady()", new Throwable());
+//                                        }
+//
+//                                        @Override
+//                                        public void onLoadFailed(Exception e, Drawable errorDrawable) {
+//                                            super.onLoadFailed(e, errorDrawable);
+//                                            //never called
+//                                            JYLog.D("TAG::onLoadFailed()" + e.getMessage(), new Throwable());
+//                                        }
+//                                    });
+//                        }
+//
+//                    });
+//                    break;
+//                case 5: // Bija tree
+//                    new Handler().post(new Runnable() {
+//                        @Override
+//                        public void run() {
+//                            JYLog.D("TAG::" + position + "::" + absolutePath, new Throwable());
+//                            Glide.with(context)
+//                                    .load(absolutePath)
+//                                    .diskCacheStrategy(DiskCacheStrategy.NONE)
+//                                    .skipMemoryCache(true)
+//                                    .bitmapTransform(new TangerineTransformation(context))
+//                                    .centerCrop()
+//                                    .into(new GlideDrawableImageViewTarget(((FilterViewHolder) holder).filterImg) {
+//                                        @Override
+//                                        public void onResourceReady(GlideDrawable resource, GlideAnimation<? super GlideDrawable> animation) {
+//                                            super.onResourceReady(resource, animation);
+//                                            //never called
+//                                            JYLog.D("TAG::onResourceReady()", new Throwable());
+//                                        }
+//
+//                                        @Override
+//                                        public void onLoadFailed(Exception e, Drawable errorDrawable) {
+//                                            super.onLoadFailed(e, errorDrawable);
+//                                            //never called
+//                                            JYLog.D("TAG::onLoadFailed()" + e.getMessage(), new Throwable());
+//                                        }
+//                                    });
+//                        }
+//
+//                    });
+//                    break;
+//                case 6: // Beach sand
+//                    new Handler().post(new Runnable() {
+//                        @Override
+//                        public void run() {
+//                            JYLog.D("TAG::" + position + "::" + absolutePath, new Throwable());
+//                            Glide.with(context)
+//                                    .load(absolutePath)
+//                                    .diskCacheStrategy(DiskCacheStrategy.NONE)
+//                                    .skipMemoryCache(true)
+//                                    .bitmapTransform(new TangerineTransformation(context))
+//                                    .centerCrop()
+//                                    .into(new GlideDrawableImageViewTarget(((FilterViewHolder) holder).filterImg) {
+//                                        @Override
+//                                        public void onResourceReady(GlideDrawable resource, GlideAnimation<? super GlideDrawable> animation) {
+//                                            super.onResourceReady(resource, animation);
+//                                            //never called
+//                                            JYLog.D("TAG::onResourceReady()", new Throwable());
+//                                        }
+//
+//                                        @Override
+//                                        public void onLoadFailed(Exception e, Drawable errorDrawable) {
+//                                            super.onLoadFailed(e, errorDrawable);
+//                                            //never called
+//                                            JYLog.D("TAG::onLoadFailed()" + e.getMessage(), new Throwable());
+//                                        }
+//                                    });
+//                        }
+//
+//                    });
+//                    break;
+//                case 7: // Coastal road
+//                    new Handler().post(new Runnable() {
+//                        @Override
+//                        public void run() {
+//                            JYLog.D("TAG::" + position + "::" + absolutePath, new Throwable());
+//                            Glide.with(context)
+//                                    .load(absolutePath)
+//                                    .diskCacheStrategy(DiskCacheStrategy.NONE)
+//                                    .skipMemoryCache(true)
+//                                    .bitmapTransform(new TangerineTransformation(context))
+//                                    .centerCrop()
+//                                    .into(new GlideDrawableImageViewTarget(((FilterViewHolder) holder).filterImg) {
+//                                        @Override
+//                                        public void onResourceReady(GlideDrawable resource, GlideAnimation<? super GlideDrawable> animation) {
+//                                            super.onResourceReady(resource, animation);
+//                                            //never called
+//                                            JYLog.D("TAG::onResourceReady()", new Throwable());
+//                                        }
+//
+//                                        @Override
+//                                        public void onLoadFailed(Exception e, Drawable errorDrawable) {
+//                                            super.onLoadFailed(e, errorDrawable);
+//                                            //never called
+//                                            JYLog.D("TAG::onLoadFailed()" + e.getMessage(), new Throwable());
+//                                        }
+//                                    });
+//                        }
+//
+//                    });
+////                        new Handler().postDelayed(new Runnable() {
+////                            @Override
+////                            public void run() {
+////                                convertBitmap = ImageFilterUtil.updateExposure(bitmap, 0.24f);
+////                                DoGamma doGamma07 = new DoGamma(convertBitmap, 1.04, 1.04, 1.04);
+////                                convertBitmap = doGamma07.executeFilter();
+////                                DoColorFilter colorFilter071 = new DoColorFilter(convertBitmap, 0.42, 0.465, 0.445);
+////                                convertBitmap = colorFilter071.executeFilter();
+////                                DoBrightness doBrightness07 = new DoBrightness(convertBitmap, 100);
+////                                convertBitmap = doBrightness07.executeFilter();
+////                                convertBitmap = ImageFilterUtil.updateSaturation(convertBitmap, 1.5f);
+////
+////                                setBitmap(convertBitmap, bitmap);
+////                            }
+////                        }, 50);
+////                        Glide.with(getActivity()).load(new File(absolutePath)).bitmapTransform(new GrayscaleTransformation(getContext(), null)).into(imgContent);
+//                    break;
+//                case 8: // Jeju sea
+//                    new Handler().post(new Runnable() {
+//                        @Override
+//                        public void run() {
+//                            JYLog.D("TAG::" + position + "::" + absolutePath, new Throwable());
+//                            Glide.with(context)
+//                                    .load(absolutePath)
+//                                    .diskCacheStrategy(DiskCacheStrategy.NONE)
+//                                    .skipMemoryCache(true)
+//                                    .bitmapTransform(new TangerineTransformation(context))
+//                                    .centerCrop()
+//                                    .into(new GlideDrawableImageViewTarget(((FilterViewHolder) holder).filterImg) {
+//                                        @Override
+//                                        public void onResourceReady(GlideDrawable resource, GlideAnimation<? super GlideDrawable> animation) {
+//                                            super.onResourceReady(resource, animation);
+//                                            //never called
+//                                            JYLog.D("TAG::onResourceReady()", new Throwable());
+//                                        }
+//
+//                                        @Override
+//                                        public void onLoadFailed(Exception e, Drawable errorDrawable) {
+//                                            super.onLoadFailed(e, errorDrawable);
+//                                            //never called
+//                                            JYLog.D("TAG::onLoadFailed()" + e.getMessage(), new Throwable());
+//                                        }
+//                                    });
+//                        }
+//
+//                    });
+////                        new Handler().postDelayed(new Runnable() {
+////                            @Override
+////                            public void run() {
+////                                DoColorFilter colorFilter08 = new DoColorFilter(bitmap, 0.56, 0.465, 0.405);
+////                                convertBitmap = colorFilter08.executeFilter();
+////                                convertBitmap = ImageFilterUtil.updateExposure(convertBitmap, 0.79f);
+////                                DoGamma doGamma08 = new DoGamma(convertBitmap, 1, 1, 1);
+////                                convertBitmap = doGamma08.executeFilter();
+////                                DoBrightness doBrightness08 = new DoBrightness(convertBitmap, 1);
+////                                convertBitmap = doBrightness08.executeFilter();
+////                                convertBitmap = ImageFilterUtil.updateSaturation(convertBitmap, 1.1f);
+////
+////                                setBitmap(convertBitmap, bitmap);
+////                            }
+////                        }, 50);
+////                        Glide.with(getActivity()).load(new File(absolutePath)).bitmapTransform(new ColorFilterTransformation(null, Color.parseColor("#ffffff"))).into(imgContent);
+//                    break;
+//                case 9: // Basalt
+//                    new Handler().post(new Runnable() {
+//                        @Override
+//                        public void run() {
+//                            JYLog.D("TAG::" + position + "::" + absolutePath, new Throwable());
+//                            Glide.with(context)
+//                                    .load(absolutePath)
+//                                    .diskCacheStrategy(DiskCacheStrategy.NONE)
+//                                    .skipMemoryCache(true)
+//                                    .bitmapTransform(new GrayscaleTransformation(context))
+//                                    .centerCrop()
+//                                    .into(new GlideDrawableImageViewTarget(((FilterViewHolder) holder).filterImg) {
+//                                        @Override
+//                                        public void onResourceReady(GlideDrawable resource, GlideAnimation<? super GlideDrawable> animation) {
+//                                            super.onResourceReady(resource, animation);
+//                                            //never called
+//                                            JYLog.D("TAG::onResourceReady()", new Throwable());
+//                                        }
+//
+//                                        @Override
+//                                        public void onLoadFailed(Exception e, Drawable errorDrawable) {
+//                                            super.onLoadFailed(e, errorDrawable);
+//                                            //never called
+//                                            JYLog.D("TAG::onLoadFailed()" + e.getMessage(), new Throwable());
+//                                        }
+//                                    });
+//                        }
+//
+//                    });
+////                        new Handler().postDelayed(new Runnable() {
+////                            @Override
+////                            public void run() {
+////                                DoGamma doGamma = new DoGamma(bitmap, 0.78, 0.78, 0.78);
+////                                convertBitmap = doGamma.executeFilter();
+////                                DoGreyscale doGreyscale9 = new DoGreyscale(convertBitmap);
+////                                convertBitmap = doGreyscale9.executeFilter();
+////                                setBitmap(convertBitmap, bitmap);
+////                            }
+////                        }, 50);
+////                        Picasso.with(getActivity()).load(new File(absolutePath)).transform((Transformation) new Trans(getActivity(), null, 100f)).into(imgContent);
+////                        Glide.with(getActivity()).load(new File(absolutePath)).bitmapTransform(new ColorFilterTransformation(null, Color.parseColor("#000000"))).into(imgContent);
+//                    break;
+//                default:
+//                    new Handler().post(new Runnable() {
+//                        @Override
+//                        public void run() {
+//                            JYLog.D("TAG::default" + absolutePath, new Throwable());
+//                            Glide.with(context)
+//                                    .load(absolutePath)
+//                                    .diskCacheStrategy(DiskCacheStrategy.NONE)
+//                                    .skipMemoryCache(true)
+//                                    .centerCrop()
+//                                    .into(new GlideDrawableImageViewTarget(((FilterViewHolder) holder).filterImg) {
+//                                        @Override
+//                                        public void onResourceReady(GlideDrawable resource, GlideAnimation<? super GlideDrawable> animation) {
+//                                            super.onResourceReady(resource, animation);
+//                                            //never called
+//                                            JYLog.D("TAG::onResourceReady()", new Throwable());
+//                                        }
+//
+//                                        @Override
+//                                        public void onLoadFailed(Exception e, Drawable errorDrawable) {
+//                                            super.onLoadFailed(e, errorDrawable);
+//                                            //never called
+//                                            JYLog.D("TAG::onLoadFailed()" + e.getMessage(), new Throwable());
+//                                        }
+//                                    });
+//                        }
+//
+//                    });
+//            }
+//        }
+    }
+
+    @Override
+    public int getItemCount() {
+        int itemCount = 0;
+        if (adapterArrayList != null)
+            itemCount = adapterArrayList.size();
+        return itemCount;
+    }
+}

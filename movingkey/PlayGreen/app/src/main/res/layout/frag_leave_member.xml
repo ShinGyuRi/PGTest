@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              android:layout_width="match_parent"
+              android:layout_height="match_parent"
+              android:background="@color/c_ffffff"
+              android:orientation="vertical">
+
+    <include
+        layout="@layout/title_back"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"/>
+
+    <RelativeLayout
+        android:id="@+id/layout_before_leave"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/dp_48">
+
+        <kr.innisfree.playgreen.common.view.NanumGothicTextView
+            android:id="@+id/txt_before_leave"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:paddingLeft="@dimen/dp_10"
+            android:text="@string/str_confirm_before_leave"
+            android:textColor="@color/c_333333"
+            android:textSize="@dimen/dp_14"/>
+
+        <ImageView
+            android:duplicateParentState="true"
+            android:layout_width="@dimen/dp_44"
+            android:layout_height="match_parent"
+            android:layout_alignParentRight="true"
+            android:background="@drawable/checkbox_2"/>
+
+    </RelativeLayout>
+
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="@dimen/dp_15"
+        android:layout_marginRight="@dimen/dp_15"
+        android:background="@color/c_f5f5f5"
+        android:orientation="vertical"
+        android:paddingBottom="@dimen/dp_40"
+        android:paddingLeft="@dimen/dp_14"
+        android:paddingRight="@dimen/dp_14"
+        android:paddingTop="@dimen/dp_20">
+
+        <kr.innisfree.playgreen.common.view.NanumGothicTextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:lineSpacingExtra="@dimen/dp_7"
+            android:text="@string/str_leave_member_notice"
+            android:textColor="@color/c_666666"
+            android:textSize="@dimen/dp_12"/>
+
+    </LinearLayout>
+
+
+    <kr.innisfree.playgreen.common.view.NanumGothicBoldTextView
+        android:id="@+id/txt_leave_member"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/dp_48"
+        android:layout_marginLeft="@dimen/dp_15"
+        android:layout_marginRight="@dimen/dp_15"
+        android:layout_marginTop="@dimen/dp_10"
+        android:gravity="center"
+        android:background="@drawable/btn_color_common"
+        android:text="@string/str_leave_member_agree"
+        android:textColor="@color/c_ffffff"
+        android:textSize="@dimen/dp_14"/>
+
+</LinearLayout>

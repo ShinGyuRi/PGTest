@@ -1,0 +1,250 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+             android:layout_width="match_parent"
+             android:layout_height="match_parent">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+
+        <include
+            layout="@layout/title_back"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"/>
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/dp_58"
+            android:layout_marginTop="@dimen/dp_8"
+            android:background="@color/c_ffffff">
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/dp_0.5"
+                android:layout_alignParentTop="true"
+                android:background="@color/c_d2d2d2"/>
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/dp_0.5"
+                android:layout_alignParentBottom="true"
+                android:background="@color/c_e1e1e1"/>
+
+            <ImageView
+                android:id="@+id/img_facebook"
+                android:layout_width="@dimen/dp_30"
+                android:layout_height="@dimen/dp_30"
+                android:layout_centerVertical="true"
+                android:layout_marginLeft="@dimen/dp_10"
+                android:background="@drawable/icon_facebook2"/>
+
+            <TextView
+                android:id="@+id/btn_facebook_account"
+                android:layout_width="@dimen/dp_62"
+                android:layout_height="match_parent"
+                android:layout_alignParentRight="true"
+                android:background="@drawable/btn_onoff"/>
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_marginLeft="@dimen/dp_10"
+                android:layout_toLeftOf="@id/btn_facebook_account"
+                android:layout_toRightOf="@id/img_facebook"
+                android:gravity="center_vertical"
+                android:orientation="vertical">
+
+                <kr.innisfree.playgreen.common.view.NanumGothicBoldTextView
+                    android:id="@+id/txt_facebook"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/str_facebook_2"
+                    android:textColor="@color/c_333333"
+                    android:textSize="@dimen/dp_14"/>
+
+                <kr.innisfree.playgreen.common.view.NanumGothicTextView
+                    android:id="@+id/txt_facebook_state"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/dp_5"
+                    android:text="@string/str_not_connect"
+                    android:textColor="@color/c_999999"
+                    android:textSize="@dimen/dp_10"/>
+
+            </LinearLayout>
+
+
+        </RelativeLayout>
+
+
+        <!-- instagram -->
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/dp_58"
+            android:background="@color/c_ffffff">
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/dp_0.5"
+                android:layout_alignParentBottom="true"
+                android:background="@color/c_e1e1e1"/>
+
+            <ImageView
+                android:id="@+id/img_instagram"
+                android:layout_width="@dimen/dp_30"
+                android:layout_height="@dimen/dp_30"
+                android:layout_centerVertical="true"
+                android:layout_marginLeft="@dimen/dp_10"
+                android:background="@drawable/icon_instagram2"/>
+
+            <TextView
+                android:id="@+id/btn_instagram_account"
+                android:layout_width="@dimen/dp_62"
+                android:layout_height="match_parent"
+                android:layout_alignParentRight="true"
+                android:background="@drawable/btn_onoff"/>
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_marginLeft="@dimen/dp_10"
+                android:layout_toLeftOf="@id/btn_instagram_account"
+                android:layout_toRightOf="@id/img_instagram"
+                android:gravity="center_vertical"
+                android:orientation="vertical">
+
+                <kr.innisfree.playgreen.common.view.NanumGothicBoldTextView
+                    android:id="@+id/txt_instagram"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/str_instagram_2"
+                    android:textColor="@color/c_333333"
+                    android:textSize="@dimen/dp_14"/>
+
+                <kr.innisfree.playgreen.common.view.NanumGothicTextView
+                    android:id="@+id/txt_instagram_state"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/dp_5"
+                    android:text="@string/str_not_connect"
+                    android:textColor="@color/c_999999"
+                    android:textSize="@dimen/dp_10"/>
+
+            </LinearLayout>
+        </RelativeLayout>
+
+
+        <!-- kakao -->
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/dp_58"
+            android:background="@color/c_ffffff">
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/dp_0.5"
+                android:layout_alignParentBottom="true"
+                android:background="@color/c_d2d2d2"/>
+
+            <ImageView
+                android:id="@+id/img_kakao"
+                android:layout_width="@dimen/dp_30"
+                android:layout_height="@dimen/dp_30"
+                android:layout_centerVertical="true"
+                android:layout_marginLeft="@dimen/dp_10"
+                android:background="@drawable/icon_kakaostory1"/>
+
+            <TextView
+                android:id="@+id/btn_kakao_account"
+                android:layout_width="@dimen/dp_62"
+                android:layout_height="match_parent"
+                android:layout_alignParentRight="true"
+                android:background="@drawable/btn_onoff"/>
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_marginLeft="@dimen/dp_10"
+                android:layout_toLeftOf="@id/btn_kakao_account"
+                android:layout_toRightOf="@id/img_kakao"
+                android:gravity="center_vertical"
+                android:orientation="vertical">
+
+                <kr.innisfree.playgreen.common.view.NanumGothicBoldTextView
+                    android:id="@+id/txt_kakao"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/str_kakaostory_2"
+                    android:textColor="@color/c_333333"
+                    android:textSize="@dimen/dp_14"/>
+
+                <kr.innisfree.playgreen.common.view.NanumGothicTextView
+                    android:id="@+id/txt_kakao_state"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/dp_5"
+                    android:text="@string/str_not_connect"
+                    android:textColor="@color/c_999999"
+                    android:textSize="@dimen/dp_10"/>
+
+            </LinearLayout>
+
+
+        </RelativeLayout>
+
+
+
+        <RelativeLayout
+            android:id="@+id/layout_leave_member"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/dp_44"
+            android:layout_marginTop="@dimen/dp_20"
+            android:background="@color/c_ffffff">
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="@drawable/ripple_dark"/>
+
+            <kr.innisfree.playgreen.common.view.NanumGothicTextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:paddingLeft="@dimen/dp_10"
+                android:text="@string/str_playgreen_leave_member"
+                android:textColor="@color/c_333333"
+                android:textSize="@dimen/dp_14"/>
+
+            <ImageView
+                android:layout_width="@dimen/dp_12"
+                android:layout_height="@dimen/dp_12"
+                android:layout_alignParentRight="true"
+                android:layout_centerVertical="true"
+                android:layout_marginRight="@dimen/dp_10"
+                android:background="@drawable/icon_next"/>
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/dp_0.5"
+                android:layout_alignParentTop="true"
+                android:background="@color/c_d2d2d2"/>
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/dp_0.5"
+                android:layout_alignParentBottom="true"
+                android:background="@color/c_d2d2d2"/>
+        </RelativeLayout>
+
+
+    </LinearLayout>
+
+    <FrameLayout
+        android:id="@+id/container"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"></FrameLayout>
+
+</FrameLayout>

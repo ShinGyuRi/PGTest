@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/dp_140"
+        android:orientation="horizontal">
+
+        <ImageView
+            android:layout_width="@dimen/dp_180"
+            android:layout_height="match_parent"
+            android:background="@drawable/img_step1" />
+
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:gravity="center_vertical"
+            android:orientation="vertical"
+            android:paddingLeft="@dimen/dp_14">
+
+            <kr.innisfree.playgreen.common.view.InnisfreeGothicBoldTextView
+                android:layout_width="@dimen/dp_48"
+                android:layout_height="@dimen/dp_16"
+                android:background="@drawable/img_round3"
+                android:gravity="center"
+                android:text="@string/str_camera_cinemagraph_info_title_01"
+                android:textColor="@color/c_999999"
+                android:textSize="@dimen/dp_10" />
+
+            <kr.innisfree.playgreen.common.view.InnisfreeGothicBoldTextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/dp_9"
+                android:gravity="left"
+                android:lineSpacingExtra="@dimen/dp_5"
+                android:text="@string/str_camera_cinemagraph_info_01"
+                android:textColor="@color/c_666666"
+                android:textSize="@dimen/dp_12" />
+
+        </LinearLayout>
+
+    </LinearLayout>
+
+</FrameLayout>

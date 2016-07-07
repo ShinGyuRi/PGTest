@@ -1,0 +1,139 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+             android:layout_width="match_parent"
+             android:layout_height="match_parent">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/c_ffffff"
+        android:orientation="vertical">
+
+        <LinearLayout
+            android:id="@+id/layout_item"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@drawable/ripple_dark"
+            android:gravity="center_vertical"
+            android:orientation="horizontal"
+            android:paddingBottom="@dimen/dp_20"
+            android:paddingLeft="@dimen/dp_10"
+            android:paddingRight="@dimen/dp_10"
+            android:paddingTop="@dimen/dp_20">
+
+            <FrameLayout
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent">
+
+                <FrameLayout
+                    android:layout_width="@dimen/dp_36"
+                    android:layout_height="@dimen/dp_36"
+                    android:layout_marginRight="@dimen/dp_10">
+
+
+                    <ImageView
+                        android:id="@+id/img_item_profile"
+                        android:layout_width="@dimen/dp_34"
+                        android:layout_height="@dimen/dp_34"
+                        android:layout_gravity="bottom|left"
+                        android:background="@drawable/img_user_null"/>
+
+                    <ImageView
+                        android:id="@+id/img_icon_badge"
+                        android:layout_width="@dimen/dp_12"
+                        android:layout_height="@dimen/dp_12"
+                        android:layout_gravity="right|top"/>
+
+                </FrameLayout>
+
+            </FrameLayout>
+
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:gravity="center_vertical"
+                android:orientation="vertical">
+
+                <kr.innisfree.playgreen.common.view.InnisfreeGothicBoldTextView
+                    android:id="@+id/txt_item_name"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:maxLines="1"
+                    android:textColor="@color/c_333333"
+                    android:textSize="@dimen/dp_14"/>
+
+                <kr.innisfree.playgreen.common.view.InnisfreeGothicTextView
+                    android:id="@+id/txt_item_content"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/dp_5"
+                    android:textColor="@color/c_333333"
+                    android:textSize="@dimen/dp_14"/>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/dp_10"
+                    android:orientation="horizontal">
+
+                    <kr.innisfree.playgreen.common.view.InnisfreeGothicTextView
+                        android:id="@+id/txt_item_regist_info"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textColor="@color/c_666666"
+                        android:textSize="@dimen/dp_12"/>
+
+                    <kr.innisfree.playgreen.common.view.InnisfreeGothicTextView
+                        android:id="@+id/txt_item_like"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:drawablePadding="@dimen/dp_2"
+                        android:drawableRight="@drawable/btn_comment_like"
+                        android:text="@string/str_like"
+                        android:textColor="@color/c_666666"
+                        android:textSize="@dimen/dp_12"/>
+
+                </LinearLayout>
+
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/layout_manage"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:id="@+id/txt_item_edit"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:padding="@dimen/dp_5"
+                    android:text="수정"
+                    android:visibility="gone"/>
+
+                <kr.innisfree.playgreen.common.view.NanumGothicTextView
+                    android:id="@+id/txt_item_delete"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="@dimen/dp_5"
+                    android:padding="@dimen/dp_5"
+                    android:text="삭제"
+                    android:textColor="@color/c_999999"
+                    android:textSize="@dimen/dp_12"/>
+
+            </LinearLayout>
+
+        </LinearLayout>
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/dp_0.5"
+            android:layout_gravity="bottom"
+            android:layout_marginLeft="@dimen/dp_10"
+            android:layout_marginRight="@dimen/dp_10"
+            android:background="@color/c_d2d2d2"/>
+    </LinearLayout>
+
+</FrameLayout>

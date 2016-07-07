@@ -1,0 +1,453 @@
+package com;
+
+import android.Manifest;
+import android.app.Activity;
+import android.app.AlertDialog;
+import android.content.ActivityNotFoundException;
+import android.content.ComponentName;
+import android.content.Context;
+import android.content.DialogInterface;
+import android.content.Intent;
+import android.content.pm.PackageManager;
+import android.content.pm.ResolveInfo;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.graphics.Typeface;
+import android.media.ExifInterface;
+import android.net.Uri;
+import android.os.Build;
+import android.os.Bundle;
+import android.provider.MediaStore;
+import android.provider.Settings;
+import android.support.v4.app.ActivityCompat;
+import android.support.v4.app.DialogFragment;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentTransaction;
+import android.support.v7.app.AppCompatActivity;
+import android.view.Display;
+import android.view.View;
+import android.view.WindowManager;
+import android.view.inputmethod.InputMethodManager;
+import android.widget.Toast;
+
+import com.android.volley.VolleyError;
+import com.moyusoft.util.Definitions;
+import com.moyusoft.util.Definitions.ACTIVITY_REQUEST_CODE;
+import com.moyusoft.util.DeviceUtil;
+import com.moyusoft.util.FileUtil;
+import com.moyusoft.util.JYLog;
+import com.moyusoft.util.ToforUtil;
+import com.moyusoft.util.Util;
+import com.volley.network.NetworkConstantUtil.NETWORK_RESULT_CODE;
+import com.volley.network.NetworkListener;
+import com.volley.network.NetworkRequestFunction;
+import com.volley.network.NetworkRequestUtil;
+import com.volley.network.dto.NetworkJson;
+
+import java.io.File;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
+
+import kr.innisfree.playgreen.R;
+import kr.innisfree.playgreen.activity.CameraActivity;
+import kr.innisfree.playgreen.activity.PushReceiveAct;
+import kr.innisfree.playgreen.activity.SplashAct;
+import kr.innisfree.playgreen.activity.user.LoginAct;
+import kr.innisfree.playgreen.common.PlaygreenManager;
+import kr.innisfree.playgreen.dialog.CommonLoadingDialog;
+import kr.innisfree.playgreen.listener.TakePictureListener;
+import kr.innisfree.playgreen.receiver.ActivityActionReceiver;
+
+/**
+ * @author jooyoung
+ */
+public abstract class ParentAct extends AppCompatActivity implements NetworkListener {
+
+	private int IMAGE_SIZE = 500;
+
+	private InputMethodManager inputManager;
+	private ActivityActionReceiver activityActionReceiver;
+	private CommonLoadingDialog loading;
+
+	public NetworkRequestFunction netFunc;
+	public NetworkRequestUtil netUtil;
+
+	public static ArrayList<Activity> activityList;
+
+	public void takePicture(Bitmap bm) {
+	}
+
+	public void onUIRefresh() {
+	}
+
+	private TakePictureListener takePickerListener;
+
+	public void setTakePictureListener(TakePictureListener listener) {
+		this.takePickerListener = listener;
+	}
+
+	public void hiddenKeyboard() {
+		if (inputManager == null)
+			inputManager = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+		if (inputManager.isActive()) {
+			inputManager.hideSoftInputFromWindow(getWindow().getDecorView().getRootView().getWindowToken(), 0);
+		}
+	}
+
+	public void showKeyboard(View view) {
+		InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+		imm.showSoftInput(view, InputMethodManager.SHOW_FORCED);
+	}
+
+	@Override
+	protected void onCreate(Bundle savedInstanceState) {
+		super.onCreate(savedInstanceState);
+
+		BaseApplication.setCurrentActivity(this);
+		if (activityList == null) {
+			activityList = new ArrayList<Activity>();
+		}
+		if(this instanceof LoginAct == false && this instanceof SplashAct == false && this instanceof PushReceiveAct==false)
+			activityList.add(this);
+		//JYLog.D("act list:" +activityList.size(),new Throwable());
+
+		if (savedInstanceState != null) {
+			activityList = null;
+			Intent i = new Intent(BaseApplication.getContext(), SplashAct.class);
+			i.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+			startActivity(i);
+			finish();
+		}
+
+		netUtil = new NetworkRequestUtil(this);
+		netFunc = new NetworkRequestFunction(netUtil);
+
+//		if (ToforUtil.Config.DEVELOPER_MODE && Build.VERSION.SDK_INT >= Build.VERSION_CODES.GINGERBREAD) {
+//			StrictMode.setThreadPolicy(new StrictMode.ThreadPolicy.Builder().detectAll().penaltyDialog().build());
+//			StrictMode.setVmPolicy(new StrictMode.VmPolicy.Builder().detectAll().penaltyDeath().build());
+//		}
+	}
+
+	public void showLoading() {
+		try {
+			if (loading == null)
+				return;
+			loading.show();
+		} catch (Exception e) {
+		}
+	}
+
+	public void hideLoading() {
+		try {
+			if (loading == null)
+				return;
+			loading.dismiss();
+		} catch (Exception e) {
+		}
+	}
+
+	public void setLoading(Activity a) {
+		loading = new CommonLoadingDialog(a);
+	}
+
+	public void setLoading(Activity a, boolean isTransBG) {
+		loading = new CommonLoadingDialog(a, isTransBG);
+	}
+
+	@Override
+	protected void onResume() {
+		super.onResume();
+
+		toforAppInit();
+
+		if (activityActionReceiver == null) activityActionReceiver = new ActivityActionReceiver();
+		activityActionReceiver.registerReciever(this);
+
+	}
+
+	@Override
+	protected void onPause() {
+		super.onPause();
+		unregisterReceiver(activityActionReceiver);
+	}
+
+	public void onReceive(Context context, Intent intent) {
+		switch (intent.getAction()) {
+			case Definitions.INTENT_ACTION.MEMBER_CODE_IS_NULL:
+				//TODO 로그인페이지 이동 ??
+				break;
+		}
+	}
+
+	public void toforAppInit() {
+
+		if (ToforUtil.PHONE_W <= 0 || ToforUtil.PHONE_H <= 0) {
+			Display defaultDisplay = ((WindowManager) getSystemService(WINDOW_SERVICE)).getDefaultDisplay();
+			ToforUtil.PHONE_W = defaultDisplay.getWidth();
+			ToforUtil.PHONE_H = defaultDisplay.getHeight();
+			ToforUtil.SCREENRATE = DeviceUtil.getScreenRate(getApplicationContext(), (int) ToforUtil.PHONE_BASIC_W, (int) ToforUtil.PHONE_BASIC_H);
+		}
+		if (Definitions.NanumGothic == null) {
+			Definitions.NanumGothic = Typeface.createFromAsset(getAssets(), "NanumGothic.ttf");
+		}
+		if (Definitions.NanumGothicBold == null) {
+			Definitions.NanumGothicBold = Typeface.createFromAsset(getAssets(), "NanumGothicBold.ttf");
+		}
+		if (Definitions.InnisfreeGothic == null) {
+			Definitions.InnisfreeGothic = Typeface.createFromAsset(getAssets(), "InnisfreeGothicR.ttf");
+		}
+		if (Definitions.InnisfreeGothicBold == null) {
+			Definitions.InnisfreeGothicBold = Typeface.createFromAsset(getAssets(), "InnisfreeGothicB.ttf");
+		}
+
+	}
+
+	/**
+	 * @param frag
+	 * @param dlgIdx
+	 */
+	public void dialogShow(Fragment frag, String dlgIdx) {
+		FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
+		Fragment prev = getSupportFragmentManager().findFragmentByTag(dlgIdx);
+		if (prev != null) {
+			ft.remove(prev);
+		}
+		ft.addToBackStack(null);
+		((DialogFragment) frag).show(ft, dlgIdx);
+	}
+
+	public void switchContent(Fragment fragment, int contentId, boolean isHistory, boolean isAni) {
+		FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
+		if (isHistory)
+			ft.addToBackStack(null);
+		if (isAni) {
+			ft.setCustomAnimations(R.anim.left, R.anim.left2, R.anim.right2, R.anim.right);
+		}
+		ft.replace(contentId, fragment).commit();
+	}
+
+	/*
+	 * Animation Right to left
+	 */
+	public void switchContent2(Fragment fragment, int contentId, boolean isHistory, boolean isAni) {
+		FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
+		if (isHistory)
+			ft.addToBackStack(null);
+		if (isAni) {
+			ft.setCustomAnimations(R.anim.right2, R.anim.right, R.anim.left, R.anim.left2);
+		}
+		ft.replace(contentId, fragment).commit();
+	}
+
+	@Override
+	public void onNetworkStart(int idx) {
+		showLoading();
+	}
+
+	@Override
+	public void onNetworkResult(int idx, NetworkJson json) {
+		hideLoading();
+	}
+
+	@Override
+	public void onNetworkError(int idx, VolleyError error, NetworkJson json) {
+		hideLoading();
+		if (json != null && json.RESULT_CODE != null) {
+			switch (json.RESULT_CODE) {
+				case NETWORK_RESULT_CODE.EXPIRE_ACCESS_TOKEN:
+					Toast.makeText(this, "만료된 토큰입니다. 다시 로그인 해주세요", Toast.LENGTH_LONG).show();
+					PlaygreenManager.removeUserInfo();
+					break;
+			}
+		}
+	}
+
+	public boolean permissionCheck(String[] reqPermission, int reqCode) {
+		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+			boolean isDenied = false;
+			for (String req : reqPermission) {
+				if (ActivityCompat.checkSelfPermission(this, req) == PackageManager.PERMISSION_DENIED) {
+					isDenied = true;
+					break;
+				}
+			}
+			if (isDenied) {
+				requestPermissions(reqPermission, reqCode);
+				return false;
+			} else {
+				return true;
+			}
+		} else {
+			return true;
+		}
+	}
+
+	@Override
+	public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
+//		for(String permission: permissions)
+//			JYLog.D(requestCode +" permission: "+ permission, new Throwable());
+//		for(int result : grantResults)
+//			JYLog.D(requestCode +" result: "+ result, new Throwable());
+		switch (requestCode) {
+			case ACTIVITY_REQUEST_CODE.PERMISSION_ABOUT_CAMERA:
+				for (int result : grantResults) {
+					if (result != PackageManager.PERMISSION_GRANTED) {
+						showPermissionDialog(R.string.str_permission_message_camera);
+						return;
+					}
+				}
+				goCamera(0);
+				break;
+			case ACTIVITY_REQUEST_CODE.PERMISSION_ABOUT_GALLERY:
+				goGallery(0);
+				break;
+		}
+		super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+	}
+
+	public void showPermissionDialog(int messageRes) {
+		AlertDialog.Builder alertDialog = new AlertDialog.Builder(this);
+		alertDialog.setMessage(messageRes);
+		alertDialog.setNegativeButton(R.string.str_close, null);
+		alertDialog.setPositiveButton(R.string.str_setting, new DialogInterface.OnClickListener() {
+			@Override
+			public void onClick(DialogInterface dialog, int which) {
+				try {
+					Intent intent = new Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS)
+							.setData(Uri.parse("package:" + getPackageName()));
+					startActivity(intent);
+				} catch (ActivityNotFoundException e) {
+					e.printStackTrace();
+
+					Intent intent = new Intent(Settings.ACTION_MANAGE_APPLICATIONS_SETTINGS);
+					startActivity(intent);
+				}
+			}
+		});
+		alertDialog.show();
+	}
+
+	/*******************************
+	 * 사진관련
+	 *******************************/
+
+	public void gotoCameraActivity(int typeFramActivity) {
+		Intent i = new Intent(this, CameraActivity.class);
+		i.putExtra(Definitions.INTENT_KEY.FROM_ACTIVITY, typeFramActivity);
+		Util.moveActivity(this, i, -1, -1, false, false, ACTIVITY_REQUEST_CODE.CAMERA_ACT);
+	}
+
+	public int cropRatio;
+
+	public void goGallery(int cropRatio) {
+		String[] permission = new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE};
+		boolean isValid = permissionCheck(permission, ACTIVITY_REQUEST_CODE.PERMISSION_ABOUT_GALLERY);
+		if (isValid == false) return;
+		this.cropRatio = cropRatio;
+		Intent i = new Intent(Intent.ACTION_PICK);
+		i.setType(MediaStore.Images.Media.CONTENT_TYPE);
+		i.setData(MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
+		startActivityForResult(i, ACTIVITY_REQUEST_CODE.PICK_GALLERY);
+	}
+
+	public void goCamera(int cropRatio) {
+		String[] permission = new String[]{Manifest.permission.CAMERA, Manifest.permission.WRITE_EXTERNAL_STORAGE};
+		boolean isValid = permissionCheck(permission, ACTIVITY_REQUEST_CODE.PERMISSION_ABOUT_CAMERA);
+		if (isValid == false) return;
+		this.cropRatio = cropRatio;
+		Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+		intent.putExtra(MediaStore.EXTRA_OUTPUT, Uri.fromFile(FileUtil.getTempImageFile(this)));
+		intent.putExtra("return-data", true);
+		startActivityForResult(intent, ACTIVITY_REQUEST_CODE.PICK_CAMERA);
+	}
+
+	@Override
+	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+		if (requestCode == ACTIVITY_REQUEST_CODE.PICK_GALLERY && resultCode == Activity.RESULT_OK) {
+			if (data == null) return;
+			Uri uri = data.getData();
+			FileUtil.copyUriToFile(this, uri, FileUtil.getTempImageFile(this));
+			correctCameraOrientation(FileUtil.getTempImageFile(this));
+			if (cropRatio > 0) jyCrop();
+			else doFinalProcess();
+		} else if (requestCode == ACTIVITY_REQUEST_CODE.PICK_CAMERA && resultCode == Activity.RESULT_OK) {
+			correctCameraOrientation(FileUtil.getTempImageFile(this));
+			if (cropRatio > 0) jyCrop();
+			else doFinalProcess();
+		} else if (requestCode == ACTIVITY_REQUEST_CODE.PICK_CROP && resultCode == Activity.RESULT_OK) {
+			doFinalProcess();
+		} else {
+			super.onActivityResult(requestCode, resultCode, data);
+		}
+	}
+
+	private void doFinalProcess() {
+//		Bitmap bitmap = FileUtil.loadImageWithSampleSize(FileUtil.getTempImageFile(this), IMAGE_SIZE);
+//		bitmap = FileUtil.resizeImageWithinBoundary(bitmap, IMAGE_SIZE);
+//		FileUtil.saveBitmapToFile(bitmap, this);
+		Bitmap bm = BitmapFactory.decodeFile(FileUtil.getTempImageFile(this).getAbsolutePath());
+		if (takePickerListener != null) {
+			takePickerListener.takePicture(bm);
+		} else {
+			takePicture(bm);
+		}
+	}
+
+	private void jyCrop() {
+//		Intent intent = new Intent(this, JYCropAct.class);
+//		intent.putExtra(Definitions.INTENT_KEY.CROP_RATIO,cropRatio);
+//		startActivityForResult(intent, ACTIVITY_REQUEST_CODE.REQ_CODE_PICK_CROP);
+	}
+
+	private void cropImage(int w, int h) {
+		Intent intent = new Intent("com.android.camera.action.CROP");
+		intent.setType("image/*");
+		List<ResolveInfo> cropToolLists = getPackageManager().queryIntentActivities(intent, 0);
+		int size = cropToolLists.size();
+		if (size == 0) {
+			doFinalProcess();
+		} else {
+			intent.setData(Uri.fromFile(FileUtil.getTempImageFile(this)));
+			intent.putExtra("aspectX", w);
+			intent.putExtra("aspectY", h);
+			intent.putExtra("output", Uri.fromFile(FileUtil.getTempImageFile(this)));
+			Intent i = new Intent(intent);
+			ResolveInfo res = cropToolLists.get(0);
+			i.setComponent(new ComponentName(res.activityInfo.packageName, res.activityInfo.name));
+			startActivityForResult(i, ACTIVITY_REQUEST_CODE.PICK_CROP);
+		}
+	}
+
+	private void correctCameraOrientation(File imgFile) {
+		Bitmap bitmap = FileUtil.loadImageWithSampleSize(imgFile, IMAGE_SIZE);
+		try {
+			ExifInterface exif = new ExifInterface(imgFile.getAbsolutePath());
+			int exifOrientation = exif.getAttributeInt(ExifInterface.TAG_ORIENTATION, ExifInterface.ORIENTATION_NORMAL);
+			int exifRotateDegree = exifOrientationToDegrees(exifOrientation);
+			bitmap = FileUtil.rotateImage(bitmap, exifRotateDegree);
+			FileUtil.saveBitmapToFile(bitmap, this);
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+	}
+
+	private int exifOrientationToDegrees(int exifOrientation) {
+		if (exifOrientation == ExifInterface.ORIENTATION_ROTATE_90) {
+			return 90;
+		} else if (exifOrientation == ExifInterface.ORIENTATION_ROTATE_180) {
+			return 180;
+		} else if (exifOrientation == ExifInterface.ORIENTATION_ROTATE_270) {
+			return 270;
+		}
+		return 0;
+	}
+
+	protected void onDestroy() {
+		netUtil = null;
+		netFunc = null;
+		if (activityList != null && activityList.contains(this))
+			activityList.remove(this);
+		super.onDestroy();
+	}
+}

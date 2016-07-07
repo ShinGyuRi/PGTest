@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/dp_44"
+        android:background="@color/c_eeeeee"
+        android:gravity="center_vertical"
+        android:orientation="horizontal">
+
+        <ImageButton
+            android:id="@+id/camera_upload.imgbtn_tag"
+            android:layout_width="@dimen/dp_52"
+            android:layout_height="match_parent"
+            android:background="@drawable/ripple_effect"
+            android:src="@drawable/btn_tag" />
+
+        <View
+            android:layout_width="@dimen/dp_0.33"
+            android:layout_height="match_parent"
+            android:background="@color/c_d2d2d2" />
+
+        <View
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1" />
+
+        <ImageButton
+            android:id="@+id/camera_upload.imgbtn_facebook"
+            android:layout_width="@dimen/dp_44"
+            android:layout_height="match_parent"
+            android:background="@drawable/btn_upload_facebook" />
+
+        <ImageButton
+            android:id="@+id/camera_upload.imgbtn_instagram"
+            android:layout_width="@dimen/dp_44"
+            android:layout_height="match_parent"
+            android:background="@drawable/btn_upload_instagram" />
+
+        <ImageButton
+            android:id="@+id/camera_upload.imgbtn_kakaostory"
+            android:layout_width="@dimen/dp_44"
+            android:layout_height="match_parent"
+            android:background="@drawable/btn_upload_kakao" />
+
+    </LinearLayout>
+
+</FrameLayout>
