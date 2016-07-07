@@ -33,7 +33,7 @@ public interface HttpService {
     @POST("/users/signUp")
     void signUp(@Field("latitude") String latitude,
                 @Field("longitude") String longitude,
-                @Field("image") byte[] image,
+                @Field("image") TypedFile image,
                 @Field("gender") String gender,
                 @Field("dob") String dob,
                 @Field("snsID") String snsID,

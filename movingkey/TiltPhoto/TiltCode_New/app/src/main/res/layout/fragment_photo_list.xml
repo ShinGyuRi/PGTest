@@ -9,7 +9,7 @@
     tools:context="tiltcode.movingkey.com.tiltcode_new.fragments.CouponFragment">
 
     <ListView
-        android:id="@+id/listview1"
+        android:id="@+id/photo_listview"
         android:layout_width="match_parent"
         android:layout_height="match_parent"/>
 

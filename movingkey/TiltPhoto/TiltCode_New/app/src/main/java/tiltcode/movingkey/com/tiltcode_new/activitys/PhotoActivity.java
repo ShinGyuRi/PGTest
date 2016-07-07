@@ -13,6 +13,7 @@ import com.squareup.picasso.Picasso;
 
 import tiltcode.movingkey.com.tiltcode_new.R;
 import tiltcode.movingkey.com.tiltcode_new.fragments.GridFragment;
+import tiltcode.movingkey.com.tiltcode_new.fragments.PhotoListFragment;
 import tiltcode.movingkey.com.tiltcode_new.library.BaseApplication;
 import tiltcode.movingkey.com.tiltcode_new.library.ParentActivity;
 import tiltcode.movingkey.com.tiltcode_new.library.util.BitmapCircleResize;
@@ -35,7 +36,7 @@ public class PhotoActivity extends ParentActivity{
 
     String profileImgPath, username;
 
-    public Fragment gridFragment;
+    public Fragment gridFragment, photoListFragment;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -88,6 +89,8 @@ public class PhotoActivity extends ParentActivity{
                 break;
 
             case R.id.img_btn_list:
+                photoListFragment = PhotoListFragment.newInstance();
+                switchContent(photoListFragment, R.id.container, false, false);
                 break;
         }
     }
