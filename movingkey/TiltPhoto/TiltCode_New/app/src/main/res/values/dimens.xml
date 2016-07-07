@@ -25,4 +25,7 @@
 
     <dimen name="barcode_width">209.4dp</dimen>
     <dimen name="barcode_height">45.9dp</dimen>
+
+    <dimen name="tiltphoto_gridview_width">119.7dp</dimen>
+    <dimen name="tiltphoto_profile_width">39dp</dimen>
 </resources>

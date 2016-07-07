@@ -28,6 +28,7 @@ import tiltcode.movingkey.com.tiltcode_new.fragments.HomeFragment;
 import tiltcode.movingkey.com.tiltcode_new.library.BaseApplication;
 import tiltcode.movingkey.com.tiltcode_new.library.ParentActivity;
 import tiltcode.movingkey.com.tiltcode_new.library.util.JsinPreference;
+import tiltcode.movingkey.com.tiltcode_new.library.util.Util;
 
 public class MainActivity extends ParentActivity implements View.OnClickListener{
 
@@ -294,7 +295,8 @@ public class MainActivity extends ParentActivity implements View.OnClickListener
         Intent intent;
         switch (v.getId())  {
             case R.id.img_btn_gallery:
-                goGallery(0);
+                intent = new Intent(this, PhotoActivity.class);
+                Util.moveActivity(this, intent, -1, -1, false, false);
 
                 break;
             case R.id.img_btn_camera:

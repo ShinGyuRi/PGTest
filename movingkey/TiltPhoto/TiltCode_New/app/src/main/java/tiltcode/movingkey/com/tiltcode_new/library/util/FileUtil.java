@@ -204,7 +204,6 @@ public class FileUtil {
     }
 
 
-
     public static File getTempImageFile(Context context) {
         if(context==null)	context = BaseApplication.getContext();
         File path = new File(Environment.getExternalStorageDirectory() + "/Android/data/" + context.getPackageName() + "/temp/");

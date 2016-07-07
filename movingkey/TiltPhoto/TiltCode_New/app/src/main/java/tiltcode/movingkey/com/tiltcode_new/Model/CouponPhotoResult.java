@@ -11,7 +11,7 @@ public class CouponPhotoResult {
     @SerializedName("coupon")
     public Object coupon;
 
-    @SerializedName("Photo")
+    @SerializedName("photo")
     public Object photo;
 
     @SerializedName("result")

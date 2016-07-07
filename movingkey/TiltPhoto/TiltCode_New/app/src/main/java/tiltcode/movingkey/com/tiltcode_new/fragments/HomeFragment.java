@@ -13,6 +13,7 @@ import android.support.v4.app.Fragment;
 import android.support.v7.app.AlertDialog;
 import android.util.Log;
 import android.view.Gravity;
+import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
@@ -36,6 +37,7 @@ import retrofit.client.Response;
 import tiltcode.movingkey.com.tiltcode_new.Model.AccelData;
 import tiltcode.movingkey.com.tiltcode_new.Model.CouponPhotoResult;
 import tiltcode.movingkey.com.tiltcode_new.R;
+import tiltcode.movingkey.com.tiltcode_new.activitys.PhotoActivity;
 import tiltcode.movingkey.com.tiltcode_new.library.BaseApplication;
 import tiltcode.movingkey.com.tiltcode_new.library.ParentActivity;
 import tiltcode.movingkey.com.tiltcode_new.library.ParentFragment;
@@ -107,6 +109,7 @@ public class HomeFragment extends ParentFragment implements View.OnClickListener
     public boolean touchFlag = false;
 
     public Fragment couponFragment;
+    public PhotoActivity photoActivity;
 
     public static HomeFragment newInstance() {
         HomeFragment frag = new HomeFragment();
@@ -287,7 +290,7 @@ public class HomeFragment extends ParentFragment implements View.OnClickListener
         return values[2]; // 0 은 x 각도, 1은 y각도, 2는 z각도
     }
 
-    String imgUrl, thumnailImgUrl;
+    String couponImgUrl, thumnailImgUrl, photoImgUrl;
     String _id = null;
 
     public void getResult(ArrayList<String> tiltList)    {
@@ -321,12 +324,12 @@ public class HomeFragment extends ParentFragment implements View.OnClickListener
                            try {
                                jsonObject = new JSONObject((String) couponPhotoResult.getCoupon());
                                Log.d(TAG, "JSONObject.tostring: " + jsonObject.toString());
-                               imgUrl = jsonObject.getString("image");
+                               couponImgUrl = jsonObject.getString("image");
 //                               option = jsonObject.getString("option");
 //                               brandname = jsonObject.getString("brandname");
 //                               desc = jsonObject.getString("description");
 //                               exp = Util.unixTimeToDate(Long.parseLong(jsonObject.getString("exp")));
-//                               Log.d(TAG, "imgUrl: " + imgUrl.replace("\\", ""));
+//                               Log.d(TAG, "couponImgUrl: " + couponImgUrl.replace("\\", ""));
                                _id = jsonObject.getString("_id");
                            } catch (JSONException e) {
                                e.printStackTrace();
@@ -343,13 +346,13 @@ public class HomeFragment extends ParentFragment implements View.OnClickListener
                            tvDlgTitle.setText(R.string.str_dialog_title_coupon);
                            tvDlgMessage.setText(R.string.str_dialog_message);
                            Picasso.with(getContext())
-                                   .load(imgUrl.replace("\\", ""))
+                                   .load(couponImgUrl.replace("\\", ""))
                                    .into(dialogImg);
                            builder.setView(dialogView)
                                    .setPositiveButton("OK", new DialogInterface.OnClickListener() {
                                        @Override
                                        public void onClick(DialogInterface dialog, int which) {
-//                                           couponFragment = CouponFragment.newInstance(imgUrl.replace("\\", ""), option, brandname, desc, exp);
+//                                           couponFragment = CouponFragment.newInstance(couponImgUrl.replace("\\", ""), option, brandname, desc, exp);
 
                                            Log.d(TAG, "username: "+username + " coupon_id: "+_id);
                                            ownCouponOrPhoto(username, _id, null);
@@ -367,8 +370,24 @@ public class HomeFragment extends ParentFragment implements View.OnClickListener
                                        }
                                    });
 
-                           AlertDialog alertDialog = builder.create();
+                           final AlertDialog alertDialog = builder.create();
                            alertDialog.show();
+                           alertDialog.setOnKeyListener(new DialogInterface.OnKeyListener() {
+
+                               @Override
+                               public boolean onKey(DialogInterface dialog, int keyCode, KeyEvent event) {
+                                   //This is the filter
+                                   if (event.getAction()!=KeyEvent.ACTION_DOWN)
+                                       return true;
+
+                                   if (keyCode == KeyEvent.KEYCODE_BACK)    {
+                                       onUIRefresh();
+                                       alertDialog.cancel();
+                                       return  true;
+                                   }
+                                   return false;
+                               }
+                           });
                            if(couponPhotoResult.photo != null) {
                                WindowManager.LayoutParams params = alertDialog.getWindow().getAttributes();
                                params.y = Gravity.TOP-250;
@@ -388,11 +407,7 @@ public class HomeFragment extends ParentFragment implements View.OnClickListener
                                jsonObject = new JSONObject((String) couponPhotoResult.getPhoto());
                                Log.d(TAG, "JSONObject.tostring: " + jsonObject.toString());
                                thumnailImgUrl = jsonObject.getString("thumnailimage");
-//                               option = jsonObject.getString("option");
-//                               brandname = jsonObject.getString("brandname");
-//                               desc = jsonObject.getString("description");
-//                               exp = Util.unixTimeToDate(Long.parseLong(jsonObject.getString("exp")));
-//                               Log.d(TAG, "imgUrl: " + imgUrl.replace("\\", ""));
+                               photoImgUrl = jsonObject.getString("img_path");
                                _id = jsonObject.getString("_id");
                            } catch (JSONException e) {
                                e.printStackTrace();
@@ -415,14 +430,9 @@ public class HomeFragment extends ParentFragment implements View.OnClickListener
                                    .setPositiveButton("OK", new DialogInterface.OnClickListener() {
                                        @Override
                                        public void onClick(DialogInterface dialog, int which) {
-//                                           couponFragment = CouponFragment.newInstance(imgUrl.replace("\\", ""), option, brandname, desc, exp);
-
                                            Log.d(TAG, "username: "+username + " coupon_id: "+_id);
-                                           ownCouponOrPhoto(username, null, _id);
-//                                           ((CouponFragment)getTargetFragment()).getCouponList();
-                                           couponFragment = CouponFragment.newInstance();
-                                           ((ParentActivity) getActivity()).switchContent(couponFragment, R.id.container, true, false);
-                                           touchFlag = false;
+                                           ownCouponOrPhoto(username, null, _id);//
+                                           onUIRefresh();
                                        }
                                    })
                                    .setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
@@ -433,8 +443,24 @@ public class HomeFragment extends ParentFragment implements View.OnClickListener
                                        }
                                    });
 
-                           AlertDialog alertDialog = builder.create();
+                           final AlertDialog alertDialog = builder.create();
                            alertDialog.show();
+                            alertDialog.setOnKeyListener(new DialogInterface.OnKeyListener() {
+
+                                @Override
+                                public boolean onKey(DialogInterface dialog, int keyCode, KeyEvent event) {
+                                    //This is the filter
+                                    if (event.getAction()!=KeyEvent.ACTION_DOWN)
+                                        return true;
+
+                                    if (keyCode == KeyEvent.KEYCODE_BACK)    {
+                                        onUIRefresh();
+                                        alertDialog.cancel();
+                                        return  true;
+                                    }
+                                    return false;
+                                }
+                            });
                             if(couponPhotoResult.coupon != null) {
                                 WindowManager.LayoutParams params = alertDialog.getWindow().getAttributes();
                                 params.y = Gravity.BOTTOM+250;
@@ -444,12 +470,11 @@ public class HomeFragment extends ParentFragment implements View.OnClickListener
                        }
                         if(couponPhotoResult.coupon == null && couponPhotoResult.photo == null) {
                             AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
-                            builder.setMessage("쿠폰이 없습니다")
+                            builder.setMessage("It can not be shared.")
                                     .setNegativeButton("확인", new DialogInterface.OnClickListener()  {
                                         @Override
                                         public void onClick(DialogInterface dialog, int which) {
                                             touchFlag = false;
-
                                         }
                                     });
 
@@ -577,4 +602,6 @@ public class HomeFragment extends ParentFragment implements View.OnClickListener
         tvAlert.setText(R.string.str_home_alert);
         touchFlag = false;
     }
+
+
 }

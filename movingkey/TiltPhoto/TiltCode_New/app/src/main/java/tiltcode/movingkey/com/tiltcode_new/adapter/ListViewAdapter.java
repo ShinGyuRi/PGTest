@@ -100,7 +100,7 @@ public class ListViewAdapter extends BaseAdapter {
             public void onClick(View v) {
                 jsinPreference = new JsinPreference(BaseApplication.getContext());
                 jsinPreference.put("couponId", listViewItem.getCouponId());
-                usedCoupon();
+                removeCoupon();
                 removeItem(position);
                 notifyDataSetChanged();
             }
@@ -144,10 +144,10 @@ public class ListViewAdapter extends BaseAdapter {
 
     String username, couponId;
 
-    public void usedCoupon()    {
+    public void removeCoupon()    {
         username = jsinPreference.getValue("username", "");
         couponId = jsinPreference.getValue("couponId", "");
-        NetworkUtil.getHttpSerivce().usedCoupon(couponId, username,
+        NetworkUtil.getHttpSerivce().removeCoupon(couponId, username,
                 new Callback<ListCouponResult>() {
                     @Override
                     public void success(ListCouponResult listCouponResult, Response response) {

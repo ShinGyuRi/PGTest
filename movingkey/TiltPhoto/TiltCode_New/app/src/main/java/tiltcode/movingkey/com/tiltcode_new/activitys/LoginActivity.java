@@ -229,6 +229,7 @@ public class LoginActivity extends ParentActivity implements View.OnClickListene
         Log.d(TAG, facebookEmail + facebookReferenceId + facebookName + facebookImagePath, new Throwable());
         jsinPreference.put("username", facebookReferenceId);
         jsinPreference.put("loginType", SNSTYPE_CODE.FACEBOOK);
+        jsinPreference.put("profileImgPath", "http://graph.facebook.com/"+facebookReferenceId+"/picture?type=large");
         Log.d(TAG, "jsinpreference username"+jsinPreference.getValue("username", ""));
         getFacebookProfilePicture(facebookReferenceId);
         requestSignUp();
