@@ -2,6 +2,8 @@ package tiltcode.movingkey.com.tiltcode_new.activitys;
 
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.widget.ImageView;
@@ -47,6 +49,12 @@ public class PhotoActivity extends ParentActivity{
         jsinPreference = new JsinPreference(BaseApplication.getContext());
         username = jsinPreference.getValue("username", "");
         profileImgPath = jsinPreference.getValue("profileImgPath", "");
+
+        Fragment fragment = new GridFragment();
+        FragmentManager fragmentManager = getSupportFragmentManager();
+        FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+        fragmentTransaction.add(R.id.container, fragment);
+        fragmentTransaction.commit();
 
         Picasso.with(this)
                 .load(profileImgPath)
